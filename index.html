@@ -253,8 +253,7 @@
             min-width: 0;
             padding: 10px;
             gap: 10px;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            overflow: hidden;
         }
 
         /* Audio Toolbar */
@@ -828,6 +827,7 @@
             color: var(--text-primary);
         }
 
+        /* Cờ đánh dấu */
         .btn-flag {
             background: transparent;
             border: none;
@@ -1296,7 +1296,7 @@
             margin-top: 4px;
         }
 
-        /* TỐI ƯU GIAO DIỆN & CUỘN TRÊN ĐIỆN THOẠI */
+        /* TỐI ƯU GIAO DIỆN & CUỘN TOÀN TRANG TRÊN ĐIỆN THOẠI */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -1317,24 +1317,57 @@
                     padding: 12px;
                 }
 
+            .main-stage {
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch;
+                padding: 8px;
+                gap: 8px;
+            }
+
             .panels-split {
                 flex-direction: column;
-                min-height: auto;
+                gap: 10px;
+                height: auto !important;
+                flex: none !important;
             }
 
             .viewer-panel {
-                height: 52vh;
-                min-height: 340px;
+                height: 35vh !important;
+                min-height: 250px !important;
                 flex: none !important;
             }
 
             .sheet-panel {
-                min-height: 60vh;
+                height: 60vh !important;
+                min-height: 400px !important;
                 flex: none !important;
+                margin-bottom: 20px;
+            }
+
+            .audio-toolbar {
+                padding: 4px 8px;
+                gap: 6px;
+            }
+
+            .audio-full-box audio {
+                min-width: 140px;
+                height: 28px;
+            }
+
+            .audio-btn {
+                padding: 2px 6px;
+                font-size: 10px;
+                height: 24px;
+            }
+
+            .btn-hide-audio {
+                padding: 2px 6px;
+                font-size: 10px;
+                height: 24px;
             }
 
             .q-grid {
-                grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
             }
         }
     </style>
@@ -1429,7 +1462,6 @@
 
         let isAudioToolbarOpen = true;
         let isFocusPdfMode = false;
-        let currentPdfRenderTask = null;
 
         function showCustomDialog({ title = 'Thông báo', message = '', isConfirm = false, onConfirm = null }) {
             const overlay = document.getElementById('customModalOverlay');
@@ -1944,13 +1976,11 @@
             }
         };
 
-        // Hàm ẩn / hiện thanh Audio hoàn toàn
         window.setAudioToolbarVisible = function (visible) {
             isAudioToolbarOpen = visible;
             renderMain();
         };
 
-        // Chế độ mở rộng khung đọc đề Reading
         window.toggleFocusPdfMode = function () {
             isFocusPdfMode = !isFocusPdfMode;
             renderMain();
@@ -1968,7 +1998,7 @@
             }
         });
 
-        // Gắn cờ câu phân vân: Cập nhật DOM cục bộ
+        // Gắn cờ câu phân vân
         window.toggleFlag = function (q) {
             const t = tests.find(x => x.id === activeId);
             if (!t) return;
@@ -2342,7 +2372,7 @@
 
             renderQuestionsGridOnly();
 
-            // RENDER PDF AN TOÀN TRÊN SAFARI / MOBILE
+            // Nạp PDF
             const docArea = document.getElementById('docArea');
             if (t.viewMode === 'pdfL' || t.viewMode === 'pdfR') {
                 const isListening = t.viewMode === 'pdfL';
@@ -2352,14 +2382,12 @@
                 docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:35px 10px; font-size:13px; font-weight:600;">Đang chuẩn bị trang đề ${isListening ? 'Listening' : 'Reading'}...</div>`;
                 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-                const isMobile = window.innerWidth <= 768;
-                const renderScale = isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.3);
-
                 pdfjsLib.getDocument(pdfUrl).promise.then(async (pdf) => {
                     docArea.innerHTML = '';
                     const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 360;
+                    const isMobile = window.innerWidth <= 768;
+                    const renderScale = isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25);
 
-                    // Vẽ tuần tự từng trang một để Safari không bị tràn bộ nhớ
                     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                         const page = await pdf.getPage(pageNum);
                         const unscaledViewport = page.getViewport({ scale: 1.0 });
@@ -2410,7 +2438,7 @@
             }
         }
 
-        // Khởi chạy
+        // Khởi chạy ban đầu
         ensureTestDataLoaded(1, () => {
             renderSidebar();
             renderMain();
