@@ -253,7 +253,8 @@
             min-width: 0;
             padding: 10px;
             gap: 10px;
-            overflow: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Audio Toolbar */
@@ -773,7 +774,7 @@
                 border-color: var(--warning) !important;
             }
 
-        /* Questions Grid: Tối ưu bộ nhớ cuộn điện thoại */
+        /* Questions Grid */
         .sheet-body {
             flex: 1;
             overflow-y: auto;
@@ -791,7 +792,6 @@
             display: flex;
             flex-direction: column;
             gap: 3px;
-            contain: content; /* Giúp trình duyệt bỏ qua tính toán khi chưa cuộn tới */
         }
 
         .q-item {
@@ -1296,6 +1296,7 @@
             margin-top: 4px;
         }
 
+        /* TỐI ƯU GIAO DIỆN & CUỘN TRÊN ĐIỆN THOẠI */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -1318,10 +1319,17 @@
 
             .panels-split {
                 flex-direction: column;
+                min-height: auto;
             }
 
             .viewer-panel {
-                height: 45vh;
+                height: 52vh;
+                min-height: 340px;
+                flex: none !important;
+            }
+
+            .sheet-panel {
+                min-height: 60vh;
                 flex: none !important;
             }
 
@@ -1421,7 +1429,7 @@
 
         let isAudioToolbarOpen = true;
         let isFocusPdfMode = false;
-        let currentRenderSession = 0; // Quản lý hủy phiên render cũ tránh nghẽn thread
+        let currentPdfRenderTask = null;
 
         function showCustomDialog({ title = 'Thông báo', message = '', isConfirm = false, onConfirm = null }) {
             const overlay = document.getElementById('customModalOverlay');
@@ -1936,16 +1944,19 @@
             }
         };
 
+        // Hàm ẩn / hiện thanh Audio hoàn toàn
         window.setAudioToolbarVisible = function (visible) {
             isAudioToolbarOpen = visible;
             renderMain();
         };
 
+        // Chế độ mở rộng khung đọc đề Reading
         window.toggleFocusPdfMode = function () {
             isFocusPdfMode = !isFocusPdfMode;
             renderMain();
         };
 
+        // Phím tắt tua nhanh
         window.addEventListener('keydown', (e) => {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
             if (e.key === 'ArrowLeft') {
@@ -1957,7 +1968,7 @@
             }
         });
 
-        // Gắn cờ câu phân vân: Đổi DOM cục bộ
+        // Gắn cờ câu phân vân: Cập nhật DOM cục bộ
         window.toggleFlag = function (q) {
             const t = tests.find(x => x.id === activeId);
             if (!t) return;
@@ -2034,58 +2045,6 @@
             renderQuestionsGridOnly();
         };
 
-        // XÂY DỰNG GIAO DIỆN CÂU HỎI MƯỢT MÀ, TRÁNH KHỰNG MAIN THREAD
-        function createQuestionElement(q, t, testKey, currentExpl) {
-            const hasKey = !!testKey[q];
-            const isWrong = t.isGraded && hasKey && t.answers[q] && t.answers[q] !== testKey[q];
-            const isFlagged = !!t.flags[q];
-            const wrapper = document.createElement('div');
-            wrapper.className = 'q-wrapper';
-
-            const row = document.createElement('div');
-            row.id = `qrow-${q}`;
-            row.className = 'q-item' + (t.isGraded && hasKey ? ' graded' : '') + (isFlagged ? ' flagged' : '');
-
-            const opts = (q >= 7 && q <= 31) ? ['A', 'B', 'C'] : ['A', 'B', 'C', 'D'];
-            let optsHtml = '<div class="q-options">';
-            opts.forEach(l => {
-                let cls = 'q-bubble';
-                if (t.answers[q] === l) cls += ' selected';
-                if (t.isGraded && testKey[q]) {
-                    if (l === testKey[q]) cls += ' right-answer';
-                    if (t.answers[q] === l) cls += (l === testKey[q] ? ' correct' : ' wrong');
-                }
-                optsHtml += `<button type="button" data-opt="${l}" class="${cls}" onclick="onSelectAnswer(${q}, '${l}')">${l}</button>`;
-            });
-            optsHtml += '</div>';
-
-            row.innerHTML = `
-                    <div class="q-left-box">
-                        <button type="button" id="flagbtn-${q}" class="btn-flag ${isFlagged ? 'active' : ''}" onclick="toggleFlag(${q})" title="Gắn cờ câu phân vân">⚑</button>
-                        <span class="q-number">${q}</span>
-                    </div>
-                ` + optsHtml;
-            wrapper.appendChild(row);
-
-            if (isWrong) {
-                const expl = currentExpl[q] || 'Chưa có giải thích chi tiết cho câu này.';
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'btn-quick-expl';
-                btn.innerHTML = '💡 Giải thích câu ' + q;
-                btn.onclick = () => window.toggleInlineExpl(q);
-
-                const explBox = document.createElement('div');
-                explBox.id = `inline-expl-${q}`;
-                explBox.className = 'inline-expl-box';
-                explBox.innerHTML = expl;
-
-                wrapper.appendChild(btn);
-                wrapper.appendChild(explBox);
-            }
-            return wrapper;
-        }
-
         function renderQuestionsGridOnly() {
             const t = tests.find(x => x.id === activeId);
             const grid = document.getElementById('qgridArea');
@@ -2109,36 +2068,67 @@
                 for (let q = range[0]; q <= range[1]; q++) targetQuestions.push(q);
             }
 
-            // Kỹ thuật Chunked Rendering: Hiện ngay 30 câu đầu tiên, các câu sau nạp nối tiếp trong nền
-            currentRenderSession++;
-            const session = currentRenderSession;
-            const chunkSize = 30;
-            let index = 0;
+            const fragment = document.createDocumentFragment();
 
-            function renderBatch() {
-                if (session !== currentRenderSession) return; // Nếu đổi đề hoặc đổi tab thì hủy batch cũ
-                const fragment = document.createDocumentFragment();
-                const end = Math.min(index + chunkSize, targetQuestions.length);
+            targetQuestions.forEach(q => {
+                const hasKey = !!testKey[q];
+                const isWrong = t.isGraded && hasKey && t.answers[q] && t.answers[q] !== testKey[q];
+                const isFlagged = !!t.flags[q];
+                const wrapper = document.createElement('div');
+                wrapper.className = 'q-wrapper';
 
-                for (let i = index; i < end; i++) {
-                    const q = targetQuestions[i];
-                    fragment.appendChild(createQuestionElement(q, t, testKey, currentExpl));
+                const row = document.createElement('div');
+                row.id = `qrow-${q}`;
+                row.className = 'q-item' + (t.isGraded && hasKey ? ' graded' : '') + (isFlagged ? ' flagged' : '');
+
+                const opts = (q >= 7 && q <= 31) ? ['A', 'B', 'C'] : ['A', 'B', 'C', 'D'];
+                let optsHtml = '<div class="q-options">';
+                opts.forEach(l => {
+                    let cls = 'q-bubble';
+                    if (t.answers[q] === l) cls += ' selected';
+                    if (t.isGraded && testKey[q]) {
+                        if (l === testKey[q]) cls += ' right-answer';
+                        if (t.answers[q] === l) cls += (l === testKey[q] ? ' correct' : ' wrong');
+                    }
+                    optsHtml += `<button type="button" data-opt="${l}" class="${cls}" onclick="onSelectAnswer(${q}, '${l}')">${l}</button>`;
+                });
+                optsHtml += '</div>';
+
+                row.innerHTML = `
+              <div class="q-left-box">
+                <button type="button" id="flagbtn-${q}" class="btn-flag ${isFlagged ? 'active' : ''}" onclick="toggleFlag(${q})" title="Gắn cờ câu phân vân">⚑</button>
+                <span class="q-number">${q}</span>
+              </div>
+            ` + optsHtml;
+                wrapper.appendChild(row);
+
+                if (isWrong) {
+                    const expl = currentExpl[q] || 'Chưa có giải thích chi tiết cho câu này.';
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'btn-quick-expl';
+                    btn.innerHTML = '💡 Giải thích câu ' + q;
+                    btn.onclick = () => window.toggleInlineExpl(q);
+
+                    const explBox = document.createElement('div');
+                    explBox.id = `inline-expl-${q}`;
+                    explBox.className = 'inline-expl-box';
+                    explBox.innerHTML = expl;
+
+                    wrapper.appendChild(btn);
+                    wrapper.appendChild(explBox);
                 }
-                grid.appendChild(fragment);
-                index = end;
+                fragment.appendChild(wrapper);
+            });
 
-                if (index < targetQuestions.length) {
-                    requestAnimationFrame(renderBatch);
-                }
-            }
-            renderBatch();
+            grid.appendChild(fragment);
 
             document.querySelectorAll('.part-nav-tab').forEach(tab => {
                 tab.classList.toggle('active', tab.getAttribute('data-part') === activePartFilter);
             });
         }
 
-        // Chọn đáp án cực nhạy 0ms
+        // Chọn đáp án trực tiếp: Không tải lại toàn bộ DOM
         window.onSelectAnswer = function (q, letter) {
             const t = tests.find(x => x.id === activeId);
             if (!t || t.isGraded) return;
@@ -2352,7 +2342,7 @@
 
             renderQuestionsGridOnly();
 
-            // Nạp PDF: Sử dụng scale tối ưu không ngốn RAM
+            // RENDER PDF AN TOÀN TRÊN SAFARI / MOBILE
             const docArea = document.getElementById('docArea');
             if (t.viewMode === 'pdfL' || t.viewMode === 'pdfR') {
                 const isListening = t.viewMode === 'pdfL';
@@ -2362,20 +2352,22 @@
                 docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:35px 10px; font-size:13px; font-weight:600;">Đang chuẩn bị trang đề ${isListening ? 'Listening' : 'Reading'}...</div>`;
                 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
+                const isMobile = window.innerWidth <= 768;
+                const renderScale = isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.3);
+
                 pdfjsLib.getDocument(pdfUrl).promise.then(async (pdf) => {
                     docArea.innerHTML = '';
-                    const containerWidth = docArea.clientWidth - 20;
+                    const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 360;
 
+                    // Vẽ tuần tự từng trang một để Safari không bị tràn bộ nhớ
                     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                         const page = await pdf.getPage(pageNum);
                         const unscaledViewport = page.getViewport({ scale: 1.0 });
-                        const scale = (containerWidth > 0 ? containerWidth : 750) / unscaledViewport.width;
+                        const scale = containerWidth / unscaledViewport.width;
                         const viewport = page.getViewport({ scale: scale });
 
                         const canvas = document.createElement('canvas');
                         canvas.className = 'pdf-canvas-item';
-                        // Giới hạn scale tối đa 1.25x trên mobile để tiết kiệm GPU/RAM
-                        const renderScale = Math.min(window.devicePixelRatio || 1, 1.25);
                         canvas.width = Math.floor(viewport.width * renderScale);
                         canvas.height = Math.floor(viewport.height * renderScale);
                         canvas.style.width = Math.floor(viewport.width) + "px";
@@ -2418,7 +2410,7 @@
             }
         }
 
-        // Khởi chạy ban đầu
+        // Khởi chạy
         ensureTestDataLoaded(1, () => {
             renderSidebar();
             renderMain();
