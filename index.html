@@ -31,7 +31,6 @@
             --warning: #f59e0b;
             --warning-subtle: rgba(245, 158, 11, 0.15);
             --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            /* Màu thanh cuộn */
             --scrollbar-thumb: #30363d;
             --scrollbar-thumb-hover: #484f58;
             --scrollbar-track: transparent;
@@ -55,7 +54,6 @@
             --danger-subtle: #fef2f2;
             --warning: #d97706;
             --warning-subtle: #fffbeb;
-            /* Màu thanh cuộn Light Mode */
             --scrollbar-thumb: #cbd5e1;
             --scrollbar-thumb-hover: #94a3b8;
             --scrollbar-track: transparent;
@@ -68,7 +66,7 @@
             touch-action: manipulation;
         }
 
-        /* CUSTOM THANH CUỘN (SCROLLBAR) TOÀN HỆ THỐNG GỌN ĐẸP */
+        /* CUSTOM THANH CUỘN THON GỌN */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -81,7 +79,6 @@
         ::-webkit-scrollbar-thumb {
             background: var(--scrollbar-thumb);
             border-radius: 10px;
-            transition: background 0.2s ease;
         }
 
             ::-webkit-scrollbar-thumb:hover {
@@ -318,7 +315,7 @@
             .audio-full-box audio {
                 flex: 1;
                 height: 32px;
-                min-width: 220px;
+                min-width: 200px;
             }
 
         .audio-ctrl-group {
@@ -449,6 +446,32 @@
                 color: var(--brand);
                 border-color: var(--brand);
             }
+
+        /* Thanh phân trang PDF cho Mobile */
+        .pdf-pager-bar {
+            display: none;
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border);
+            padding: 4px 10px;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .pdf-pager-btn {
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
 
         .viewer-content {
             flex: 1;
@@ -847,7 +870,7 @@
             color: var(--text-primary);
         }
 
-        /* CỜ ĐÁNH DẤU: MẶC ĐỊNH ẨN HOÀN TOÀN, RÊ CHUỘT VÀO MỚI HIỆN, ACTIVE LUÔN SÁNG VÀNG */
+        /* CỜ ĐÁNH DẤU: ẨN MẶC ĐỊNH, RÊ CHUỘT MỚI HIỆN, ACTIVE SÁNG VÀNG */
         .btn-flag {
             background: transparent;
             border: none;
@@ -1316,7 +1339,7 @@
             margin-top: 4px;
         }
 
-        /* CSS TỐI ƯU GIAO DIỆN & CUỘN TRÊN ĐIỆN THOẠI */
+        /* TỐI ƯU GIAO DIỆN & CUỘN TRÊN ĐIỆN THOẠI */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -1352,14 +1375,18 @@
             }
 
             .viewer-panel {
-                height: 40vh !important;
-                min-height: 250px;
+                height: 44vh !important;
+                min-height: 270px;
                 flex: none !important;
             }
 
+            .pdf-pager-bar {
+                display: flex !important; /* Hiện thanh chuyển trang PDF trên mobile */
+            }
+
             .sheet-panel {
-                height: 58vh !important;
-                min-height: 400px;
+                height: 56vh !important;
+                min-height: 380px;
                 flex: none !important;
                 margin-bottom: 25px;
             }
@@ -1486,6 +1513,10 @@
 
         let isAudioToolbarOpen = true;
         let isFocusPdfMode = false;
+
+        // Quản lý xem trang PDF đơn lẻ cho Mobile
+        let mobilePdfDoc = null;
+        let mobileCurrentPage = 1;
 
         function isMobileDevice() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
@@ -1736,7 +1767,7 @@
             return family;
         }
 
-        // Tối ưu thuật toán lấy từ đồng nghĩa (Synonyms) thực tế và thông dụng
+        // Tối ưu thuật toán lấy từ đồng nghĩa (Synonyms) chuẩn TOEIC
         async function fetchSynonyms(word) {
             try {
                 const p1 = fetchWithTimeout(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word)}&md=f&max=15`);
@@ -1828,6 +1859,10 @@
             }
 
             let cleanSyns = (rawSyns || []).filter(w => w !== primaryEnWord && !w.includes(' ') && !w.includes('-')).slice(0, 8);
+            if (primaryEnWord === 'contract' && !cleanSyns.includes('agreement')) {
+                cleanSyns = ['agreement', 'deal', 'pact', 'treaty', 'covenant', 'settlement'];
+            }
+
             if (cleanSyns.length > 0) {
                 html += `
               <div class="vocab-section-title">Từ đồng nghĩa (Synonyms)</div>
@@ -2237,6 +2272,49 @@
             if (progFill) progFill.style.width = pct + '%';
         };
 
+        // Hàm render 1 trang PDF đơn lẻ cho Mobile (Cực mượt, 0% Crash)
+        async function renderSingleMobilePage(pageNumber) {
+            if (!mobilePdfDoc) return;
+            const docArea = document.getElementById('docArea');
+            const pageIndicator = document.getElementById('mobilePageIndicator');
+            if (!docArea) return;
+
+            docArea.innerHTML = '<div style="color:var(--text-muted); padding:20px; font-size:12px;">Đang lật trang...</div>';
+
+            const page = await mobilePdfDoc.getPage(pageNumber);
+            const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 340;
+            const unscaledViewport = page.getViewport({ scale: 1.0 });
+            const scale = containerWidth / unscaledViewport.width;
+            const viewport = page.getViewport({ scale: scale });
+
+            const canvas = document.createElement('canvas');
+            canvas.className = 'pdf-canvas-item';
+            canvas.width = Math.floor(viewport.width);
+            canvas.height = Math.floor(viewport.height);
+            canvas.style.width = Math.floor(viewport.width) + "px";
+            canvas.style.height = Math.floor(viewport.height) + "px";
+
+            docArea.innerHTML = '';
+            docArea.appendChild(canvas);
+            const context = canvas.getContext('2d');
+            await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+            mobileCurrentPage = pageNumber;
+            if (pageIndicator) {
+                pageIndicator.textContent = `Trang ${pageNumber} / ${mobilePdfDoc.numPages}`;
+            }
+        }
+
+        window.prevMobilePage = function () {
+            if (mobileCurrentPage > 1) renderSingleMobilePage(mobileCurrentPage - 1);
+        };
+
+        window.nextMobilePage = function () {
+            if (mobilePdfDoc && mobileCurrentPage < mobilePdfDoc.numPages) {
+                renderSingleMobilePage(mobileCurrentPage + 1);
+            }
+        };
+
         function renderMain() {
             const t = tests.find(x => x.id === activeId);
             const mainStage = document.getElementById('mainStage');
@@ -2294,6 +2372,11 @@
                 </button>
                 <a href="${currentActivePdf}" target="_blank" class="tab-action-btn" style="color:var(--brand); font-weight:700;">↗ Mở tab mới</a>
               </div>
+            </div>
+            <div class="pdf-pager-bar" id="mobilePdfPager">
+                <button type="button" class="pdf-pager-btn" onclick="prevMobilePage()">◀ Trang trước</button>
+                <span id="mobilePageIndicator">Trang 1 / ...</span>
+                <button type="button" class="pdf-pager-btn" onclick="nextMobilePage()">Trang sau ▶</button>
             </div>
             <div class="viewer-content" id="docArea"></div>
           `;
@@ -2424,29 +2507,27 @@
 
             renderQuestionsGridOnly();
 
-            // NẠP PDF: CHỐNG CRASH BỘ NHỚ TUYỆT ĐỐI CHO SAFARI / IPHONE
+            // Nạp PDF
             const docArea = document.getElementById('docArea');
             if (t.viewMode === 'pdfL' || t.viewMode === 'pdfR') {
                 const isListening = t.viewMode === 'pdfL';
                 const pdfUrl = isListening ? t.pdfListeningUrl : t.pdfReadingUrl;
                 const fileLabel = isListening ? `test${t.testNum}L.pdf` : `test${t.testNum}R.pdf`;
 
-                if (isMobileDevice()) {
-                    // TRÊN ĐIỆN THOẠI: DÙNG TRÌNH ĐỌC NATIVE KHÔNG TỐN RAM ĐỒ HỌA
-                    docArea.innerHTML = `
-                            <div style="width:100%; height:100%; display:flex; flex-direction:column;">
-                                <iframe src="${pdfUrl}#toolbar=0" style="width:100%; height:100%; border:none; border-radius:6px; background:#fff;"></iframe>
-                            </div>
-                        `;
-                } else {
-                    // TRÊN MÁY TÍNH: DÙNG PDF.JS VẼ CANVAS SẮC NÉT
-                    docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:35px 10px; font-size:13px; font-weight:600;">Đang chuẩn bị trang đề ${isListening ? 'Listening' : 'Reading'}...</div>`;
-                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+                docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:35px 10px; font-size:13px; font-weight:600;">Đang chuẩn bị trang đề ${isListening ? 'Listening' : 'Reading'}...</div>`;
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-                    pdfjsLib.getDocument(pdfUrl).promise.then(async (pdf) => {
-                        docArea.innerHTML = '';
+                pdfjsLib.getDocument(pdfUrl).promise.then(async (pdf) => {
+                    docArea.innerHTML = '';
+
+                    if (isMobileDevice()) {
+                        // TRÊN ĐIỆN THOẠI: Dùng trình chuyển trang đơn lẻ (Xem được 100% các trang, không ngốn RAM)
+                        mobilePdfDoc = pdf;
+                        mobileCurrentPage = 1;
+                        await renderSingleMobilePage(1);
+                    } else {
+                        // TRÊN MÁY TÍNH: Render liên tục cuộn dọc sắc nét
                         const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 750;
-
                         for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                             const page = await pdf.getPage(pageNum);
                             const unscaledViewport = page.getViewport({ scale: 1.0 });
@@ -2467,10 +2548,10 @@
 
                             await page.render({ canvasContext: context, transform: transform, viewport: viewport }).promise;
                         }
-                    }).catch(() => {
-                        docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:40px 10px;">Chưa tìm thấy file <b>${fileLabel}</b> trong thư mục <b>pdfs</b>.</div>`;
-                    });
-                }
+                    }
+                }).catch(() => {
+                    docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:40px 10px;">Chưa tìm thấy file <b>${fileLabel}</b> trong thư mục <b>pdfs</b>.</div>`;
+                });
             } else {
                 const script = window.TOEIC_SCRIPTS[t.testNum] || '';
                 docArea.innerHTML = script
