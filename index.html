@@ -31,6 +31,10 @@
             --warning: #f59e0b;
             --warning-subtle: rgba(245, 158, 11, 0.15);
             --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            /* Màu thanh cuộn */
+            --scrollbar-thumb: #30363d;
+            --scrollbar-thumb-hover: #484f58;
+            --scrollbar-track: transparent;
         }
 
         body:not(.dark-theme) {
@@ -51,6 +55,10 @@
             --danger-subtle: #fef2f2;
             --warning: #d97706;
             --warning-subtle: #fffbeb;
+            /* Màu thanh cuộn Light Mode */
+            --scrollbar-thumb: #cbd5e1;
+            --scrollbar-thumb-hover: #94a3b8;
+            --scrollbar-track: transparent;
         }
 
         * {
@@ -58,6 +66,31 @@
             margin: 0;
             padding: 0;
             touch-action: manipulation;
+        }
+
+        /* CUSTOM THANH CUỘN (SCROLLBAR) TOÀN HỆ THỐNG GỌN ĐẸP */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+            transition: background 0.2s ease;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--scrollbar-thumb-hover);
+            }
+
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
         }
 
         body {
@@ -285,7 +318,7 @@
             .audio-full-box audio {
                 flex: 1;
                 height: 32px;
-                min-width: 200px;
+                min-width: 220px;
             }
 
         .audio-ctrl-group {
@@ -424,7 +457,7 @@
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
             background: var(--bg-page);
-            padding: 6px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -814,23 +847,34 @@
             color: var(--text-primary);
         }
 
-        /* Cờ đánh dấu */
+        /* CỜ ĐÁNH DẤU: MẶC ĐỊNH ẨN HOÀN TOÀN, RÊ CHUỘT VÀO MỚI HIỆN, ACTIVE LUÔN SÁNG VÀNG */
         .btn-flag {
             background: transparent;
             border: none;
             cursor: pointer;
             font-size: 11px;
             color: var(--text-muted);
-            opacity: 0.35;
+            opacity: 0;
+            transition: opacity 0.15s ease, transform 0.1s ease;
             padding: 0 1px;
             line-height: 1;
         }
 
-            .btn-flag.active {
-                opacity: 1 !important;
-                color: var(--warning) !important;
-                text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
-            }
+        .q-item:hover .btn-flag {
+            opacity: 0.65;
+        }
+
+        .btn-flag:hover {
+            transform: scale(1.2);
+            color: var(--warning);
+            opacity: 1 !important;
+        }
+
+        .btn-flag.active {
+            opacity: 1 !important;
+            color: var(--warning) !important;
+            text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+        }
 
         .q-options {
             display: flex;
@@ -1692,7 +1736,7 @@
             return family;
         }
 
-        // Tối ưu thuật toán lấy từ đồng nghĩa (Synonyms) chuẩn TOEIC
+        // Tối ưu thuật toán lấy từ đồng nghĩa (Synonyms) thực tế và thông dụng
         async function fetchSynonyms(word) {
             try {
                 const p1 = fetchWithTimeout(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word)}&md=f&max=15`);
@@ -1984,7 +2028,6 @@
             renderMain();
         };
 
-        // Thuần CSS: Không gọi lại renderMain tránh crash trên điện thoại
         window.toggleFocusPdfMode = function () {
             isFocusPdfMode = !isFocusPdfMode;
             const split = document.getElementById('panelsSplitArea');
@@ -2202,7 +2245,7 @@
 
             const testKey = window.TOEIC_KEYS[t.testNum] || {};
 
-            // Audio Bar: Bật preload="none" để bảo vệ RAM Safari
+            // Audio Bar
             if (isAudioToolbarOpen) {
                 const audioBar = document.createElement('div');
                 audioBar.className = 'audio-toolbar';
