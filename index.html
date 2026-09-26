@@ -250,7 +250,7 @@
             overflow: hidden;
         }
 
-        /* Audio Toolbar */
+        /* Audio Toolbar Khi mở / Đóng */
         .audio-toolbar {
             background: var(--bg-surface);
             border: 1px solid var(--border);
@@ -279,7 +279,7 @@
             .audio-full-box audio {
                 flex: 1;
                 height: 32px;
-                min-width: 200px;
+                min-width: 220px;
             }
 
         .audio-ctrl-group {
@@ -334,6 +334,7 @@
             min-height: 0;
         }
 
+        /* Cấu trúc chia đôi linh hoạt */
         .viewer-panel {
             flex: 1.35;
             background: var(--bg-surface);
@@ -346,7 +347,7 @@
         }
 
         .panels-split.focus-mode .viewer-panel {
-            flex: 3.5;
+            flex: 3.5; /* Mở rộng tối đa khi bật chế độ đọc rộng */
         }
 
         .panels-split.focus-mode .sheet-panel {
@@ -418,7 +419,7 @@
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
             background: var(--bg-page);
-            padding: 10px;
+            padding: 14px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -426,8 +427,8 @@
 
         .pdf-canvas-item {
             display: block;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            margin-bottom: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.3);
             background: #ffffff;
             max-width: 100%;
             height: auto;
@@ -436,8 +437,8 @@
 
         /* Transcript */
         .script-container {
-            padding: 14px 16px;
-            line-height: 1.6;
+            padding: 16px 20px;
+            line-height: 1.7;
             background: var(--bg-surface);
             width: 100%;
             max-width: 820px;
@@ -451,36 +452,37 @@
                 color: var(--brand);
                 font-size: 13.5px;
                 font-weight: 800;
-                margin: 18px 0 10px 0;
-                padding-bottom: 5px;
+                margin: 22px 0 12px 0;
+                padding-bottom: 6px;
                 border-bottom: 2px solid var(--border);
                 text-transform: uppercase;
+                letter-spacing: 0.03em;
             }
 
                 .script-container h3:first-child {
-                    margin-top: 2px;
+                    margin-top: 4px;
                 }
 
         .script-question {
             background: var(--bg-subtle);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 10px 14px;
-            margin-bottom: 12px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
         }
 
         .script-speaker {
-            font-size: 12px;
+            font-size: 12.5px;
             font-weight: 800;
             color: var(--brand);
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .script-opt {
-            font-size: 12.5px;
-            padding: 3px 6px;
-            margin: 2px 0;
+            font-size: 13px;
+            padding: 4px 8px;
+            margin: 3px 0;
             color: var(--text-secondary);
         }
 
@@ -488,11 +490,23 @@
                 color: #e11d48 !important;
                 font-weight: 700;
                 background: rgba(225, 29, 72, 0.12) !important;
-                padding: 2px 6px;
+                padding: 2px 8px;
                 border-radius: 4px;
                 border-left: 3px solid #e11d48;
                 display: inline-block;
             }
+
+        .script-dialogue {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--brand);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
 
         /* Sheet Panel */
         .sheet-panel {
@@ -575,7 +589,7 @@
                 color: var(--text-primary);
             }
 
-        /* Score Strip */
+        /* Score Strip & Aim */
         .score-strip {
             background: var(--bg-subtle);
             padding: 8px 12px;
@@ -759,7 +773,6 @@
             flex: 1;
             overflow-y: auto;
             padding: 10px;
-            -webkit-overflow-scrolling: touch;
         }
 
         .q-grid {
@@ -783,6 +796,7 @@
             border: 1px solid var(--border);
             background: var(--bg-surface);
             box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            transition: border-color 0.15s ease, background 0.15s ease;
         }
 
             .q-item.flagged {
@@ -807,22 +821,34 @@
             color: var(--text-primary);
         }
 
+        /* Cờ đánh dấu ẩn mặc định */
         .btn-flag {
             background: transparent;
             border: none;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
-            opacity: 0.35;
-            padding: 2px;
+            opacity: 0;
+            transition: opacity 0.15s ease, transform 0.1s ease;
+            padding: 0 1px;
             line-height: 1;
         }
 
-            .btn-flag.active {
-                opacity: 1 !important;
-                color: var(--warning) !important;
-                text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
-            }
+        .q-item:hover .btn-flag {
+            opacity: 0.6;
+        }
+
+        .btn-flag:hover {
+            transform: scale(1.2);
+            color: var(--warning);
+            opacity: 1 !important;
+        }
+
+        .btn-flag.active {
+            opacity: 1 !important;
+            color: var(--warning) !important;
+            text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+        }
 
         .q-options {
             display: flex;
@@ -842,9 +868,13 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            transition: all 0.12s ease;
         }
+
+            .q-bubble:hover {
+                border-color: var(--brand);
+                color: var(--brand);
+            }
 
             .q-bubble.selected {
                 background: var(--brand) !important;
@@ -959,6 +989,10 @@
                 outline: none;
             }
 
+                .search-row input:focus {
+                    border-color: var(--brand);
+                }
+
             .search-row button {
                 padding: 8px 16px;
                 font-family: inherit;
@@ -989,6 +1023,7 @@
             font-size: 22px;
             font-weight: 800;
             color: var(--brand);
+            letter-spacing: -0.01em;
         }
 
         .vocab-vi-box {
@@ -1000,11 +1035,13 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .vocab-vi-badge {
             font-size: 11px;
             font-weight: 800;
+            letter-spacing: 0.04em;
             padding: 3px 8px;
             border-radius: 5px;
             background: #238636;
@@ -1017,6 +1054,7 @@
             font-size: 14.5px;
             font-weight: 700;
             color: var(--text-primary);
+            letter-spacing: -0.01em;
         }
 
         .vocab-section-title {
@@ -1024,6 +1062,7 @@
             font-weight: 800;
             color: var(--text-muted);
             text-transform: uppercase;
+            letter-spacing: 0.05em;
             margin: 14px 0 8px 0;
         }
 
@@ -1094,6 +1133,47 @@
             border: 1px solid var(--border);
             color: var(--text-primary);
             cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+            .syn-chip:hover {
+                border-color: var(--brand);
+                color: var(--brand);
+                background: var(--brand-subtle);
+            }
+
+        .def-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .def-item-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .def-badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 1px 6px;
+            border-radius: 3px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            color: var(--brand);
+            margin-right: 6px;
+        }
+
+        .vocab-note {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 12px;
         }
 
         .backdrop {
@@ -1173,12 +1253,28 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
+            animation: modalPop 0.16s ease-out;
+        }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.94);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .custom-modal-title {
             font-size: 15px;
             font-weight: 800;
             color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .custom-modal-desc {
@@ -1191,9 +1287,9 @@
             display: flex;
             justify-content: flex-end;
             gap: 8px;
+            margin-top: 4px;
         }
 
-        /* ĐẶC BIỆT: TỐI ƯU GIAO DIỆN & TỐC ĐỘ CHO ĐIỆN THOẠI */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -1219,40 +1315,12 @@
             }
 
             .viewer-panel {
-                height: 48vh;
+                height: 45vh;
                 flex: none !important;
             }
 
-            .sheet-panel {
-                flex: 1;
-                min-height: 42vh;
-            }
-
             .q-grid {
-                grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
-                gap: 5px;
-            }
-
-            .q-bubble {
-                width: 24px;
-                height: 24px;
-                font-size: 10.5px;
-            }
-
-            .audio-toolbar {
-                padding: 4px 8px;
-                gap: 6px;
-            }
-
-            .audio-full-box audio {
-                min-width: 140px;
-                height: 28px;
-            }
-
-            .audio-btn {
-                padding: 2px 6px;
-                font-size: 10px;
-                height: 24px;
+                grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
             }
         }
     </style>
@@ -1278,7 +1346,7 @@
         </div>
     </header>
 
-    <!-- Modal Thông báo -->
+    <!-- Modal Thông báo tùy chỉnh -->
     <div class="custom-modal-overlay" id="customModalOverlay">
         <div class="custom-modal-box">
             <div class="custom-modal-title" id="customModalTitle">Thông báo</div>
@@ -1302,7 +1370,7 @@
                 <input type="text" id="newProfileInput" placeholder="Tên hồ sơ mới...">
                 <button id="createProfileBtn">Tạo & Vào</button>
             </div>
-            <div style="font-size:12px; color:var(--text-muted); margin-top:10px;">Kết quả thi được lưu riêng theo hồ sơ trên trình duyệt này.</div>
+            <div class="vocab-note">Kết quả thi sẽ được lưu riêng theo hồ sơ trên trình duyệt này.</div>
         </div>
     </div>
 
@@ -1326,7 +1394,7 @@
                 <button id="vocabSearchBtn">Tra</button>
             </div>
             <div class="vocab-body" id="vocabResult">
-                <div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px 0;">Hỗ trợ tra hai chiều: Anh ⇄ Việt hoặc Việt ⇄ Anh.</div>
+                <div class="vocab-note" style="text-align:center; padding:20px 0;">Hỗ trợ tra hai chiều: Anh ⇄ Việt hoặc Việt ⇄ Anh.</div>
             </div>
         </div>
 
@@ -1345,12 +1413,9 @@
         window.TOEIC_SCRIPTS = window.TOEIC_SCRIPTS || {};
         window.TOEIC_EXPLANATIONS = window.TOEIC_EXPLANATIONS || {};
 
+        // Trạng thái hiển thị
         let isAudioToolbarOpen = true;
         let isFocusPdfMode = false;
-
-        function isMobileDevice() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-        }
 
         function showCustomDialog({ title = 'Thông báo', message = '', isConfirm = false, onConfirm = null }) {
             const overlay = document.getElementById('customModalOverlay');
@@ -1611,7 +1676,7 @@
             const rawQuery = (keyword || vocabInput.value).trim();
             if (!rawQuery) return;
             vocabInput.value = rawQuery;
-            vocabResult.innerHTML = '<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px 0;">Đang tra cứu và phân tích từ...</div>';
+            vocabResult.innerHTML = '<div class="vocab-note" style="text-align:center; padding:20px 0;">Đang tra cứu và phân tích từ...</div>';
 
             const userEnteredVietnamese = isVietnamese(rawQuery);
             let englishWord = '';
@@ -1664,6 +1729,10 @@
             }
 
             let cleanSyns = (rawSyns || []).filter(w => w !== primaryEnWord && !w.includes(' ') && !w.includes('-')).slice(0, 8);
+            if (primaryEnWord === 'contract' && !cleanSyns.includes('agreement')) {
+                cleanSyns = ['agreement', 'deal', 'pact', 'treaty', 'covenant', 'settlement'];
+            }
+
             if (cleanSyns.length > 0) {
                 html += `
           <div class="vocab-section-title">Từ đồng nghĩa (Synonyms)</div>
@@ -1674,14 +1743,14 @@
             }
 
             if (dmDefData && dmDefData[0] && dmDefData[0].defs) {
-                html += `<div class="vocab-section-title">Định nghĩa chi tiết</div><div>`;
+                html += `<div class="vocab-section-title">Định nghĩa chi tiết</div><div class="def-group">`;
                 dmDefData[0].defs.slice(0, 3).forEach((d, idx) => {
                     const parts = d.split('\t');
                     const pos = parts[0] === 'n' ? 'Noun' : (parts[0] === 'v' ? 'Verb' : (parts[0] === 'adj' ? 'Adj' : parts[0]));
                     const defText = parts[1] || parts[0];
                     html += `
-            <div style="background:var(--bg-surface); border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-size:12px; margin-bottom:6px;">
-              <div><span style="font-size:10px; font-weight:800; padding:1px 5px; border-radius:3px; background:var(--bg-subtle); border:1px solid var(--border); color:var(--brand); margin-right:6px;">${pos}</span><b>${idx + 1}.</b> ${defText}</div>
+            <div class="def-item-card">
+              <div><span class="def-badge">${pos}</span><b>${idx + 1}.</b> ${defText}</div>
             </div>
           `;
                 });
@@ -1689,7 +1758,7 @@
             }
 
             html += `
-          <div style="margin-top:14px; text-align:right; font-size:12px;">
+          <div class="vocab-note" style="margin-top:16px; text-align:right;">
             <a href="https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(primaryEnWord)}" target="_blank" style="color:var(--brand); text-decoration:none; font-weight:600;">Xem trên Cambridge Dictionary ↗</a>
           </div>
         </div>
@@ -1701,6 +1770,13 @@
         document.getElementById('vocabSearchBtn').addEventListener('click', () => lookupWord());
         vocabInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') lookupWord(); });
 
+        document.addEventListener('mouseup', () => {
+            const selection = window.getSelection().toString().trim();
+            if (selection && selection.length > 1 && selection.length < 35 && !selection.includes('\n')) {
+                vocabInput.value = selection;
+            }
+        });
+
         // Lịch sử kết quả
         const historyDrawer = document.getElementById('historyDrawer');
         const historyListEl = document.getElementById('historyListEl');
@@ -1708,30 +1784,27 @@
         function renderHistoryDrawer() {
             const profile = getCurrentProfile();
             if (!profile) {
-                historyListEl.innerHTML = '<div style="color:var(--text-muted); font-size:12px; text-align:center;">Vui lòng bấm nút "👤 Đăng nhập" ở trên để chọn hồ sơ xem lịch sử.</div>';
+                historyListEl.innerHTML = '<div class="vocab-note" style="text-align:center;">Vui lòng bấm nút "👤 Đăng nhập" ở trên để chọn hồ sơ xem lịch sử.</div>';
                 return;
             }
             const list = getResults(profile);
             if (list.length === 0) {
-                historyListEl.innerHTML = `<div style="color:var(--text-muted); font-size:12px; text-align:center;">Chưa có kết quả làm bài nào cho hồ sơ <b>${profile}</b>.</div>`;
+                historyListEl.innerHTML = `<div class="vocab-note" style="text-align:center;">Chưa có kết quả làm bài nào cho hồ sơ <b>${profile}</b>.</div>`;
                 return;
             }
             historyListEl.innerHTML = '';
             list.forEach((r, idx) => {
                 const card = document.createElement('div');
-                card.style.background = 'var(--bg-subtle)';
-                card.style.border = '1px solid var(--border)';
-                card.style.borderRadius = '8px';
+                card.className = 'review-card';
                 card.style.padding = '10px 12px';
-                card.style.marginBottom = '8px';
                 let dateStr = r.date;
                 try { dateStr = new Date(r.date).toLocaleString('vi-VN'); } catch (e) { }
                 card.innerHTML = `
           <div style="font-weight:700; font-size:13px; color:var(--text-primary);">${r.testName} <span style="color:var(--text-muted); font-size:11px;">• ${dateStr}</span></div>
-          <div style="margin-top:4px; font-size:12px; color:var(--text-secondary);">Đúng <b>${r.totalCorrect}</b>/${r.gradedCount} câu • Điểm: <b style="color:var(--brand);">${r.scaled.total}</b>/990 (LC ${r.scaled.lc} | RC ${r.scaled.rc})</div>
+          <div style="margin-top:4px; font-size:12.5px; color:var(--text-secondary);">Đúng <b>${r.totalCorrect}</b>/${r.gradedCount} câu • Điểm: <b style="color:var(--brand);">${r.scaled.total}</b>/990 (LC ${r.scaled.lc} | RC ${r.scaled.rc})</div>
         `;
                 const delBtn = document.createElement('button');
-                delBtn.className = 'btn-outline'; delBtn.style.marginTop = '6px'; delBtn.style.color = 'var(--danger)'; delBtn.textContent = 'Xoá';
+                delBtn.className = 'btn-outline'; delBtn.style.marginTop = '8px'; delBtn.style.color = 'var(--danger)'; delBtn.textContent = 'Xoá kết quả này';
                 delBtn.onclick = () => {
                     saveResults(profile, getResults(profile).filter((_, i) => i !== idx));
                     renderHistoryDrawer();
@@ -1831,6 +1904,7 @@
             }, 1000);
         }
 
+        // Xử lý tăng giảm Aim [-] 450 [+]
         window.changeAim = function (delta) {
             const input = document.getElementById('aimInput');
             if (!input) return;
@@ -1841,6 +1915,7 @@
             localStorage.setItem('toeic_user_aim', val);
         };
 
+        // CÁC HÀM ĐIỀU KHIỂN AUDIO
         window.skipAudio = function (seconds) {
             const audio = document.getElementById('mainAudioPlayer');
             if (audio) {
@@ -1855,17 +1930,19 @@
             }
         };
 
+        // Hàm ẩn / hiện thanh Audio hoàn toàn
         window.setAudioToolbarVisible = function (visible) {
             isAudioToolbarOpen = visible;
             renderMain();
         };
 
+        // Chế độ mở rộng khung đọc đề Reading
         window.toggleFocusPdfMode = function () {
             isFocusPdfMode = !isFocusPdfMode;
             renderMain();
         };
 
-        // Phím tắt tua âm thanh trên máy tính
+        // Phím tắt tua nhanh
         window.addEventListener('keydown', (e) => {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
             if (e.key === 'ArrowLeft') {
@@ -1877,23 +1954,12 @@
             }
         });
 
-        // CẬP NHẬT CỤC BỘ KHÔNG BỊ GIẬT MÀN HÌNH ĐIỆN THOẠI
+        // Gắn cờ câu phân vân
         window.toggleFlag = function (q) {
             const t = tests.find(x => x.id === activeId);
             if (!t) return;
             t.flags[q] = !t.flags[q];
-
-            if (activePartFilter === 'flagged') {
-                renderQuestionsGridOnly();
-                return;
-            }
-
-            const row = document.getElementById(`qrow-${q}`);
-            const btn = document.getElementById(`flagbtn-${q}`);
-            if (row && btn) {
-                row.classList.toggle('flagged', !!t.flags[q]);
-                btn.classList.toggle('active', !!t.flags[q]);
-            }
+            renderQuestionsGridOnly();
         };
 
         function renderSidebar() {
@@ -1969,7 +2035,7 @@
                     if (t.flags[q]) targetQuestions.push(q);
                 }
                 if (targetQuestions.length === 0) {
-                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:30px 10px; color:var(--text-muted); font-size:12.5px; font-weight:600;">Chưa có câu nào được gắn cờ phân vân ⚑.</div>';
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:35px 10px; color:var(--text-muted); font-size:13px; font-weight:600;">Chưa có câu nào được gắn cờ phân vân ⚑.</div>';
                     return;
                 }
             } else {
@@ -1997,13 +2063,13 @@
                         if (l === testKey[q]) cls += ' right-answer';
                         if (t.answers[q] === l) cls += (l === testKey[q] ? ' correct' : ' wrong');
                     }
-                    optsHtml += `<button id="btn-bubble-${q}-${l}" class="${cls}" onclick="onSelectAnswer(${q}, '${l}')">${l}</button>`;
+                    optsHtml += `<button class="${cls}" onclick="onSelectAnswer(${q}, '${l}')">${l}</button>`;
                 });
                 optsHtml += '</div>';
 
                 row.innerHTML = `
           <div class="q-left-box">
-            <button id="flagbtn-${q}" class="btn-flag ${isFlagged ? 'active' : ''}" onclick="toggleFlag(${q})" title="Gắn cờ câu phân vân">⚑</button>
+            <button class="btn-flag ${isFlagged ? 'active' : ''}" onclick="toggleFlag(${q})" title="Gắn cờ câu phân vân">⚑</button>
             <span class="q-number">${q}</span>
           </div>
         ` + optsHtml;
@@ -2032,28 +2098,16 @@
             });
         }
 
-        // CHỌN ĐÁP ÁN CỰC NHẸ CHO DI ĐỘNG (KHÔNG RENDER LẠI TOÀN BỘ DANH SÁCH CÂU HỎI)
         window.onSelectAnswer = function (q, letter) {
             const t = tests.find(x => x.id === activeId);
             if (!t || t.isGraded) return;
-
-            const previousAnswer = t.answers[q];
-            t.answers[q] = (previousAnswer === letter) ? undefined : letter;
-
-            const opts = (q >= 7 && q <= 31) ? ['A', 'B', 'C'] : ['A', 'B', 'C', 'D'];
-            opts.forEach(l => {
-                const el = document.getElementById(`btn-bubble-${q}-${l}`);
-                if (el) {
-                    el.classList.toggle('selected', t.answers[q] === l);
-                }
-            });
+            t.answers[q] = (t.answers[q] === letter) ? undefined : letter;
+            renderQuestionsGridOnly();
 
             const count = Object.keys(t.answers).length;
             const pct = Math.round((count / 200) * 100);
-            const scoreEl = document.getElementById('scoreDisplay');
-            const progFill = document.getElementById('progressBarFill');
-            if (scoreEl) scoreEl.textContent = `Đã làm: ${count}/200 (${pct}%)`;
-            if (progFill) progFill.style.width = pct + '%';
+            document.getElementById('scoreDisplay').textContent = `Đã làm: ${count}/200 (${pct}%)`;
+            document.getElementById('progressBarFill').style.width = pct + '%';
         };
 
         function renderMain() {
@@ -2064,7 +2118,7 @@
 
             const testKey = window.TOEIC_KEYS[t.testNum] || {};
 
-            // Audio Toolbar độc lập
+            // Audio Bar độc lập (chỉ xuất hiện khi isAudioToolbarOpen = true)
             if (isAudioToolbarOpen) {
                 const audioBar = document.createElement('div');
                 audioBar.className = 'audio-toolbar';
@@ -2086,7 +2140,7 @@
               </select>
             </div>
           </div>
-          <button class="btn-hide-audio" onclick="setAudioToolbarVisible(false)" title="Đóng thanh Audio để rộng chỗ đọc đề Reading">✕ Đóng</button>
+          <button class="btn-hide-audio" onclick="setAudioToolbarVisible(false)" title="Đóng thanh Audio để rộng chỗ đọc đề Reading">✕ Đóng Audio</button>
         `;
                 mainStage.appendChild(audioBar);
             }
@@ -2242,55 +2296,43 @@
 
             renderQuestionsGridOnly();
 
-            // NẠP PDF & TỐI ƯU CỰC MƯỢT TRÊN ĐIỆN THOẠI
+            // Nạp PDF / Transcript
             const docArea = document.getElementById('docArea');
             if (t.viewMode === 'pdfL' || t.viewMode === 'pdfR') {
                 const isListening = t.viewMode === 'pdfL';
                 const pdfUrl = isListening ? t.pdfListeningUrl : t.pdfReadingUrl;
                 const fileLabel = isListening ? `test${t.testNum}L.pdf` : `test${t.testNum}R.pdf`;
 
-                if (isMobileDevice()) {
-                    // Trên điện thoại: Nhúng iframe trực tiếp chạy bộ giải mã PDF Native bằng phần cứng, không tốn RAM
-                    docArea.innerHTML = `
-            <div style="width:100%; height:100%; display:flex; flex-direction:column;">
-              <iframe src="${pdfUrl}#toolbar=0" style="width:100%; height:100%; border:none; border-radius:6px; background:#fff;"></iframe>
-            </div>
-          `;
-                } else {
-                    // Trên máy tính: Dùng pdf.js với kích thước giới hạn 1.2x không gây tràn bộ nhớ
-                    docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:35px 10px; font-size:13px; font-weight:600;">Đang chuẩn bị trang đề ${isListening ? 'Listening' : 'Reading'}...</div>`;
-                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+                docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:35px 10px; font-size:13px; font-weight:600;">Đang tải trang đề ${isListening ? 'Listening' : 'Reading'}...</div>`;
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-                    pdfjsLib.getDocument(pdfUrl).promise.then(async (pdf) => {
-                        docArea.innerHTML = '';
-                        const containerWidth = docArea.clientWidth - 20;
+                pdfjsLib.getDocument(pdfUrl).promise.then(async (pdf) => {
+                    docArea.innerHTML = '';
+                    const containerWidth = docArea.clientWidth - 20;
 
-                        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-                            const page = await pdf.getPage(pageNum);
-                            const unscaledViewport = page.getViewport({ scale: 1.0 });
-                            const scale = (containerWidth > 0 ? containerWidth : 750) / unscaledViewport.width;
-                            const viewport = page.getViewport({ scale: scale });
+                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                        const page = await pdf.getPage(pageNum);
+                        const unscaledViewport = page.getViewport({ scale: 1.0 });
+                        const scale = (containerWidth > 0 ? containerWidth : 750) / unscaledViewport.width;
+                        const viewport = page.getViewport({ scale: scale });
 
-                            const canvas = document.createElement('canvas');
-                            canvas.className = 'pdf-canvas-item';
-                            const renderScale = 1.2;
-                            canvas.width = Math.floor(viewport.width * renderScale);
-                            canvas.height = Math.floor(viewport.height * renderScale);
-                            canvas.style.width = Math.floor(viewport.width) + "px";
-                            canvas.style.height = Math.floor(viewport.height) + "px";
+                        const canvas = document.createElement('canvas');
+                        canvas.className = 'pdf-canvas-item';
+                        const outputScale = window.devicePixelRatio || 1;
+                        canvas.width = Math.floor(viewport.width * outputScale);
+                        canvas.height = Math.floor(viewport.height * outputScale);
+                        canvas.style.width = Math.floor(viewport.width) + "px";
+                        canvas.style.height = Math.floor(viewport.height) + "px";
 
-                            docArea.appendChild(canvas);
-                            const context = canvas.getContext('2d');
-                            await page.render({
-                                canvasContext: context,
-                                transform: [renderScale, 0, 0, renderScale, 0, 0],
-                                viewport: viewport
-                            }).promise;
-                        }
-                    }).catch(() => {
-                        docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:40px 10px;">Chưa tìm thấy file <b>${fileLabel}</b> trong thư mục <b>pdfs</b>.</div>`;
-                    });
-                }
+                        docArea.appendChild(canvas);
+                        const context = canvas.getContext('2d');
+                        const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+
+                        await page.render({ canvasContext: context, transform: transform, viewport: viewport }).promise;
+                    }
+                }).catch(() => {
+                    docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:40px 10px;">Chưa tìm thấy file <b>${fileLabel}</b> trong thư mục <b>pdfs</b>.</div>`;
+                });
             } else {
                 const script = window.TOEIC_SCRIPTS[t.testNum] || '';
                 docArea.innerHTML = script
@@ -2298,6 +2340,7 @@
                     : `<div style="padding:40px; color:var(--text-muted); text-align:center;">Chưa có transcript cho đề này.</div>`;
             }
 
+            // Tự động ẩn hẳn Audio khi chuyển sang đề Reading
             document.getElementById('tabPdfL').addEventListener('click', () => {
                 t.viewMode = 'pdfL';
                 isAudioToolbarOpen = true;
@@ -2305,7 +2348,7 @@
             });
             document.getElementById('tabPdfR').addEventListener('click', () => {
                 t.viewMode = 'pdfR';
-                isAudioToolbarOpen = false;
+                isAudioToolbarOpen = false; // Tự động đóng hoàn toàn khi xem Reading
                 renderMain();
             });
             document.getElementById('tabTranscript').addEventListener('click', () => {
