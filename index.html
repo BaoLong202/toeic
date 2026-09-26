@@ -57,6 +57,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            touch-action: manipulation; /* Tối ưu cảm ứng mobile: khử trễ 300ms */
         }
 
         body {
@@ -69,6 +70,12 @@
             flex-direction: column;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
+        }
+
+        /* Nút cảm ứng tức thì trên điện thoại */
+        button, .q-bubble, .btn-flag, .part-nav-tab, .viewer-tab, .btn-outline {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Header */
@@ -250,7 +257,7 @@
             overflow: hidden;
         }
 
-        /* Audio Toolbar Khi mở / Đóng */
+        /* Audio Toolbar */
         .audio-toolbar {
             background: var(--bg-surface);
             border: 1px solid var(--border);
@@ -347,7 +354,7 @@
         }
 
         .panels-split.focus-mode .viewer-panel {
-            flex: 3.5; /* Mở rộng tối đa khi bật chế độ đọc rộng */
+            flex: 3.5;
         }
 
         .panels-split.focus-mode .sheet-panel {
@@ -773,6 +780,7 @@
             flex: 1;
             overflow-y: auto;
             padding: 10px;
+            -webkit-overflow-scrolling: touch;
         }
 
         .q-grid {
@@ -1700,32 +1708,32 @@
             ]);
 
             let html = `
-        <div class="vocab-card">
-          <div style="display:flex; justify-content:space-between; align-items:baseline;">
-            <span class="vocab-word">${englishWord}</span>
-          </div>
-      `;
+            <div class="vocab-card">
+              <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                <span class="vocab-word">${englishWord}</span>
+              </div>
+          `;
 
             if (vietnameseMeaning) {
                 html += `
-          <div class="vocab-vi-box">
-            <span class="vocab-vi-badge">Tiếng Việt</span>
-            <span class="vocab-vi-text">${vietnameseMeaning}</span>
-          </div>
-        `;
+              <div class="vocab-vi-box">
+                <span class="vocab-vi-badge">Tiếng Việt</span>
+                <span class="vocab-vi-text">${vietnameseMeaning}</span>
+              </div>
+            `;
             }
 
             const hasFamily = Object.values(family).some(arr => arr.length > 0);
             if (hasFamily) {
                 html += `
-          <div class="vocab-section-title">Họ từ vựng (Word Family)</div>
-          <div class="word-family-grid">
-            ${family.n.length ? `<div class="family-row"><span class="family-tag n">Noun</span><span class="family-words">${family.n.join(', ')}</span></div>` : ''}
-            ${family.v.length ? `<div class="family-row"><span class="family-tag v">Verb</span><span class="family-words">${family.v.join(', ')}</span></div>` : ''}
-            ${family.adj.length ? `<div class="family-row"><span class="family-tag adj">Adj</span><span class="family-words">${family.adj.join(', ')}</span></div>` : ''}
-            ${family.adv.length ? `<div class="family-row"><span class="family-tag adv">Adv</span><span class="family-words">${family.adv.join(', ')}</span></div>` : ''}
-          </div>
-        `;
+              <div class="vocab-section-title">Họ từ vựng (Word Family)</div>
+              <div class="word-family-grid">
+                ${family.n.length ? `<div class="family-row"><span class="family-tag n">Noun</span><span class="family-words">${family.n.join(', ')}</span></div>` : ''}
+                ${family.v.length ? `<div class="family-row"><span class="family-tag v">Verb</span><span class="family-words">${family.v.join(', ')}</span></div>` : ''}
+                ${family.adj.length ? `<div class="family-row"><span class="family-tag adj">Adj</span><span class="family-words">${family.adj.join(', ')}</span></div>` : ''}
+                ${family.adv.length ? `<div class="family-row"><span class="family-tag adv">Adv</span><span class="family-words">${family.adv.join(', ')}</span></div>` : ''}
+              </div>
+            `;
             }
 
             let cleanSyns = (rawSyns || []).filter(w => w !== primaryEnWord && !w.includes(' ') && !w.includes('-')).slice(0, 8);
@@ -1735,11 +1743,11 @@
 
             if (cleanSyns.length > 0) {
                 html += `
-          <div class="vocab-section-title">Từ đồng nghĩa (Synonyms)</div>
-          <div class="synonym-chips">
-            ${cleanSyns.map(s => `<span class="syn-chip" onclick="lookupWord('${s}')">${s}</span>`).join('')}
-          </div>
-        `;
+              <div class="vocab-section-title">Từ đồng nghĩa (Synonyms)</div>
+              <div class="synonym-chips">
+                ${cleanSyns.map(s => `<span class="syn-chip" onclick="lookupWord('${s}')">${s}</span>`).join('')}
+              </div>
+            `;
             }
 
             if (dmDefData && dmDefData[0] && dmDefData[0].defs) {
@@ -1749,20 +1757,20 @@
                     const pos = parts[0] === 'n' ? 'Noun' : (parts[0] === 'v' ? 'Verb' : (parts[0] === 'adj' ? 'Adj' : parts[0]));
                     const defText = parts[1] || parts[0];
                     html += `
-            <div class="def-item-card">
-              <div><span class="def-badge">${pos}</span><b>${idx + 1}.</b> ${defText}</div>
-            </div>
-          `;
+                <div class="def-item-card">
+                  <div><span class="def-badge">${pos}</span><b>${idx + 1}.</b> ${defText}</div>
+                </div>
+              `;
                 });
                 html += `</div>`;
             }
 
             html += `
-          <div class="vocab-note" style="margin-top:16px; text-align:right;">
-            <a href="https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(primaryEnWord)}" target="_blank" style="color:var(--brand); text-decoration:none; font-weight:600;">Xem trên Cambridge Dictionary ↗</a>
-          </div>
-        </div>
-      `;
+              <div class="vocab-note" style="margin-top:16px; text-align:right;">
+                <a href="https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(primaryEnWord)}" target="_blank" style="color:var(--brand); text-decoration:none; font-weight:600;">Xem trên Cambridge Dictionary ↗</a>
+              </div>
+            </div>
+          `;
 
             vocabResult.innerHTML = html;
         }
@@ -1800,9 +1808,9 @@
                 let dateStr = r.date;
                 try { dateStr = new Date(r.date).toLocaleString('vi-VN'); } catch (e) { }
                 card.innerHTML = `
-          <div style="font-weight:700; font-size:13px; color:var(--text-primary);">${r.testName} <span style="color:var(--text-muted); font-size:11px;">• ${dateStr}</span></div>
-          <div style="margin-top:4px; font-size:12.5px; color:var(--text-secondary);">Đúng <b>${r.totalCorrect}</b>/${r.gradedCount} câu • Điểm: <b style="color:var(--brand);">${r.scaled.total}</b>/990 (LC ${r.scaled.lc} | RC ${r.scaled.rc})</div>
-        `;
+              <div style="font-weight:700; font-size:13px; color:var(--text-primary);">${r.testName} <span style="color:var(--text-muted); font-size:11px;">• ${dateStr}</span></div>
+              <div style="margin-top:4px; font-size:12.5px; color:var(--text-secondary);">Đúng <b>${r.totalCorrect}</b>/${r.gradedCount} câu • Điểm: <b style="color:var(--brand);">${r.scaled.total}</b>/990 (LC ${r.scaled.lc} | RC ${r.scaled.rc})</div>
+            `;
                 const delBtn = document.createElement('button');
                 delBtn.className = 'btn-outline'; delBtn.style.marginTop = '8px'; delBtn.style.color = 'var(--danger)'; delBtn.textContent = 'Xoá kết quả này';
                 delBtn.onclick = () => {
@@ -1954,12 +1962,23 @@
             }
         });
 
-        // Gắn cờ câu phân vân
+        // Gắn cờ câu phân vân - Cập nhật DOM cục bộ tức thì
         window.toggleFlag = function (q) {
             const t = tests.find(x => x.id === activeId);
             if (!t) return;
             t.flags[q] = !t.flags[q];
-            renderQuestionsGridOnly();
+
+            if (activePartFilter === 'flagged') {
+                renderQuestionsGridOnly();
+                return;
+            }
+
+            const row = document.getElementById(`qrow-${q}`);
+            const btn = document.getElementById(`flagbtn-${q}`);
+            if (row && btn) {
+                row.classList.toggle('flagged', !!t.flags[q]);
+                btn.classList.toggle('active', !!t.flags[q]);
+            }
         };
 
         function renderSidebar() {
@@ -2063,21 +2082,22 @@
                         if (l === testKey[q]) cls += ' right-answer';
                         if (t.answers[q] === l) cls += (l === testKey[q] ? ' correct' : ' wrong');
                     }
-                    optsHtml += `<button class="${cls}" onclick="onSelectAnswer(${q}, '${l}')">${l}</button>`;
+                    optsHtml += `<button type="button" data-opt="${l}" class="${cls}" onclick="onSelectAnswer(${q}, '${l}')">${l}</button>`;
                 });
                 optsHtml += '</div>';
 
                 row.innerHTML = `
-          <div class="q-left-box">
-            <button class="btn-flag ${isFlagged ? 'active' : ''}" onclick="toggleFlag(${q})" title="Gắn cờ câu phân vân">⚑</button>
-            <span class="q-number">${q}</span>
-          </div>
-        ` + optsHtml;
+              <div class="q-left-box">
+                <button type="button" id="flagbtn-${q}" class="btn-flag ${isFlagged ? 'active' : ''}" onclick="toggleFlag(${q})" title="Gắn cờ câu phân vân">⚑</button>
+                <span class="q-number">${q}</span>
+              </div>
+            ` + optsHtml;
                 wrapper.appendChild(row);
 
                 if (isWrong) {
                     const expl = currentExpl[q] || 'Chưa có giải thích chi tiết cho câu này.';
                     const btn = document.createElement('button');
+                    btn.type = 'button';
                     btn.className = 'btn-quick-expl';
                     btn.innerHTML = '💡 Giải thích câu ' + q;
                     btn.onclick = () => window.toggleInlineExpl(q);
@@ -2098,16 +2118,32 @@
             });
         }
 
+        // Tối ưu chọn đáp án: cập nhật trực tiếp tại dòng câu hỏi, không vẽ lại toàn bộ DOM
         window.onSelectAnswer = function (q, letter) {
             const t = tests.find(x => x.id === activeId);
             if (!t || t.isGraded) return;
-            t.answers[q] = (t.answers[q] === letter) ? undefined : letter;
-            renderQuestionsGridOnly();
+
+            const previousAnswer = t.answers[q];
+            t.answers[q] = (previousAnswer === letter) ? undefined : letter;
+
+            const row = document.getElementById(`qrow-${q}`);
+            if (row) {
+                const bubbles = row.querySelectorAll('.q-bubble');
+                bubbles.forEach(b => {
+                    if (b.getAttribute('data-opt') === letter) {
+                        b.classList.toggle('selected', t.answers[q] === letter);
+                    } else {
+                        b.classList.remove('selected');
+                    }
+                });
+            }
 
             const count = Object.keys(t.answers).length;
             const pct = Math.round((count / 200) * 100);
-            document.getElementById('scoreDisplay').textContent = `Đã làm: ${count}/200 (${pct}%)`;
-            document.getElementById('progressBarFill').style.width = pct + '%';
+            const scoreEl = document.getElementById('scoreDisplay');
+            const progFill = document.getElementById('progressBarFill');
+            if (scoreEl) scoreEl.textContent = `Đã làm: ${count}/200 (${pct}%)`;
+            if (progFill) progFill.style.width = pct + '%';
         };
 
         function renderMain() {
@@ -2123,25 +2159,25 @@
                 const audioBar = document.createElement('div');
                 audioBar.className = 'audio-toolbar';
                 audioBar.innerHTML = `
-          <div class="audio-full-box">
-            <audio id="mainAudioPlayer" controls src="${t.audioUrl}"></audio>
-            <div class="audio-ctrl-group">
-              <button class="audio-btn" onclick="skipAudio(-10)" title="Lùi 10s">↺ 10s</button>
-              <button class="audio-btn" onclick="skipAudio(-5)" title="Lùi 5s (phím ←)">↺ 5s</button>
-              <button class="audio-btn" onclick="skipAudio(5)" title="Tiến 5s (phím →)">5s ↻</button>
-              <button class="audio-btn" onclick="skipAudio(10)" title="Tiến 10s">10s ↻</button>
-              <select class="select-native" onchange="changeAudioSpeed(this.value)" title="Tốc độ phát">
-                <option value="0.75">0.75x</option>
-                <option value="1.0" selected>1.0x</option>
-                <option value="1.1">1.1x</option>
-                <option value="1.2">1.2x</option>
-                <option value="1.25">1.25x</option>
-                <option value="1.5">1.5x</option>
-              </select>
-            </div>
-          </div>
-          <button class="btn-hide-audio" onclick="setAudioToolbarVisible(false)" title="Đóng thanh Audio để rộng chỗ đọc đề Reading">✕ Đóng Audio</button>
-        `;
+              <div class="audio-full-box">
+                <audio id="mainAudioPlayer" controls src="${t.audioUrl}"></audio>
+                <div class="audio-ctrl-group">
+                  <button type="button" class="audio-btn" onclick="skipAudio(-10)" title="Lùi 10s">↺ 10s</button>
+                  <button type="button" class="audio-btn" onclick="skipAudio(-5)" title="Lùi 5s (phím ←)">↺ 5s</button>
+                  <button type="button" class="audio-btn" onclick="skipAudio(5)" title="Tiến 5s (phím →)">5s ↻</button>
+                  <button type="button" class="audio-btn" onclick="skipAudio(10)" title="Tiến 10s">10s ↻</button>
+                  <select class="select-native" onchange="changeAudioSpeed(this.value)" title="Tốc độ phát">
+                    <option value="0.75">0.75x</option>
+                    <option value="1.0" selected>1.0x</option>
+                    <option value="1.1">1.1x</option>
+                    <option value="1.2">1.2x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                  </select>
+                </div>
+              </div>
+              <button type="button" class="btn-hide-audio" onclick="setAudioToolbarVisible(false)" title="Đóng thanh Audio để rộng chỗ đọc đề Reading">✕ Đóng Audio</button>
+            `;
                 mainStage.appendChild(audioBar);
             }
 
@@ -2154,21 +2190,21 @@
             const viewerPanel = document.createElement('div');
             viewerPanel.className = 'viewer-panel';
             viewerPanel.innerHTML = `
-        <div class="viewer-tabs">
-          <button class="viewer-tab ${t.viewMode === 'pdfL' ? 'active' : ''}" id="tabPdfL">Đề Listening (PDF)</button>
-          <button class="viewer-tab ${t.viewMode === 'pdfR' ? 'active' : ''}" id="tabPdfR">Đề Reading (PDF)</button>
-          <button class="viewer-tab ${t.viewMode === 'transcript' ? 'active' : ''}" id="tabTranscript">Listening Script</button>
+            <div class="viewer-tabs">
+              <button type="button" class="viewer-tab ${t.viewMode === 'pdfL' ? 'active' : ''}" id="tabPdfL">Đề Listening (PDF)</button>
+              <button type="button" class="viewer-tab ${t.viewMode === 'pdfR' ? 'active' : ''}" id="tabPdfR">Đề Reading (PDF)</button>
+              <button type="button" class="viewer-tab ${t.viewMode === 'transcript' ? 'active' : ''}" id="tabTranscript">Listening Script</button>
 
-          <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
-            ${!isAudioToolbarOpen ? `<button class="tab-action-btn" onclick="setAudioToolbarVisible(true)" style="color:var(--brand); font-weight:700;">🔊 Mở Audio</button>` : ''}
-            <button class="tab-action-btn" onclick="toggleFocusPdfMode()" title="Mở rộng / Thu gọn khung đọc đề">
-              ${isFocusPdfMode ? '⛶ Thu gọn đề' : '⛶ Đọc rộng hơn'}
-            </button>
-            <a href="${currentActivePdf}" target="_blank" class="tab-action-btn" style="color:var(--brand); font-weight:700;">↗ Mở tab mới</a>
-          </div>
-        </div>
-        <div class="viewer-content" id="docArea"></div>
-      `;
+              <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
+                ${!isAudioToolbarOpen ? `<button type="button" class="tab-action-btn" onclick="setAudioToolbarVisible(true)" style="color:var(--brand); font-weight:700;">🔊 Mở Audio</button>` : ''}
+                <button type="button" class="tab-action-btn" onclick="toggleFocusPdfMode()" title="Mở rộng / Thu gọn khung đọc đề">
+                  ${isFocusPdfMode ? '⛶ Thu gọn đề' : '⛶ Đọc rộng hơn'}
+                </button>
+                <a href="${currentActivePdf}" target="_blank" class="tab-action-btn" style="color:var(--brand); font-weight:700;">↗ Mở tab mới</a>
+              </div>
+            </div>
+            <div class="viewer-content" id="docArea"></div>
+          `;
             panels.appendChild(viewerPanel);
 
             // Phiếu làm bài
@@ -2178,63 +2214,63 @@
             const pct = Math.round((count / 200) * 100);
 
             sheetPanel.innerHTML = `
-        <div class="sheet-header">
-          <span class="sheet-title">${t.name}</span>
-          <div class="sheet-actions">
-            <select id="testSelector" class="select-native">
-              ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<option value="${n}" ${t.testNum === n ? 'selected' : ''}>Đề ${n}</option>`).join('')}
-            </select>
-            <button id="clearBtn" class="btn-reset">Làm lại</button>
-            <button id="gradeBtn" class="btn-submit">Chấm bài</button>
-          </div>
-        </div>
-        <div class="score-strip">
-          <div class="score-row-top">
-            <div class="strip-left">
-              <div class="aim-box">
-                <span>Aim:</span>
-                <div class="aim-control-group">
-                  <button class="aim-btn" onclick="changeAim(-50)">-</button>
-                  <input type="number" id="aimInput" value="${userAimScore}" step="50" min="10" max="990">
-                  <button class="aim-btn" onclick="changeAim(50)">+</button>
-                </div>
-              </div>
-              <div class="timer-box">
-                <select id="timerModeSelect" class="select-native">
-                  <option value="120" ${selectedTimerMode === '120' ? 'selected' : ''}>120 phút (Full)</option>
-                  <option value="75" ${selectedTimerMode === '75' ? 'selected' : ''}>75 phút (Reading)</option>
-                  <option value="45" ${selectedTimerMode === '45' ? 'selected' : ''}>45 phút (Listening)</option>
-                  <option value="none" ${selectedTimerMode === 'none' ? 'selected' : ''}>Không giới hạn</option>
+            <div class="sheet-header">
+              <span class="sheet-title">${t.name}</span>
+              <div class="sheet-actions">
+                <select id="testSelector" class="select-native">
+                  ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<option value="${n}" ${t.testNum === n ? 'selected' : ''}>Đề ${n}</option>`).join('')}
                 </select>
-                <span class="timer-display" id="timerText">${selectedTimerMode === 'none' ? '--:--' : formatTimer(timerSeconds)}</span>
-                <button id="timerToggleBtn" class="btn-outline" style="padding:3px 7px; font-size:11px;">
-                  ${isTimerRunning ? 'Dừng' : 'Chạy'}
-                </button>
+                <button type="button" id="clearBtn" class="btn-reset">Làm lại</button>
+                <button type="button" id="gradeBtn" class="btn-submit">Chấm bài</button>
               </div>
             </div>
-            <div id="scoreDisplay" class="score-metric">Đã làm: ${count}/200 (${pct}%)</div>
-          </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="progressBarFill" style="width: ${pct}%;"></div>
-          </div>
-        </div>
+            <div class="score-strip">
+              <div class="score-row-top">
+                <div class="strip-left">
+                  <div class="aim-box">
+                    <span>Aim:</span>
+                    <div class="aim-control-group">
+                      <button type="button" class="aim-btn" onclick="changeAim(-50)">-</button>
+                      <input type="number" id="aimInput" value="${userAimScore}" step="50" min="10" max="990">
+                      <button type="button" class="aim-btn" onclick="changeAim(50)">+</button>
+                    </div>
+                  </div>
+                  <div class="timer-box">
+                    <select id="timerModeSelect" class="select-native">
+                      <option value="120" ${selectedTimerMode === '120' ? 'selected' : ''}>120 phút (Full)</option>
+                      <option value="75" ${selectedTimerMode === '75' ? 'selected' : ''}>75 phút (Reading)</option>
+                      <option value="45" ${selectedTimerMode === '45' ? 'selected' : ''}>45 phút (Listening)</option>
+                      <option value="none" ${selectedTimerMode === 'none' ? 'selected' : ''}>Không giới hạn</option>
+                    </select>
+                    <span class="timer-display" id="timerText">${selectedTimerMode === 'none' ? '--:--' : formatTimer(timerSeconds)}</span>
+                    <button type="button" id="timerToggleBtn" class="btn-outline" style="padding:3px 7px; font-size:11px;">
+                      ${isTimerRunning ? 'Dừng' : 'Chạy'}
+                    </button>
+                  </div>
+                </div>
+                <div id="scoreDisplay" class="score-metric">Đã làm: ${count}/200 (${pct}%)</div>
+              </div>
+              <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBarFill" style="width: ${pct}%;"></div>
+              </div>
+            </div>
 
-        <div class="part-nav-tabs">
-          <button class="part-nav-tab active" data-part="all" onclick="switchPartTab('all')">Tất cả</button>
-          <button class="part-nav-tab flag-tab" data-part="flagged" onclick="switchPartTab('flagged')">⚑ Đã gắn cờ</button>
-          <button class="part-nav-tab" data-part="p1" onclick="switchPartTab('p1')">Part 1</button>
-          <button class="part-nav-tab" data-part="p2" onclick="switchPartTab('p2')">Part 2</button>
-          <button class="part-nav-tab" data-part="p3" onclick="switchPartTab('p3')">Part 3</button>
-          <button class="part-nav-tab" data-part="p4" onclick="switchPartTab('p4')">Part 4</button>
-          <button class="part-nav-tab" data-part="p5" onclick="switchPartTab('p5')">Part 5</button>
-          <button class="part-nav-tab" data-part="p6" onclick="switchPartTab('p6')">Part 6</button>
-          <button class="part-nav-tab" data-part="p7" onclick="switchPartTab('p7')">Part 7</button>
-        </div>
+            <div class="part-nav-tabs">
+              <button type="button" class="part-nav-tab active" data-part="all" onclick="switchPartTab('all')">Tất cả</button>
+              <button type="button" class="part-nav-tab flag-tab" data-part="flagged" onclick="switchPartTab('flagged')">⚑ Đã gắn cờ</button>
+              <button type="button" class="part-nav-tab" data-part="p1" onclick="switchPartTab('p1')">Part 1</button>
+              <button type="button" class="part-nav-tab" data-part="p2" onclick="switchPartTab('p2')">Part 2</button>
+              <button type="button" class="part-nav-tab" data-part="p3" onclick="switchPartTab('p3')">Part 3</button>
+              <button type="button" class="part-nav-tab" data-part="p4" onclick="switchPartTab('p4')">Part 4</button>
+              <button type="button" class="part-nav-tab" data-part="p5" onclick="switchPartTab('p5')">Part 5</button>
+              <button type="button" class="part-nav-tab" data-part="p6" onclick="switchPartTab('p6')">Part 6</button>
+              <button type="button" class="part-nav-tab" data-part="p7" onclick="switchPartTab('p7')">Part 7</button>
+            </div>
 
-        <div class="sheet-body">
-          <div class="q-grid" id="qgridArea"></div>
-        </div>
-      `;
+            <div class="sheet-body">
+              <div class="q-grid" id="qgridArea"></div>
+            </div>
+          `;
             panels.appendChild(sheetPanel);
             mainStage.appendChild(panels);
 
