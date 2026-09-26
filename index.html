@@ -285,7 +285,7 @@
             .audio-full-box audio {
                 flex: 1;
                 height: 32px;
-                min-width: 220px;
+                min-width: 200px;
             }
 
         .audio-ctrl-group {
@@ -424,7 +424,7 @@
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
             background: var(--bg-page);
-            padding: 10px;
+            padding: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -438,18 +438,6 @@
             max-width: 100%;
             height: auto;
             border-radius: 4px;
-        }
-
-        .btn-load-more-pdf {
-            padding: 8px 16px;
-            margin: 12px 0;
-            border-radius: 6px;
-            border: 1px solid var(--brand);
-            background: var(--brand-subtle);
-            color: var(--brand);
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
         }
 
         /* Transcript */
@@ -826,6 +814,7 @@
             color: var(--text-primary);
         }
 
+        /* Cờ đánh dấu */
         .btn-flag {
             background: transparent;
             border: none;
@@ -1319,14 +1308,14 @@
             }
 
             .viewer-panel {
-                height: 38vh !important;
-                min-height: 240px;
+                height: 40vh !important;
+                min-height: 250px;
                 flex: none !important;
             }
 
             .sheet-panel {
-                height: 60vh !important;
-                min-height: 420px;
+                height: 58vh !important;
+                min-height: 400px;
                 flex: none !important;
                 margin-bottom: 25px;
             }
@@ -1357,7 +1346,6 @@
                 grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
             }
 
-            /* Ẩn nút đọc rộng hơn trên mobile vì màn hình dọc không dùng tỉ lệ cột ngang */
             #btnToggleFocus {
                 display: none !important;
             }
@@ -1454,6 +1442,10 @@
 
         let isAudioToolbarOpen = true;
         let isFocusPdfMode = false;
+
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        }
 
         function showCustomDialog({ title = 'Thông báo', message = '', isConfirm = false, onConfirm = null }) {
             const overlay = document.getElementById('customModalOverlay');
@@ -1700,7 +1692,7 @@
             return family;
         }
 
-        // Tối ưu thuật toán lấy từ đồng nghĩa (Synonyms) thực tế và thông dụng
+        // Tối ưu thuật toán lấy từ đồng nghĩa (Synonyms) chuẩn TOEIC
         async function fetchSynonyms(word) {
             try {
                 const p1 = fetchWithTimeout(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word)}&md=f&max=15`);
@@ -1729,7 +1721,6 @@
                 processList(synRes);
                 processList(mlRes);
 
-                // Ưu tiên các từ có tần suất xuất hiện tự nhiên cao
                 candidates.sort((a, b) => b.freq - a.freq);
                 return candidates.slice(0, 8).map(x => x.word);
             } catch (e) { }
@@ -1793,10 +1784,6 @@
             }
 
             let cleanSyns = (rawSyns || []).filter(w => w !== primaryEnWord && !w.includes(' ') && !w.includes('-')).slice(0, 8);
-            if (primaryEnWord === 'contract' && !cleanSyns.includes('agreement')) {
-                cleanSyns = ['agreement', 'deal', 'pact', 'treaty', 'covenant', 'settlement'];
-            }
-
             if (cleanSyns.length > 0) {
                 html += `
               <div class="vocab-section-title">Từ đồng nghĩa (Synonyms)</div>
@@ -1997,7 +1984,7 @@
             renderMain();
         };
 
-        // CHUYỂN ĐỔI CHẾ ĐỘ THU THUẦN CSS: KHÔNG GỌI LẠI RENDERMAIN() TRÁNH CRASH TRÊN MOBILE
+        // Thuần CSS: Không gọi lại renderMain tránh crash trên điện thoại
         window.toggleFocusPdfMode = function () {
             isFocusPdfMode = !isFocusPdfMode;
             const split = document.getElementById('panelsSplitArea');
@@ -2215,7 +2202,7 @@
 
             const testKey = window.TOEIC_KEYS[t.testNum] || {};
 
-            // Audio Bar
+            // Audio Bar: Bật preload="none" để bảo vệ RAM Safari
             if (isAudioToolbarOpen) {
                 const audioBar = document.createElement('div');
                 audioBar.className = 'audio-toolbar';
@@ -2237,7 +2224,7 @@
                   </select>
                 </div>
               </div>
-              <button type="button" class="btn-hide-audio" onclick="setAudioToolbarVisible(false)" title="Đóng thanh Audio để rộng chỗ đọc đề Reading">✕ Đóng Audio</button>
+              <button type="button" class="btn-hide-audio" onclick="setAudioToolbarVisible(false)" title="Đóng thanh Audio">✕ Đóng Audio</button>
             `;
                 mainStage.appendChild(audioBar);
             }
@@ -2394,33 +2381,38 @@
 
             renderQuestionsGridOnly();
 
-            // Nạp PDF: An toàn bộ nhớ tuyệt đối trên Safari/iOS
+            // NẠP PDF: CHỐNG CRASH BỘ NHỚ TUYỆT ĐỐI CHO SAFARI / IPHONE
             const docArea = document.getElementById('docArea');
             if (t.viewMode === 'pdfL' || t.viewMode === 'pdfR') {
                 const isListening = t.viewMode === 'pdfL';
                 const pdfUrl = isListening ? t.pdfListeningUrl : t.pdfReadingUrl;
                 const fileLabel = isListening ? `test${t.testNum}L.pdf` : `test${t.testNum}R.pdf`;
 
-                docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:35px 10px; font-size:13px; font-weight:600;">Đang chuẩn bị trang đề ${isListening ? 'Listening' : 'Reading'}...</div>`;
-                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+                if (isMobileDevice()) {
+                    // TRÊN ĐIỆN THOẠI: DÙNG TRÌNH ĐỌC NATIVE KHÔNG TỐN RAM ĐỒ HỌA
+                    docArea.innerHTML = `
+                            <div style="width:100%; height:100%; display:flex; flex-direction:column;">
+                                <iframe src="${pdfUrl}#toolbar=0" style="width:100%; height:100%; border:none; border-radius:6px; background:#fff;"></iframe>
+                            </div>
+                        `;
+                } else {
+                    // TRÊN MÁY TÍNH: DÙNG PDF.JS VẼ CANVAS SẮC NÉT
+                    docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:35px 10px; font-size:13px; font-weight:600;">Đang chuẩn bị trang đề ${isListening ? 'Listening' : 'Reading'}...</div>`;
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-                pdfjsLib.getDocument(pdfUrl).promise.then(async (pdf) => {
-                    docArea.innerHTML = '';
-                    const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 340;
-                    const isMobile = window.innerWidth <= 768;
-                    const maxInitialPages = isMobile ? Math.min(3, pdf.numPages) : pdf.numPages;
-                    let lastRenderedPage = 0;
+                    pdfjsLib.getDocument(pdfUrl).promise.then(async (pdf) => {
+                        docArea.innerHTML = '';
+                        const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 750;
 
-                    async function renderPdfPages(startPage, count) {
-                        for (let p = startPage; p < startPage + count && p <= pdf.numPages; p++) {
-                            const page = await pdf.getPage(p);
+                        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                            const page = await pdf.getPage(pageNum);
                             const unscaledViewport = page.getViewport({ scale: 1.0 });
                             const scale = containerWidth / unscaledViewport.width;
                             const viewport = page.getViewport({ scale: scale });
 
                             const canvas = document.createElement('canvas');
                             canvas.className = 'pdf-canvas-item';
-                            const renderScale = isMobile ? 1.0 : Math.min(window.devicePixelRatio || 1, 1.25);
+                            const renderScale = Math.min(window.devicePixelRatio || 1, 1.25);
                             canvas.width = Math.floor(viewport.width * renderScale);
                             canvas.height = Math.floor(viewport.height * renderScale);
                             canvas.style.width = Math.floor(viewport.width) + "px";
@@ -2431,30 +2423,11 @@
                             const transform = renderScale !== 1 ? [renderScale, 0, 0, renderScale, 0, 0] : null;
 
                             await page.render({ canvasContext: context, transform: transform, viewport: viewport }).promise;
-                            lastRenderedPage = p;
                         }
-
-                        const oldBtn = document.getElementById('loadMorePdfBtn');
-                        if (oldBtn) oldBtn.remove();
-
-                        if (lastRenderedPage < pdf.numPages) {
-                            const loadBtn = document.createElement('button');
-                            loadBtn.id = 'loadMorePdfBtn';
-                            loadBtn.className = 'btn-load-more-pdf';
-                            loadBtn.textContent = `Tải thêm trang PDF (${lastRenderedPage}/${pdf.numPages})`;
-                            loadBtn.onclick = () => {
-                                loadBtn.textContent = 'Đang nạp tiếp...';
-                                renderPdfPages(lastRenderedPage + 1, 3);
-                            };
-                            docArea.appendChild(loadBtn);
-                        }
-                    }
-
-                    await renderPdfPages(1, maxInitialPages);
-
-                }).catch(() => {
-                    docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:40px 10px;">Chưa tìm thấy file <b>${fileLabel}</b> trong thư mục <b>pdfs</b>.</div>`;
-                });
+                    }).catch(() => {
+                        docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:40px 10px;">Chưa tìm thấy file <b>${fileLabel}</b> trong thư mục <b>pdfs</b>.</div>`;
+                    });
+                }
             } else {
                 const script = window.TOEIC_SCRIPTS[t.testNum] || '';
                 docArea.innerHTML = script
