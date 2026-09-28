@@ -66,7 +66,7 @@
             touch-action: manipulation;
         }
 
-        /* CUSTOM THANH CUỘN THON GỌN */
+        /* CUSTOM THANH CUỘN */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -179,7 +179,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.35);
             display: none;
             flex-direction: column;
-            width: 150px;
+            width: 160px;
             z-index: 60;
             padding: 4px;
         }
@@ -1313,7 +1313,6 @@
 
             to {
                 transform: scale(1);
-                opacity: 1;
             }
         }
 
@@ -1339,7 +1338,7 @@
             margin-top: 4px;
         }
 
-        /* TỐI ƯU GIAO DIỆN & CUỘN TRÊN ĐIỆN THOẠI */
+        /* CSS TỐI ƯU GIAO DIỆN & CUỘN TRÊN ĐIỆN THOẠI */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -1381,7 +1380,7 @@
             }
 
             .pdf-pager-bar {
-                display: flex !important; /* Hiện thanh chuyển trang PDF trên mobile */
+                display: flex !important;
             }
 
             .sheet-panel {
@@ -1434,6 +1433,7 @@
             </div>
         </div>
         <div class="header-actions">
+            <button id="notebookToggleBtn" class="btn-outline">⭐ Sổ từ vựng</button>
             <button id="vocabToggleBtn" class="btn-outline">📖 Tra từ</button>
             <button id="profileBtn" class="btn-outline">👤 Đăng nhập</button>
             <button id="menuToggleBtn" class="btn-outline">☰</button>
@@ -1468,7 +1468,7 @@
                 <input type="text" id="newProfileInput" placeholder="Tên hồ sơ mới...">
                 <button id="createProfileBtn">Tạo & Vào</button>
             </div>
-            <div class="vocab-note">Kết quả thi sẽ được lưu riêng theo hồ sơ trên trình duyệt này.</div>
+            <div class="vocab-note">Kết quả thi và Sổ từ vựng sẽ được lưu riêng theo hồ sơ trên trình duyệt này.</div>
         </div>
     </div>
 
@@ -1496,6 +1496,18 @@
             </div>
         </div>
 
+        <!-- SỔ TAY TỪ VỰNG CẦN NOTE -->
+        <div class="drawer" id="notebookDrawer">
+            <div class="drawer-head">
+                <span class="drawer-title">⭐ Sổ tay từ vựng</span>
+                <button class="drawer-close" id="notebookCloseBtn">&times;</button>
+            </div>
+            <div class="search-row">
+                <input type="text" id="notebookFilterInput" placeholder="Lọc từ trong sổ tay...">
+            </div>
+            <div class="vocab-body" id="notebookListEl"></div>
+        </div>
+
         <!-- Lịch sử kết quả -->
         <div class="drawer" id="historyDrawer">
             <div class="drawer-head">
@@ -1514,7 +1526,6 @@
         let isAudioToolbarOpen = true;
         let isFocusPdfMode = false;
 
-        // Quản lý xem trang PDF đơn lẻ cho Mobile
         let mobilePdfDoc = null;
         let mobileCurrentPage = 1;
 
@@ -1616,6 +1627,43 @@
             saveResults(profile, list);
         }
 
+        // QUẢN LÝ SỔ TAY TỪ VỰNG CẦN NOTE
+        function getNotebookKey(profile) { return 'toeic_notebook_' + (profile || 'default'); }
+        function getSavedWords() {
+            const profile = getCurrentProfile();
+            try { return JSON.parse(localStorage.getItem(getNotebookKey(profile)) || '[]'); } catch (e) { return []; }
+        }
+        function saveNotebook(list) {
+            const profile = getCurrentProfile();
+            localStorage.setItem(getNotebookKey(profile), JSON.stringify(list));
+        }
+
+        function isWordSaved(word) {
+            const list = getSavedWords();
+            return list.some(item => item.word.toLowerCase() === word.toLowerCase());
+        }
+
+        window.toggleSaveWord = function (word, vi = '', def = '') {
+            let list = getSavedWords();
+            const exists = list.some(x => x.word.toLowerCase() === word.toLowerCase());
+            if (exists) {
+                list = list.filter(x => x.word.toLowerCase() !== word.toLowerCase());
+            } else {
+                list.unshift({ word, vi, def, date: new Date().toISOString() });
+            }
+            saveNotebook(list);
+
+            // Cập nhật trạng thái nút bấm nếu đang mở thẻ tra từ
+            const saveBtn = document.getElementById(`save-word-btn-${word.toLowerCase().replace(/[^a-z0-9]/g, '')}`);
+            if (saveBtn) {
+                const nowSaved = isWordSaved(word);
+                saveBtn.className = nowSaved ? 'btn-outline active' : 'btn-outline';
+                saveBtn.style.color = nowSaved ? 'var(--warning)' : 'var(--text-secondary)';
+                saveBtn.innerHTML = nowSaved ? '★ Đã lưu' : '⭐ Lưu vào sổ tay';
+            }
+            renderNotebookDrawer();
+        };
+
         const profileOverlay = document.getElementById('profileOverlay');
         const profileListEl = document.getElementById('profileListEl');
         const newProfileInput = document.getElementById('newProfileInput');
@@ -1646,6 +1694,7 @@
                     setCurrentProfile(name);
                     profileOverlay.classList.remove('open');
                     updateProfileBtnLabel();
+                    renderNotebookDrawer();
                 };
 
                 const delBtn = document.createElement('button');
@@ -1653,14 +1702,16 @@
                 delBtn.onclick = () => {
                     showCustomDialog({
                         title: 'Xác nhận xoá hồ sơ',
-                        message: `Bạn có chắc muốn xoá hồ sơ "${name}" cùng toàn bộ kết quả làm bài không?`,
+                        message: `Bạn có chắc muốn xoá hồ sơ "${name}" cùng toàn bộ kết quả làm bài và sổ từ vựng không?`,
                         isConfirm: true,
                         onConfirm: () => {
                             saveProfilesList(getProfiles().filter(p => p !== name));
                             localStorage.removeItem(getResultsKey(name));
+                            localStorage.removeItem(getNotebookKey(name));
                             if (getCurrentProfile() === name) setCurrentProfile('');
                             renderProfileOverlay();
                             updateProfileBtnLabel();
+                            renderNotebookDrawer();
                         }
                     });
                 };
@@ -1689,6 +1740,7 @@
             setCurrentProfile(name);
             profileOverlay.classList.remove('open');
             updateProfileBtnLabel();
+            renderNotebookDrawer();
         });
 
         updateProfileBtnLabel();
@@ -1700,12 +1752,68 @@
 
         document.getElementById('vocabToggleBtn').addEventListener('click', () => {
             historyDrawer.classList.remove('open');
+            notebookDrawer.classList.remove('open');
             vocabDrawer.classList.add('open');
             backdrop.classList.add('open');
             vocabInput.focus();
         });
         document.getElementById('vocabCloseBtn').addEventListener('click', () => {
             vocabDrawer.classList.remove('open');
+            backdrop.classList.remove('open');
+        });
+
+        // Sổ từ vựng
+        const notebookDrawer = document.getElementById('notebookDrawer');
+        const notebookListEl = document.getElementById('notebookListEl');
+        const notebookFilterInput = document.getElementById('notebookFilterInput');
+
+        function renderNotebookDrawer() {
+            const list = getSavedWords();
+            const filter = (notebookFilterInput.value || '').trim().toLowerCase();
+            const filtered = list.filter(item => item.word.toLowerCase().includes(filter) || (item.vi && item.vi.toLowerCase().includes(filter)));
+
+            if (filtered.length === 0) {
+                notebookListEl.innerHTML = `<div class="vocab-note" style="text-align:center; padding:30px 10px;">${filter ? 'Không tìm thấy từ nào phù hợp.' : 'Chưa có từ nào trong Sổ tay.<br>Hãy tra từ và bấm nút <b>"⭐ Lưu vào sổ tay"</b>.'}</div>`;
+                return;
+            }
+
+            notebookListEl.innerHTML = '';
+            filtered.forEach((item) => {
+                const card = document.createElement('div');
+                card.style.background = 'var(--bg-subtle)';
+                card.style.border = '1px solid var(--border)';
+                card.style.borderRadius = '8px';
+                card.style.padding = '10px 12px';
+                card.style.marginBottom = '8px';
+
+                card.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:15px; font-weight:800; color:var(--brand); cursor:pointer;" onclick="openAndLookup('${item.word}')">${item.word} ↗</span>
+                            <button class="btn-outline" style="padding:2px 8px; font-size:11px; color:var(--danger);" onclick="toggleSaveWord('${item.word}')">Xoá</button>
+                        </div>
+                        ${item.vi ? `<div style="font-size:13px; font-weight:700; color:var(--text-primary); margin-top:4px;">${item.vi}</div>` : ''}
+                        ${item.def ? `<div style="font-size:12px; color:var(--text-secondary); margin-top:4px; line-height:1.4;">${item.def}</div>` : ''}
+                    `;
+                notebookListEl.appendChild(card);
+            });
+        }
+
+        window.openAndLookup = function (word) {
+            notebookDrawer.classList.remove('open');
+            vocabDrawer.classList.add('open');
+            lookupWord(word);
+        };
+
+        notebookFilterInput.addEventListener('input', renderNotebookDrawer);
+        document.getElementById('notebookToggleBtn').addEventListener('click', () => {
+            historyDrawer.classList.remove('open');
+            vocabDrawer.classList.remove('open');
+            renderNotebookDrawer();
+            notebookDrawer.classList.add('open');
+            backdrop.classList.add('open');
+        });
+        document.getElementById('notebookCloseBtn').addEventListener('click', () => {
+            notebookDrawer.classList.remove('open');
             backdrop.classList.remove('open');
         });
 
@@ -1767,7 +1875,6 @@
             return family;
         }
 
-        // Tối ưu thuật toán lấy từ đồng nghĩa (Synonyms) chuẩn TOEIC
         async function fetchSynonyms(word) {
             try {
                 const p1 = fetchWithTimeout(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word)}&md=f&max=15`);
@@ -1829,47 +1936,55 @@
                 fetchWordFamily(primaryEnWord)
             ]);
 
+            const saved = isWordSaved(englishWord);
+            const btnId = `save-word-btn-${englishWord.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+
+            let firstDefText = '';
+            if (dmDefData && dmDefData[0] && dmDefData[0].defs && dmDefData[0].defs[0]) {
+                const parts = dmDefData[0].defs[0].split('\t');
+                firstDefText = parts[1] || parts[0];
+            }
+
             let html = `
-            <div class="vocab-card">
-              <div style="display:flex; justify-content:space-between; align-items:baseline;">
-                <span class="vocab-word">${englishWord}</span>
-              </div>
-          `;
+                    <div class="vocab-card">
+                      <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="vocab-word">${englishWord}</span>
+                        <button id="${btnId}" class="btn-outline ${saved ? 'active' : ''}" style="${saved ? 'color:var(--warning);' : ''}" onclick="toggleSaveWord('${englishWord}', '${vietnameseMeaning.replace(/'/g, "\\'")}', '${firstDefText.replace(/'/g, "\\'")}')">
+                          ${saved ? '★ Đã lưu' : '⭐ Lưu vào sổ tay'}
+                        </button>
+                      </div>
+                `;
 
             if (vietnameseMeaning) {
                 html += `
-              <div class="vocab-vi-box">
-                <span class="vocab-vi-badge">Tiếng Việt</span>
-                <span class="vocab-vi-text">${vietnameseMeaning}</span>
-              </div>
-            `;
+                      <div class="vocab-vi-box">
+                        <span class="vocab-vi-badge">Tiếng Việt</span>
+                        <span class="vocab-vi-text">${vietnameseMeaning}</span>
+                      </div>
+                    `;
             }
 
             const hasFamily = Object.values(family).some(arr => arr.length > 0);
             if (hasFamily) {
                 html += `
-              <div class="vocab-section-title">Họ từ vựng (Word Family)</div>
-              <div class="word-family-grid">
-                ${family.n.length ? `<div class="family-row"><span class="family-tag n">Noun</span><span class="family-words">${family.n.join(', ')}</span></div>` : ''}
-                ${family.v.length ? `<div class="family-row"><span class="family-tag v">Verb</span><span class="family-words">${family.v.join(', ')}</span></div>` : ''}
-                ${family.adj.length ? `<div class="family-row"><span class="family-tag adj">Adj</span><span class="family-words">${family.adj.join(', ')}</span></div>` : ''}
-                ${family.adv.length ? `<div class="family-row"><span class="family-tag adv">Adv</span><span class="family-words">${family.adv.join(', ')}</span></div>` : ''}
-              </div>
-            `;
+                      <div class="vocab-section-title">Họ từ vựng (Word Family)</div>
+                      <div class="word-family-grid">
+                        ${family.n.length ? `<div class="family-row"><span class="family-tag n">Noun</span><span class="family-words">${family.n.join(', ')}</span></div>` : ''}
+                        ${family.v.length ? `<div class="family-row"><span class="family-tag v">Verb</span><span class="family-words">${family.v.join(', ')}</span></div>` : ''}
+                        ${family.adj.length ? `<div class="family-row"><span class="family-tag adj">Adj</span><span class="family-words">${family.adj.join(', ')}</span></div>` : ''}
+                        ${family.adv.length ? `<div class="family-row"><span class="family-tag adv">Adv</span><span class="family-words">${family.adv.join(', ')}</span></div>` : ''}
+                      </div>
+                    `;
             }
 
             let cleanSyns = (rawSyns || []).filter(w => w !== primaryEnWord && !w.includes(' ') && !w.includes('-')).slice(0, 8);
-            if (primaryEnWord === 'contract' && !cleanSyns.includes('agreement')) {
-                cleanSyns = ['agreement', 'deal', 'pact', 'treaty', 'covenant', 'settlement'];
-            }
-
             if (cleanSyns.length > 0) {
                 html += `
-              <div class="vocab-section-title">Từ đồng nghĩa (Synonyms)</div>
-              <div class="synonym-chips">
-                ${cleanSyns.map(s => `<span class="syn-chip" onclick="lookupWord('${s}')">${s}</span>`).join('')}
-              </div>
-            `;
+                      <div class="vocab-section-title">Từ đồng nghĩa (Synonyms)</div>
+                      <div class="synonym-chips">
+                        ${cleanSyns.map(s => `<span class="syn-chip" onclick="lookupWord('${s}')">${s}</span>`).join('')}
+                      </div>
+                    `;
             }
 
             if (dmDefData && dmDefData[0] && dmDefData[0].defs) {
@@ -1879,20 +1994,20 @@
                     const pos = parts[0] === 'n' ? 'Noun' : (parts[0] === 'v' ? 'Verb' : (parts[0] === 'adj' ? 'Adj' : parts[0]));
                     const defText = parts[1] || parts[0];
                     html += `
-                <div class="def-item-card">
-                  <div><span class="def-badge">${pos}</span><b>${idx + 1}.</b> ${defText}</div>
-                </div>
-              `;
+                            <div class="def-item-card">
+                              <div><span class="def-badge">${pos}</span><b>${idx + 1}.</b> ${defText}</div>
+                            </div>
+                        `;
                 });
                 html += `</div>`;
             }
 
             html += `
-              <div class="vocab-note" style="margin-top:16px; text-align:right;">
-                <a href="https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(primaryEnWord)}" target="_blank" style="color:var(--brand); text-decoration:none; font-weight:600;">Xem trên Cambridge Dictionary ↗</a>
-              </div>
-            </div>
-          `;
+                      <div class="vocab-note" style="margin-top:16px; text-align:right;">
+                        <a href="https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(primaryEnWord)}" target="_blank" style="color:var(--brand); text-decoration:none; font-weight:600;">Xem trên Cambridge Dictionary ↗</a>
+                      </div>
+                    </div>
+                `;
 
             vocabResult.innerHTML = html;
         }
@@ -1930,9 +2045,9 @@
                 let dateStr = r.date;
                 try { dateStr = new Date(r.date).toLocaleString('vi-VN'); } catch (e) { }
                 card.innerHTML = `
-              <div style="font-weight:700; font-size:13px; color:var(--text-primary);">${r.testName} <span style="color:var(--text-muted); font-size:11px;">• ${dateStr}</span></div>
-              <div style="margin-top:4px; font-size:12.5px; color:var(--text-secondary);">Đúng <b>${r.totalCorrect}</b>/${r.gradedCount} câu • Điểm: <b style="color:var(--brand);">${r.scaled.total}</b>/990 (LC ${r.scaled.lc} | RC ${r.scaled.rc})</div>
-            `;
+                      <div style="font-weight:700; font-size:13px; color:var(--text-primary);">${r.testName} <span style="color:var(--text-muted); font-size:11px;">• ${dateStr}</span></div>
+                      <div style="margin-top:4px; font-size:12.5px; color:var(--text-secondary);">Đúng <b>${r.totalCorrect}</b>/${r.gradedCount} câu • Điểm: <b style="color:var(--brand);">${r.scaled.total}</b>/990 (LC ${r.scaled.lc} | RC ${r.scaled.rc})</div>
+                    `;
                 const delBtn = document.createElement('button');
                 delBtn.className = 'btn-outline'; delBtn.style.marginTop = '8px'; delBtn.style.color = 'var(--danger)'; delBtn.textContent = 'Xoá kết quả này';
                 delBtn.onclick = () => {
@@ -1946,6 +2061,7 @@
 
         document.getElementById('historyToggleBtn').addEventListener('click', () => {
             vocabDrawer.classList.remove('open');
+            notebookDrawer.classList.remove('open');
             renderHistoryDrawer();
             historyDrawer.classList.add('open');
             backdrop.classList.add('open');
@@ -1957,6 +2073,7 @@
         backdrop.addEventListener('click', () => {
             vocabDrawer.classList.remove('open');
             historyDrawer.classList.remove('open');
+            notebookDrawer.classList.remove('open');
             backdrop.classList.remove('open');
             sidebarEl.classList.remove('open');
         });
@@ -2212,11 +2329,11 @@
                 optsHtml += '</div>';
 
                 row.innerHTML = `
-              <div class="q-left-box">
-                <button type="button" id="flagbtn-${q}" class="btn-flag ${isFlagged ? 'active' : ''}" onclick="toggleFlag(${q})" title="Gắn cờ câu phân vân">⚑</button>
-                <span class="q-number">${q}</span>
-              </div>
-            ` + optsHtml;
+                      <div class="q-left-box">
+                        <button type="button" id="flagbtn-${q}" class="btn-flag ${isFlagged ? 'active' : ''}" onclick="toggleFlag(${q})" title="Gắn cờ câu phân vân">⚑</button>
+                        <span class="q-number">${q}</span>
+                      </div>
+                    ` + optsHtml;
                 wrapper.appendChild(row);
 
                 if (isWrong) {
@@ -2272,14 +2389,14 @@
             if (progFill) progFill.style.width = pct + '%';
         };
 
-        // Hàm render 1 trang PDF đơn lẻ cho Mobile (Cực mượt, 0% Crash)
+        // Render trang PDF đơn lẻ cho Mobile
         async function renderSingleMobilePage(pageNumber) {
             if (!mobilePdfDoc) return;
             const docArea = document.getElementById('docArea');
             const pageIndicator = document.getElementById('mobilePageIndicator');
             if (!docArea) return;
 
-            docArea.innerHTML = '<div style="color:var(--text-muted); padding:20px; font-size:12px;">Đang lật trang...</div>';
+            docArea.innerHTML = '<div style="color:var(--text-muted); padding:20px; font-size:12px;">Đang tải trang...</div>';
 
             const page = await mobilePdfDoc.getPage(pageNumber);
             const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 340;
@@ -2521,12 +2638,10 @@
                     docArea.innerHTML = '';
 
                     if (isMobileDevice()) {
-                        // TRÊN ĐIỆN THOẠI: Dùng trình chuyển trang đơn lẻ (Xem được 100% các trang, không ngốn RAM)
                         mobilePdfDoc = pdf;
                         mobileCurrentPage = 1;
                         await renderSingleMobilePage(1);
                     } else {
-                        // TRÊN MÁY TÍNH: Render liên tục cuộn dọc sắc nét
                         const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 750;
                         for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                             const page = await pdf.getPage(pageNum);
