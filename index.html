@@ -66,6 +66,7 @@
             touch-action: manipulation;
         }
 
+        /* CUSTOM THANH CUỘN GỌN GÀNG */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -480,16 +481,9 @@
             align-items: center;
         }
 
-        .pdf-page-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 12px;
-            min-height: 400px;
-        }
-
         .pdf-canvas-item {
             display: block;
+            margin-bottom: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             background: #ffffff;
             max-width: 100%;
@@ -866,6 +860,7 @@
             color: var(--text-primary);
         }
 
+        /* CỜ ĐÁNH DẤU: ẨN MẶC ĐỊNH, RÊ CHUỘT MỚI HIỆN */
         .btn-flag {
             background: transparent;
             border: none;
@@ -1435,7 +1430,6 @@
         </div>
     </header>
 
-    <!-- Modal Thông báo -->
     <div class="custom-modal-overlay" id="customModalOverlay">
         <div class="custom-modal-box">
             <div class="custom-modal-title" id="customModalTitle">Thông báo</div>
@@ -1447,7 +1441,6 @@
         </div>
     </div>
 
-    <!-- Modal Profile -->
     <div class="profile-overlay" id="profileOverlay">
         <div class="profile-card">
             <div class="drawer-head">
@@ -1472,7 +1465,6 @@
         <div class="main-stage" id="mainStage"></div>
         <div class="backdrop" id="backdrop"></div>
 
-        <!-- Tra từ vựng hai chiều -->
         <div class="drawer" id="vocabDrawer">
             <div class="drawer-head">
                 <span class="drawer-title">Tra từ & Dịch nghĩa</span>
@@ -1487,7 +1479,6 @@
             </div>
         </div>
 
-        <!-- SỔ TAY TỪ VỰNG -->
         <div class="drawer" id="notebookDrawer">
             <div class="drawer-head">
                 <span class="drawer-title">⭐ Sổ tay từ vựng</span>
@@ -1499,7 +1490,6 @@
             <div class="vocab-body" id="notebookListEl"></div>
         </div>
 
-        <!-- Lịch sử kết quả -->
         <div class="drawer" id="historyDrawer">
             <div class="drawer-head">
                 <span class="drawer-title">Lịch sử kết quả</span>
@@ -1519,7 +1509,6 @@
 
         let activePdfLoadingTask = null;
         let activePdfDocument = null;
-        let pdfObserver = null;
         let mobilePdfDoc = null;
         let mobileCurrentPage = 1;
 
@@ -1527,12 +1516,7 @@
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
         }
 
-        // DỌN SẠCH TÀI NGUYÊN PDF TRONG RAM
         function cleanupPdfResources() {
-            if (pdfObserver) {
-                pdfObserver.disconnect();
-                pdfObserver = null;
-            }
             if (activePdfLoadingTask) {
                 try { activePdfLoadingTask.destroy(); } catch (e) { }
                 activePdfLoadingTask = null;
@@ -1885,7 +1869,6 @@
             return family;
         }
 
-        // Tối ưu thuật toán lấy từ đồng nghĩa (Synonyms) chuẩn TOEIC
         async function fetchSynonyms(word) {
             try {
                 const p1 = fetchWithTimeout(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word)}&md=f&max=15`);
@@ -2444,68 +2427,40 @@
             }
         };
 
-        // RENDER PDF TRÊN MÁY TÍNH LAZY-LOAD TIẾT KIỆM RAM
-        function renderDesktopLazyPdf(pdf) {
+        // Render PDF tuần tự trực tiếp theo tỉ lệ chuẩn
+        async function renderDesktopPdf(pdf) {
             const docArea = document.getElementById('docArea');
             if (!docArea) return;
             docArea.innerHTML = '';
 
             const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 750;
-            const renderedPages = new Map();
-
-            pdfObserver = new IntersectionObserver((entries) => {
-                entries.forEach(async (entry) => {
-                    const pageNum = parseInt(entry.target.getAttribute('data-page-num'), 10);
-                    if (entry.isIntersecting) {
-                        if (!renderedPages.has(pageNum)) {
-                            renderedPages.set(pageNum, true);
-                            const page = await pdf.getPage(pageNum);
-                            const unscaledViewport = page.getViewport({ scale: 1.0 });
-                            const scale = containerWidth / unscaledViewport.width;
-                            const viewport = page.getViewport({ scale: scale });
-
-                            const canvas = document.createElement('canvas');
-                            canvas.className = 'pdf-canvas-item';
-                            const renderScale = 1.0;
-                            canvas.width = Math.floor(viewport.width * renderScale);
-                            canvas.height = Math.floor(viewport.height * renderScale);
-                            canvas.style.width = Math.floor(viewport.width) + "px";
-                            canvas.style.height = Math.floor(viewport.height) + "px";
-
-                            entry.target.innerHTML = '';
-                            entry.target.appendChild(canvas);
-                            const context = canvas.getContext('2d');
-                            await page.render({ canvasContext: context, viewport: viewport }).promise;
-                        }
-                    } else {
-                        if (renderedPages.has(pageNum)) {
-                            renderedPages.delete(pageNum);
-                            entry.target.innerHTML = `<div style="color:var(--text-muted); font-size:11px; display:flex; align-items:center; justify-content:center; height:100%; border:1px dashed var(--border); border-radius:4px;">Trang ${pageNum}</div>`;
-                        }
-                    }
-                });
-            }, { root: docArea, rootMargin: '200px 0px 200px 0px' });
 
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-                const placeholder = document.createElement('div');
-                placeholder.className = 'pdf-page-container';
-                placeholder.setAttribute('data-page-num', pageNum);
-                placeholder.innerHTML = `<div style="color:var(--text-muted); font-size:11px; display:flex; align-items:center; justify-content:center; height:100%; border:1px dashed var(--border); border-radius:4px;">Trang ${pageNum}</div>`;
-                docArea.appendChild(placeholder);
-                pdfObserver.observe(placeholder);
+                const page = await pdf.getPage(pageNum);
+                const unscaledViewport = page.getViewport({ scale: 1.0 });
+                const scale = containerWidth / unscaledViewport.width;
+                const viewport = page.getViewport({ scale: scale });
+
+                const canvas = document.createElement('canvas');
+                canvas.className = 'pdf-canvas-item';
+                canvas.width = Math.floor(viewport.width);
+                canvas.height = Math.floor(viewport.height);
+                canvas.style.width = Math.floor(viewport.width) + "px";
+                canvas.style.height = Math.floor(viewport.height) + "px";
+
+                docArea.appendChild(canvas);
+                const context = canvas.getContext('2d');
+                await page.render({ canvasContext: context, viewport: viewport }).promise;
             }
         }
 
-        // HÀM RENDER CHÍNH (ĐỒNG BỘ TUYỆT ĐỐI, KHÔNG BAO GIỜ BỊ NHÂN ĐÔI GIAO DIỆN)
+        // HÀM RENDER CHÍNH (ĐỒNG BỘ NỘI DUNG DOM)
         function renderMain() {
             const t = tests.find(x => x.id === activeId);
             const mainStage = document.getElementById('mainStage');
             if (!t || !mainStage) return;
 
-            // Xóa sạch nội dung cũ ngay lập tức
             mainStage.innerHTML = '';
-
-            // Hủy các tác vụ render ngầm của PDF cũ
             cleanupPdfResources();
 
             const testKey = window.TOEIC_KEYS[t.testNum] || {};
@@ -2636,7 +2591,6 @@
             panels.appendChild(sheetPanel);
             mainStage.appendChild(panels);
 
-            // Bắt sự kiện chuyển đề
             document.getElementById('testSelector').addEventListener('change', (e) => {
                 const nextNum = parseInt(e.target.value, 10);
                 const targetTest = tests.find(x => x.testNum === nextNum);
@@ -2649,7 +2603,6 @@
                 }
             });
 
-            // Timer
             const timerSelect = document.getElementById('timerModeSelect');
             timerSelect.addEventListener('change', (e) => {
                 selectedTimerMode = e.target.value;
@@ -2694,7 +2647,6 @@
 
             renderQuestionsGridOnly();
 
-            // NẠP PDF TIẾT KIỆM BỘ NHỚ
             const docArea = document.getElementById('docArea');
             if (t.viewMode === 'pdfL' || t.viewMode === 'pdfR') {
                 const isListening = t.viewMode === 'pdfL';
@@ -2714,7 +2666,7 @@
                         mobileCurrentPage = 1;
                         await renderSingleMobilePage(1);
                     } else {
-                        renderDesktopLazyPdf(pdf);
+                        await renderDesktopPdf(pdf);
                     }
                 }).catch(() => {
                     docArea.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:40px 10px;">Chưa tìm thấy file <b>${fileLabel}</b> trong thư mục <b>pdfs</b>.</div>`;
@@ -2747,7 +2699,6 @@
             }
         }
 
-        // Khởi chạy ban đầu
         ensureTestDataLoaded(1, () => {
             renderSidebar();
             renderMain();
