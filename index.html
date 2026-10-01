@@ -1718,7 +1718,6 @@
                 <button class="dropdown-item" id="calcToggleBtn">🧮 Công cụ tính điểm</button>
                 <button class="dropdown-item" id="themeToggleBtn">🌙 Giao diện</button>
                 <button class="dropdown-item" id="historyToggleBtn">📜 Lịch sử</button>
-                <!-- Đã loại bỏ hoàn toàn nút quản trị viên ở đây -->
             </div>
         </div>
     </header>
@@ -1817,7 +1816,7 @@
                     </div>
                 </div>
 
-                <!-- ĐÃ CHIA CHI TIẾT TỪNG PART CHO PHẦN READING -->
+                <!-- ĐÃ CHIA CHI TIẾT TỪNG PART CHO READING -->
                 <div class="calc-slider-item">
                     <div class="calc-slider-top"><span>Part 5: Hoàn thành câu</span><span class="calc-slider-max">Tối đa 30 câu</span></div>
                     <div class="calc-slider-ctrl">
@@ -2015,7 +2014,7 @@
             395, 400, 405, 410, 415, 420, 425, 430, 435, 445, 450, 455, 465, 470, 480, 485, 490, 495, 495, 495, 495
         ];
 
-        // LOGIC CÔNG CỤ TÍNH ĐIỂM (CALCULATOR)
+        // LOGIC CÔNG CỤ TÍNH ĐIỂM
         const calcModalOverlay = document.getElementById('calcModalOverlay');
         const calcToggleBtn = document.getElementById('calcToggleBtn');
         const calcModalCloseBtn = document.getElementById('calcModalCloseBtn');
@@ -2112,7 +2111,7 @@
             }
         });
 
-        // Hồ sơ
+        // Quản lý Hồ sơ
         function getProfiles() {
             try { return JSON.parse(localStorage.getItem('toeic_profiles') || '[]'); } catch (e) { return []; }
         }
@@ -2876,7 +2875,23 @@
             });
         }
 
+        // BẮT BUỘC NHẬP TÊN TRƯỚC KHI CHỌN ĐÁP ÁN
         window.onSelectAnswer = function (q, letter) {
+            const profile = getCurrentProfile();
+            if (!profile) {
+                showCustomDialog({
+                    title: 'Vui lòng nhập tên',
+                    message: 'Bạn cần nhập tên hoặc chọn hồ sơ trước khi bắt đầu làm bài.',
+                    isConfirm: false,
+                    onConfirm: () => {
+                        renderProfileOverlay();
+                        profileOverlay.classList.add('open');
+                        newProfileInput.focus();
+                    }
+                });
+                return;
+            }
+
             const t = tests.find(x => x.id === activeId);
             if (!t || t.isGraded) return;
 
@@ -3143,8 +3158,23 @@
                 });
             });
 
-            // NÚT CHẤM BÀI
+            // BẮT BUỘC NHẬP TÊN KHI CHẤM BÀI
             document.getElementById('gradeBtn').addEventListener('click', () => {
+                const profile = getCurrentProfile();
+                if (!profile) {
+                    showCustomDialog({
+                        title: 'Vui lòng nhập tên',
+                        message: 'Bạn cần nhập tên thí sinh để lưu kết quả và chấm bài.',
+                        isConfirm: false,
+                        onConfirm: () => {
+                            renderProfileOverlay();
+                            profileOverlay.classList.add('open');
+                            newProfileInput.focus();
+                        }
+                    });
+                    return;
+                }
+
                 t.isGraded = true; stopTimer();
                 const res = computeScore(t, testKey);
 
@@ -3220,6 +3250,12 @@
         ensureTestDataLoaded(1, () => {
             renderSidebar();
             renderMain();
+
+            // Tự động yêu cầu nhập tên nếu người dùng mới vào lần đầu
+            if (!getCurrentProfile()) {
+                renderProfileOverlay();
+                profileOverlay.classList.add('open');
+            }
         });
     </script>
 </body>
