@@ -1718,7 +1718,7 @@
                 <button class="dropdown-item" id="calcToggleBtn">🧮 Công cụ tính điểm</button>
                 <button class="dropdown-item" id="themeToggleBtn">🌙 Giao diện</button>
                 <button class="dropdown-item" id="historyToggleBtn">📜 Lịch sử</button>
-                <a href="./admin.html" class="dropdown-item" style="text-decoration:none; color:inherit;">🛡️ Quản trị viên</a>
+                <!-- Đã loại bỏ hoàn toàn nút quản trị viên ở đây -->
             </div>
         </div>
     </header>
@@ -1817,11 +1817,28 @@
                     </div>
                 </div>
 
+                <!-- ĐÃ CHIA CHI TIẾT TỪNG PART CHO PHẦN READING -->
                 <div class="calc-slider-item">
-                    <div class="calc-slider-top"><span>Reading (Part 5 - 7)</span><span class="calc-slider-max">Tối đa 100 câu</span></div>
+                    <div class="calc-slider-top"><span>Part 5: Hoàn thành câu</span><span class="calc-slider-max">Tối đa 30 câu</span></div>
                     <div class="calc-slider-ctrl">
-                        <input type="range" id="slRc" min="0" max="100" value="45">
-                        <span class="calc-val-box" id="valRc">45</span>
+                        <input type="range" id="slP5" min="0" max="30" value="15">
+                        <span class="calc-val-box" id="valP5">15</span>
+                    </div>
+                </div>
+
+                <div class="calc-slider-item">
+                    <div class="calc-slider-top"><span>Part 6: Đoạn văn ngắn</span><span class="calc-slider-max">Tối đa 16 câu</span></div>
+                    <div class="calc-slider-ctrl">
+                        <input type="range" id="slP6" min="0" max="16" value="8">
+                        <span class="calc-val-box" id="valP6">8</span>
+                    </div>
+                </div>
+
+                <div class="calc-slider-item">
+                    <div class="calc-slider-top"><span>Part 7: Đọc hiểu</span><span class="calc-slider-max">Tối đa 54 câu</span></div>
+                    <div class="calc-slider-ctrl">
+                        <input type="range" id="slP7" min="0" max="54" value="22">
+                        <span class="calc-val-box" id="valP7">22</span>
                     </div>
                 </div>
             </div>
@@ -2015,24 +2032,32 @@
         const slP2 = document.getElementById('slP2');
         const slP3 = document.getElementById('slP3');
         const slP4 = document.getElementById('slP4');
-        const slRc = document.getElementById('slRc');
+        const slP5 = document.getElementById('slP5');
+        const slP6 = document.getElementById('slP6');
+        const slP7 = document.getElementById('slP7');
 
         function updateCalculator() {
             const p1 = parseInt(slP1.value, 10);
             const p2 = parseInt(slP2.value, 10);
             const p3 = parseInt(slP3.value, 10);
             const p4 = parseInt(slP4.value, 10);
-            const rc = parseInt(slRc.value, 10);
+            const p5 = parseInt(slP5.value, 10);
+            const p6 = parseInt(slP6.value, 10);
+            const p7 = parseInt(slP7.value, 10);
 
             document.getElementById('valP1').textContent = p1;
             document.getElementById('valP2').textContent = p2;
             document.getElementById('valP3').textContent = p3;
             document.getElementById('valP4').textContent = p4;
-            document.getElementById('valRc').textContent = rc;
+            document.getElementById('valP5').textContent = p5;
+            document.getElementById('valP6').textContent = p6;
+            document.getElementById('valP7').textContent = p7;
 
             const totalLc = Math.min(100, p1 + p2 + p3 + p4);
+            const totalRc = Math.min(100, p5 + p6 + p7);
+
             const baseLc = ETS_LC_TABLE[totalLc];
-            const baseRc = ETS_RC_TABLE[rc];
+            const baseRc = ETS_RC_TABLE[totalRc];
 
             const minLc = Math.max(5, baseLc - 25);
             const maxLc = Math.min(495, baseLc + 30);
@@ -2043,7 +2068,7 @@
             document.getElementById('calcLcCountSub').textContent = `${totalLc} / 100 câu đúng`;
 
             document.getElementById('calcRcScore').textContent = `${baseRc}`;
-            document.getElementById('calcRcCountSub').textContent = `${rc} / 100 câu đúng`;
+            document.getElementById('calcRcCountSub').textContent = `${totalRc} / 100 câu đúng`;
 
             document.getElementById('calcTotalScore').textContent = `${minTotal} - ${maxTotal}`;
 
@@ -2056,7 +2081,7 @@
             document.getElementById('calcBarTotal').style.width = totalPct + '%';
         }
 
-        [slP1, slP2, slP3, slP4, slRc].forEach(slider => {
+        [slP1, slP2, slP3, slP4, slP5, slP6, slP7].forEach(slider => {
             slider.addEventListener('input', updateCalculator);
         });
 
@@ -2580,6 +2605,7 @@
             vocabDrawer.classList.remove('open');
             historyDrawer.classList.remove('open');
             notebookDrawer.classList.remove('open');
+            calcModalOverlay.classList.remove('open');
             backdrop.classList.remove('open');
             sidebarEl.classList.remove('open');
         });
