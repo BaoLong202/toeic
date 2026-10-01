@@ -179,7 +179,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.35);
             display: none;
             flex-direction: column;
-            width: 160px;
+            width: 180px;
             z-index: 60;
             padding: 4px;
         }
@@ -1396,7 +1396,6 @@
 
             to {
                 transform: scale(1);
-                opacity: 1;
             }
         }
 
@@ -1420,6 +1419,200 @@
             justify-content: flex-end;
             gap: 8px;
             margin-top: 4px;
+        }
+
+        /* GIAO DIỆN CÔNG CỤ TÍNH ĐIỂM TOEIC (CALCULATOR MODAL) */
+        .calc-modal-box {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            color: #f3f4f6;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .calc-header-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .calc-header-sub {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+
+        .calc-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.3fr;
+            gap: 12px;
+        }
+
+        .calc-score-card {
+            background: #1a2234;
+            border: 1px solid #26334d;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+            .calc-score-card.highlight {
+                background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
+                border-color: #3b82f6;
+            }
+
+        .calc-card-lbl {
+            font-size: 11px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+        }
+
+        .calc-score-val {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            margin: 4px 0 2px 0;
+        }
+
+        .calc-card-sub {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .calc-bars-box {
+            background: #1a2234;
+            border: 1px solid #26334d;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .calc-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .calc-bar-lbl {
+            width: 85px;
+            color: #d1d5db;
+        }
+
+        .calc-bar-track {
+            flex: 1;
+            height: 14px;
+            background: #111827;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .calc-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.15s ease;
+        }
+
+            .calc-bar-fill.lc {
+                background: #60a5fa;
+            }
+
+            .calc-bar-fill.rc {
+                background: #818cf8;
+            }
+
+            .calc-bar-fill.total {
+                background: #34d399;
+            }
+
+        .calc-slider-section {
+            background: #1a2234;
+            border: 1px solid #26334d;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .calc-slider-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: -4px;
+        }
+
+        .calc-slider-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .calc-slider-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        .calc-slider-max {
+            font-size: 11px;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        .calc-slider-ctrl {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .calc-slider-ctrl input[type=range] {
+                flex: 1;
+                height: 6px;
+                -webkit-appearance: none;
+                background: #374151;
+                border-radius: 4px;
+                outline: none;
+            }
+
+                .calc-slider-ctrl input[type=range]::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    background: #ffffff;
+                    cursor: pointer;
+                    box-shadow: 0 0 6px rgba(0,0,0,0.5);
+                }
+
+        .calc-val-box {
+            background: #111827;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            width: 44px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
         }
 
         @media (max-width: 768px) {
@@ -1502,6 +1695,10 @@
             #btnToggleFocus {
                 display: none !important;
             }
+
+            .calc-cards-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -1518,12 +1715,15 @@
             <button id="profileBtn" class="btn-outline">👤 Đăng nhập</button>
             <button id="menuToggleBtn" class="btn-outline">☰</button>
             <div class="dropdown-menu" id="dropdownMenu">
+                <button class="dropdown-item" id="calcToggleBtn">🧮 Công cụ tính điểm</button>
                 <button class="dropdown-item" id="themeToggleBtn">🌙 Giao diện</button>
                 <button class="dropdown-item" id="historyToggleBtn">📜 Lịch sử</button>
+                <a href="./admin.html" class="dropdown-item" style="text-decoration:none; color:inherit;">🛡️ Quản trị viên</a>
             </div>
         </div>
     </header>
 
+    <!-- Modal Thông báo Chung -->
     <div class="custom-modal-overlay" id="customModalOverlay">
         <div class="custom-modal-box">
             <div class="custom-modal-title" id="customModalTitle">Thông báo</div>
@@ -1535,6 +1735,100 @@
         </div>
     </div>
 
+    <!-- Modal Công cụ tính điểm TOEIC (Score Calculator) -->
+    <div class="custom-modal-overlay" id="calcModalOverlay">
+        <div class="calc-modal-box">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div>
+                    <h3 class="calc-header-title">Công cụ tính điểm TOEIC</h3>
+                    <p class="calc-header-sub">Quy đổi câu đúng Listening & Reading theo thang điểm ETS chuẩn</p>
+                </div>
+                <button class="drawer-close" id="calcModalCloseBtn">&times;</button>
+            </div>
+
+            <!-- Khối kết quả điểm -->
+            <div class="calc-cards-grid">
+                <div class="calc-score-card">
+                    <span class="calc-card-lbl">Nghe (Listening)</span>
+                    <div class="calc-score-val" id="calcLcScore">160 - 215</div>
+                    <span class="calc-card-sub" id="calcLcCountSub">41 / 100 câu đúng</span>
+                </div>
+                <div class="calc-score-card">
+                    <span class="calc-card-lbl">Đọc (Reading)</span>
+                    <div class="calc-score-val" id="calcRcScore">220</div>
+                    <span class="calc-card-sub" id="calcRcCountSub">45 / 100 câu đúng</span>
+                </div>
+                <div class="calc-score-card highlight">
+                    <span class="calc-card-lbl" style="color:#93c5fd;">Tổng điểm ước tính</span>
+                    <div class="calc-score-val" style="color:#60a5fa;" id="calcTotalScore">380 - 435</div>
+                    <span class="calc-card-sub" style="color:#bfdbfe;">Trên tổng 990 điểm</span>
+                </div>
+            </div>
+
+            <!-- Biểu đồ thanh ngang -->
+            <div class="calc-bars-box">
+                <div class="calc-bar-row">
+                    <span class="calc-bar-lbl">Listening</span>
+                    <div class="calc-bar-track"><div class="calc-bar-fill lc" id="calcBarLc" style="width:38%;"></div></div>
+                </div>
+                <div class="calc-bar-row">
+                    <span class="calc-bar-lbl">Reading</span>
+                    <div class="calc-bar-track"><div class="calc-bar-fill rc" id="calcBarRc" style="width:44%;"></div></div>
+                </div>
+                <div class="calc-bar-row">
+                    <span class="calc-bar-lbl">Tổng điểm</span>
+                    <div class="calc-bar-track"><div class="calc-bar-fill total" id="calcBarTotal" style="width:41%;"></div></div>
+                </div>
+            </div>
+
+            <!-- Điều chỉnh số câu đúng từng Part (Sliders) -->
+            <div class="calc-slider-section">
+                <div class="calc-slider-title">Điều chỉnh số câu đúng từng Part</div>
+
+                <div class="calc-slider-item">
+                    <div class="calc-slider-top"><span>Part 1: Hình ảnh</span><span class="calc-slider-max">Tối đa 6 câu</span></div>
+                    <div class="calc-slider-ctrl">
+                        <input type="range" id="slP1" min="0" max="6" value="5">
+                        <span class="calc-val-box" id="valP1">5</span>
+                    </div>
+                </div>
+
+                <div class="calc-slider-item">
+                    <div class="calc-slider-top"><span>Part 2: Hỏi & Đáp</span><span class="calc-slider-max">Tối đa 25 câu</span></div>
+                    <div class="calc-slider-ctrl">
+                        <input type="range" id="slP2" min="0" max="25" value="17">
+                        <span class="calc-val-box" id="valP2">17</span>
+                    </div>
+                </div>
+
+                <div class="calc-slider-item">
+                    <div class="calc-slider-top"><span>Part 3: Hội thoại ngắn</span><span class="calc-slider-max">Tối đa 39 câu</span></div>
+                    <div class="calc-slider-ctrl">
+                        <input type="range" id="slP3" min="0" max="39" value="19">
+                        <span class="calc-val-box" id="valP3">19</span>
+                    </div>
+                </div>
+
+                <div class="calc-slider-item">
+                    <div class="calc-slider-top"><span>Part 4: Bài nói ngắn</span><span class="calc-slider-max">Tối đa 30 câu</span></div>
+                    <div class="calc-slider-ctrl">
+                        <input type="range" id="slP4" min="0" max="30" value="0">
+                        <span class="calc-val-box" id="valP4">0</span>
+                    </div>
+                </div>
+
+                <div class="calc-slider-item">
+                    <div class="calc-slider-top"><span>Reading (Part 5 - 7)</span><span class="calc-slider-max">Tối đa 100 câu</span></div>
+                    <div class="calc-slider-ctrl">
+                        <input type="range" id="slRc" min="0" max="100" value="45">
+                        <span class="calc-val-box" id="valRc">45</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Hồ sơ -->
     <div class="profile-overlay" id="profileOverlay">
         <div class="profile-card">
             <div class="drawer-head">
@@ -1606,7 +1900,7 @@
         let mobilePdfDoc = null;
         let mobileCurrentPage = 1;
 
-        // CẤU HÌNH FIREBASE REALTIME SYNC
+        // CẤU HÌNH FIREBASE REALTIME
         const firebaseConfig = {
             apiKey: "AIzaSyDyu65Udqqj1Bysvf7WqupXtELa-8QHFa8",
             authDomain: "admintoeic-9cc9d.firebaseapp.com",
@@ -1634,7 +1928,7 @@
                     device: isMobileDevice() ? 'Điện thoại' : 'Máy tính'
                 });
             } catch (e) {
-                console.warn("Lỗi gửi dữ liệu về Firebase:", e);
+                console.warn("Lỗi gửi Firebase:", e);
             }
         }
 
@@ -1688,7 +1982,85 @@
             document.head.appendChild(script);
         }
 
-        // Menu & Theme
+        // BẢNG QUY ĐỔI ĐIỂM CHUẨN ETS
+        const ETS_LC_TABLE = [
+            5, 5, 5, 5, 5, 5, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70,
+            75, 80, 85, 90, 95, 100, 110, 115, 120, 125, 130, 135, 140, 145, 150, 160, 165, 170, 175, 180,
+            185, 190, 195, 200, 210, 215, 220, 230, 240, 245, 250, 255, 260, 270, 275, 280, 290, 295, 300, 310,
+            315, 320, 325, 330, 340, 345, 350, 360, 365, 370, 380, 385, 390, 395, 400, 405, 410, 420, 425, 430,
+            440, 445, 450, 460, 465, 470, 475, 480, 485, 490, 495, 495, 495, 495, 495, 495, 495, 495, 495, 495, 495
+        ];
+        const ETS_RC_TABLE = [
+            5, 5, 5, 5, 5, 5, 5, 5, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60,
+            65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160,
+            165, 170, 175, 180, 185, 190, 195, 200, 205, 210, 215, 220, 225, 230, 235, 240, 250, 255, 260, 265,
+            270, 280, 285, 290, 300, 305, 310, 320, 325, 330, 335, 340, 350, 355, 360, 365, 370, 380, 385, 390,
+            395, 400, 405, 410, 415, 420, 425, 430, 435, 445, 450, 455, 465, 470, 480, 485, 490, 495, 495, 495, 495
+        ];
+
+        // LOGIC CÔNG CỤ TÍNH ĐIỂM (CALCULATOR)
+        const calcModalOverlay = document.getElementById('calcModalOverlay');
+        const calcToggleBtn = document.getElementById('calcToggleBtn');
+        const calcModalCloseBtn = document.getElementById('calcModalCloseBtn');
+
+        calcToggleBtn.addEventListener('click', () => {
+            calcModalOverlay.classList.add('open');
+            updateCalculator();
+        });
+        calcModalCloseBtn.addEventListener('click', () => {
+            calcModalOverlay.classList.remove('open');
+        });
+
+        const slP1 = document.getElementById('slP1');
+        const slP2 = document.getElementById('slP2');
+        const slP3 = document.getElementById('slP3');
+        const slP4 = document.getElementById('slP4');
+        const slRc = document.getElementById('slRc');
+
+        function updateCalculator() {
+            const p1 = parseInt(slP1.value, 10);
+            const p2 = parseInt(slP2.value, 10);
+            const p3 = parseInt(slP3.value, 10);
+            const p4 = parseInt(slP4.value, 10);
+            const rc = parseInt(slRc.value, 10);
+
+            document.getElementById('valP1').textContent = p1;
+            document.getElementById('valP2').textContent = p2;
+            document.getElementById('valP3').textContent = p3;
+            document.getElementById('valP4').textContent = p4;
+            document.getElementById('valRc').textContent = rc;
+
+            const totalLc = Math.min(100, p1 + p2 + p3 + p4);
+            const baseLc = ETS_LC_TABLE[totalLc];
+            const baseRc = ETS_RC_TABLE[rc];
+
+            const minLc = Math.max(5, baseLc - 25);
+            const maxLc = Math.min(495, baseLc + 30);
+            const minTotal = minLc + baseRc;
+            const maxTotal = maxLc + baseRc;
+
+            document.getElementById('calcLcScore').textContent = `${minLc} - ${maxLc}`;
+            document.getElementById('calcLcCountSub').textContent = `${totalLc} / 100 câu đúng`;
+
+            document.getElementById('calcRcScore').textContent = `${baseRc}`;
+            document.getElementById('calcRcCountSub').textContent = `${rc} / 100 câu đúng`;
+
+            document.getElementById('calcTotalScore').textContent = `${minTotal} - ${maxTotal}`;
+
+            const lcPct = Math.round((baseLc / 495) * 100);
+            const rcPct = Math.round((baseRc / 495) * 100);
+            const totalPct = Math.round(((baseLc + baseRc) / 990) * 100);
+
+            document.getElementById('calcBarLc').style.width = lcPct + '%';
+            document.getElementById('calcBarRc').style.width = rcPct + '%';
+            document.getElementById('calcBarTotal').style.width = totalPct + '%';
+        }
+
+        [slP1, slP2, slP3, slP4, slRc].forEach(slider => {
+            slider.addEventListener('input', updateCalculator);
+        });
+
+        // Menu Dropdown & Theme
         const menuToggleBtn = document.getElementById('menuToggleBtn');
         const dropdownMenu = document.getElementById('dropdownMenu');
         menuToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); dropdownMenu.classList.toggle('open'); });
@@ -1967,7 +2339,8 @@
                     if (!Array.isArray(list)) return;
                     list.forEach(item => {
                         const w = item.word.toLowerCase();
-                        if (w.includes(' ') || w.includes('-') || seen.has(w)) return;
+                        if (w.includes(' ') || w.includes('-')) return;
+                        if (seen.has(w)) return;
                         seen.add(w);
                         let freq = 0;
                         if (item.tags) {
@@ -2353,21 +2726,6 @@
                 list.appendChild(card);
             });
         }
-
-        const ETS_LC_TABLE = [
-            5, 5, 5, 5, 5, 5, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70,
-            75, 80, 85, 90, 95, 100, 110, 115, 120, 125, 130, 135, 140, 145, 150, 160, 165, 170, 175, 180,
-            185, 190, 195, 200, 210, 215, 220, 230, 240, 245, 250, 255, 260, 270, 275, 280, 290, 295, 300, 310,
-            315, 320, 325, 330, 340, 345, 350, 360, 365, 370, 380, 385, 390, 395, 400, 405, 410, 420, 425, 430,
-            440, 445, 450, 460, 465, 470, 475, 480, 485, 490, 495, 495, 495, 495, 495, 495, 495, 495, 495, 495, 495
-        ];
-        const ETS_RC_TABLE = [
-            5, 5, 5, 5, 5, 5, 5, 5, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60,
-            65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160,
-            165, 170, 175, 180, 185, 190, 195, 200, 205, 210, 215, 220, 225, 230, 235, 240, 250, 255, 260, 265,
-            270, 280, 285, 290, 300, 305, 310, 320, 325, 330, 335, 340, 350, 355, 360, 365, 370, 380, 385, 390,
-            395, 400, 405, 410, 415, 420, 425, 430, 435, 445, 450, 455, 465, 470, 480, 485, 490, 495, 495, 495, 495
-        ];
 
         function computeScore(t, testKey) {
             let lcCorrect = 0, rcCorrect = 0;
@@ -2759,7 +3117,7 @@
                 });
             });
 
-            // NÚT CHẤM BÀI: TÍNH ĐIỂM + LƯU LOCAL + GỬI LÊN FIREBASE REALTIME
+            // NÚT CHẤM BÀI
             document.getElementById('gradeBtn').addEventListener('click', () => {
                 t.isGraded = true; stopTimer();
                 const res = computeScore(t, testKey);
@@ -2775,7 +3133,7 @@
                 };
 
                 addResultRecord(record);
-                syncResultToFirebase(record); // Đồng bộ ngầm về Admin Dashboard
+                syncResultToFirebase(record);
                 renderMain();
             });
 
