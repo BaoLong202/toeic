@@ -66,7 +66,7 @@
             touch-action: manipulation;
         }
 
-        /* CUSTOM THANH CUỘN GỌN GÀNG */
+        /* CUSTOM THANH CUỘN */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -483,11 +483,11 @@
 
         .pdf-canvas-item {
             display: block;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            margin: 0 auto 14px auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
             background: #ffffff;
             max-width: 100%;
-            height: auto;
+            height: auto !important;
             border-radius: 4px;
         }
 
@@ -860,7 +860,6 @@
             color: var(--text-primary);
         }
 
-        /* CỜ ĐÁNH DẤU: ẨN MẶC ĐỊNH, RÊ CHUỘT MỚI HIỆN */
         .btn-flag {
             background: transparent;
             border: none;
@@ -970,9 +969,9 @@
         .drawer {
             position: fixed;
             top: 0;
-            right: -430px;
-            width: 390px;
-            max-width: 90vw;
+            right: -450px;
+            width: 420px;
+            max-width: 92vw;
             height: 100%;
             background: var(--bg-surface);
             border-left: 1px solid var(--border);
@@ -1048,6 +1047,107 @@
             overflow-y: auto;
         }
 
+        /* GIAO DIỆN LỊCH SỬ LÀM BÀI DASHBOARD */
+        .history-card {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: border-color 0.15s ease;
+        }
+
+            .history-card:hover {
+                border-color: var(--border-hover);
+            }
+
+        .history-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .history-test-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .history-date {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .history-score-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+
+        .history-total-badge {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--brand);
+        }
+
+        .history-sub-scores {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 8px;
+        }
+
+        .history-parts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+            margin-top: 2px;
+        }
+
+        .history-part-chip {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 5px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+        }
+
+            .history-part-chip.full-width {
+                grid-column: span 2;
+            }
+
+        .history-part-title {
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .history-part-count {
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+            .history-part-count.good {
+                color: var(--success);
+            }
+
+            .history-part-count.weak {
+                color: var(--warning);
+            }
+
+        /* Giao diện Từ điển */
         .vocab-card {
             background: var(--bg-subtle);
             border: 1px solid var(--border);
@@ -1492,7 +1592,7 @@
 
         <div class="drawer" id="historyDrawer">
             <div class="drawer-head">
-                <span class="drawer-title">Lịch sử kết quả</span>
+                <span class="drawer-title">📜 Lịch sử kết quả làm bài</span>
                 <button class="drawer-close" id="historyCloseBtn">&times;</button>
             </div>
             <div class="vocab-body" id="historyListEl"></div>
@@ -1513,7 +1613,7 @@
         let mobileCurrentPage = 1;
 
         function isMobileDevice() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
         function cleanupPdfResources() {
@@ -2017,42 +2117,111 @@
             }
         });
 
-        // Lịch sử kết quả
+        // LỊCH SỬ KẾT QUẢ ĐÃ CHIA CHI TIẾT THEO PART
         const historyDrawer = document.getElementById('historyDrawer');
         const historyListEl = document.getElementById('historyListEl');
 
         function renderHistoryDrawer() {
             const profile = getCurrentProfile();
             if (!profile) {
-                historyListEl.innerHTML = '<div class="vocab-note" style="text-align:center;">Vui lòng bấm nút "👤 Đăng nhập" ở trên để chọn hồ sơ xem lịch sử.</div>';
+                historyListEl.innerHTML = '<div class="vocab-note" style="text-align:center; padding:30px 10px;">Vui lòng bấm nút "👤 Đăng nhập" ở trên để chọn hồ sơ xem lịch sử.</div>';
                 return;
             }
             const list = getResults(profile);
             if (list.length === 0) {
-                historyListEl.innerHTML = `<div class="vocab-note" style="text-align:center;">Chưa có kết quả làm bài nào cho hồ sơ <b>${profile}</b>.</div>`;
+                historyListEl.innerHTML = `<div class="vocab-note" style="text-align:center; padding:30px 10px;">Chưa có kết quả làm bài nào cho hồ sơ <b>${profile}</b>.</div>`;
                 return;
             }
             historyListEl.innerHTML = '';
             list.forEach((r, idx) => {
                 const card = document.createElement('div');
-                card.className = 'review-card';
-                card.style.padding = '10px 12px';
+                card.className = 'history-card';
                 let dateStr = r.date;
                 try { dateStr = new Date(r.date).toLocaleString('vi-VN'); } catch (e) { }
-                card.innerHTML = `
-                      <div style="font-weight:700; font-size:13px; color:var(--text-primary);">${r.testName} <span style="color:var(--text-muted); font-size:11px;">• ${dateStr}</span></div>
-                      <div style="margin-top:4px; font-size:12.5px; color:var(--text-secondary);">Đúng <b>${r.totalCorrect}</b>/${r.gradedCount} câu • Điểm: <b style="color:var(--brand);">${r.scaled.total}</b>/990 (LC ${r.scaled.lc} | RC ${r.scaled.rc})</div>
-                    `;
-                const delBtn = document.createElement('button');
-                delBtn.className = 'btn-outline'; delBtn.style.marginTop = '8px'; delBtn.style.color = 'var(--danger)'; delBtn.textContent = 'Xoá kết quả này';
-                delBtn.onclick = () => {
-                    saveResults(profile, getResults(profile).filter((_, i) => i !== idx));
-                    renderHistoryDrawer();
+
+                // Tính toán số câu đúng từng Part nếu bản ghi cũ chưa lưu
+                const parts = r.parts || {
+                    p1: { correct: 0, total: 6 },
+                    p2: { correct: 0, total: 25 },
+                    p3: { correct: 0, total: 39 },
+                    p4: { correct: 0, total: 30 },
+                    p5: { correct: 0, total: 30 },
+                    p6: { correct: 0, total: 16 },
+                    p7: { correct: 0, total: 54 }
                 };
-                card.appendChild(delBtn);
+
+                const getStatusClass = (correct, total) => {
+                    const rate = correct / total;
+                    if (rate >= 0.75) return 'good';
+                    if (rate < 0.5) return 'weak';
+                    return '';
+                };
+
+                card.innerHTML = `
+                      <div class="history-top-row">
+                        <div>
+                            <div class="history-test-name">${r.testName}</div>
+                            <div class="history-date">${dateStr}</div>
+                        </div>
+                        <button class="btn-outline" style="padding:2px 8px; font-size:11px; color:var(--danger);" onclick="deleteHistoryRecord(${idx})">Xoá</button>
+                      </div>
+
+                      <div class="history-score-banner">
+                        <div>
+                            <span style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Tổng điểm</span>
+                            <div class="history-total-badge">${r.scaled.total}<span style="font-size:12px; color:var(--text-muted); font-weight:600;">/990</span></div>
+                        </div>
+                        <div class="history-sub-scores">
+                            <span>LC: <b style="color:var(--brand);">${r.scaled.lc}</b></span>
+                            <span>•</span>
+                            <span>RC: <b style="color:var(--brand);">${r.scaled.rc}</b></span>
+                            <span>•</span>
+                            <span>Đúng: <b>${r.totalCorrect}</b>/200</span>
+                        </div>
+                      </div>
+
+                      <div style="font-size:11px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-top:2px;">Chi tiết từng Part</div>
+                      <div class="history-parts-grid">
+                        <div class="history-part-chip">
+                            <span class="history-part-title">Part 1</span>
+                            <span class="history-part-count ${getStatusClass(parts.p1.correct, parts.p1.total)}">${parts.p1.correct}/${parts.p1.total}</span>
+                        </div>
+                        <div class="history-part-chip">
+                            <span class="history-part-title">Part 2</span>
+                            <span class="history-part-count ${getStatusClass(parts.p2.correct, parts.p2.total)}">${parts.p2.correct}/${parts.p2.total}</span>
+                        </div>
+                        <div class="history-part-chip">
+                            <span class="history-part-title">Part 3</span>
+                            <span class="history-part-count ${getStatusClass(parts.p3.correct, parts.p3.total)}">${parts.p3.correct}/${parts.p3.total}</span>
+                        </div>
+                        <div class="history-part-chip">
+                            <span class="history-part-title">Part 4</span>
+                            <span class="history-part-count ${getStatusClass(parts.p4.correct, parts.p4.total)}">${parts.p4.correct}/${parts.p4.total}</span>
+                        </div>
+                        <div class="history-part-chip">
+                            <span class="history-part-title">Part 5</span>
+                            <span class="history-part-count ${getStatusClass(parts.p5.correct, parts.p5.total)}">${parts.p5.correct}/${parts.p5.total}</span>
+                        </div>
+                        <div class="history-part-chip">
+                            <span class="history-part-title">Part 6</span>
+                            <span class="history-part-count ${getStatusClass(parts.p6.correct, parts.p6.total)}">${parts.p6.correct}/${parts.p6.total}</span>
+                        </div>
+                        <div class="history-part-chip full-width">
+                            <span class="history-part-title">Part 7 (Reading Comprehension)</span>
+                            <span class="history-part-count ${getStatusClass(parts.p7.correct, parts.p7.total)}">${parts.p7.correct}/${parts.p7.total}</span>
+                        </div>
+                      </div>
+                    `;
                 historyListEl.appendChild(card);
             });
         }
+
+        window.deleteHistoryRecord = function (idx) {
+            const profile = getCurrentProfile();
+            if (!profile) return;
+            saveResults(profile, getResults(profile).filter((_, i) => i !== idx));
+            renderHistoryDrawer();
+        };
 
         document.getElementById('historyToggleBtn').addEventListener('click', () => {
             vocabDrawer.classList.remove('open');
@@ -2253,15 +2422,46 @@
             395, 400, 405, 410, 415, 420, 425, 430, 435, 445, 450, 455, 465, 470, 480, 485, 490, 495, 495, 495, 495
         ];
 
+        // TÍNH ĐIỂM VÀ PHÂN TÁCH CHI TIẾT THEO TỪNG PART
         function computeScore(t, testKey) {
             let lcCorrect = 0, rcCorrect = 0;
-            Object.keys(testKey).forEach(qStr => {
-                const q = parseInt(qStr, 10);
-                if (t.answers[q] === testKey[q]) { q <= 100 ? lcCorrect++ : rcCorrect++; }
-            });
+            const parts = {
+                p1: { correct: 0, total: 6 },
+                p2: { correct: 0, total: 25 },
+                p3: { correct: 0, total: 39 },
+                p4: { correct: 0, total: 30 },
+                p5: { correct: 0, total: 30 },
+                p6: { correct: 0, total: 16 },
+                p7: { correct: 0, total: 54 }
+            };
+
+            for (let q = 1; q <= 200; q++) {
+                const isRight = testKey[q] && t.answers[q] === testKey[q];
+                if (q <= 100) {
+                    if (isRight) lcCorrect++;
+                } else {
+                    if (isRight) rcCorrect++;
+                }
+
+                if (isRight) {
+                    if (q <= 6) parts.p1.correct++;
+                    else if (q <= 31) parts.p2.correct++;
+                    else if (q <= 70) parts.p3.correct++;
+                    else if (q <= 100) parts.p4.correct++;
+                    else if (q <= 130) parts.p5.correct++;
+                    else if (q <= 146) parts.p6.correct++;
+                    else parts.p7.correct++;
+                }
+            }
+
             const lc = ETS_LC_TABLE[Math.min(100, lcCorrect)];
             const rc = ETS_RC_TABLE[Math.min(100, rcCorrect)];
-            return { gradedCount: Object.keys(testKey).length, totalCorrect: lcCorrect + rcCorrect, scaled: { lc, rc, total: lc + rc } };
+            return {
+                gradedCount: Object.keys(testKey).length,
+                totalCorrect: lcCorrect + rcCorrect,
+                scaled: { lc, rc, total: lc + rc },
+                parts: parts
+            };
         }
 
         window.toggleInlineExpl = function (q) {
@@ -2394,7 +2594,7 @@
             docArea.innerHTML = '<div style="color:var(--text-muted); padding:20px; font-size:12px;">Đang tải trang...</div>';
 
             const page = await mobilePdfDoc.getPage(pageNumber);
-            const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 340;
+            const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 20) : 340;
             const unscaledViewport = page.getViewport({ scale: 1.0 });
             const scale = containerWidth / unscaledViewport.width;
             const viewport = page.getViewport({ scale: scale });
@@ -2403,8 +2603,8 @@
             canvas.className = 'pdf-canvas-item';
             canvas.width = Math.floor(viewport.width);
             canvas.height = Math.floor(viewport.height);
-            canvas.style.width = Math.floor(viewport.width) + "px";
-            canvas.style.height = Math.floor(viewport.height) + "px";
+            canvas.style.width = "100%";
+            canvas.style.maxWidth = Math.floor(viewport.width) + "px";
 
             docArea.innerHTML = '';
             docArea.appendChild(canvas);
@@ -2427,13 +2627,13 @@
             }
         };
 
-        // Render PDF tuần tự trực tiếp theo tỉ lệ chuẩn
+        // Render PDF chuẩn xác 100% bề ngang, không bị lệch góc
         async function renderDesktopPdf(pdf) {
             const docArea = document.getElementById('docArea');
             if (!docArea) return;
             docArea.innerHTML = '';
 
-            const containerWidth = docArea.clientWidth > 0 ? (docArea.clientWidth - 16) : 750;
+            const containerWidth = docArea.clientWidth > 40 ? (docArea.clientWidth - 32) : 720;
 
             for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                 const page = await pdf.getPage(pageNum);
@@ -2445,8 +2645,8 @@
                 canvas.className = 'pdf-canvas-item';
                 canvas.width = Math.floor(viewport.width);
                 canvas.height = Math.floor(viewport.height);
-                canvas.style.width = Math.floor(viewport.width) + "px";
-                canvas.style.height = Math.floor(viewport.height) + "px";
+                canvas.style.width = "100%";
+                canvas.style.maxWidth = Math.floor(viewport.width) + "px";
 
                 docArea.appendChild(canvas);
                 const context = canvas.getContext('2d');
@@ -2640,7 +2840,8 @@
                     date: new Date().toISOString(),
                     gradedCount: res.gradedCount,
                     totalCorrect: res.totalCorrect,
-                    scaled: res.scaled
+                    scaled: res.scaled,
+                    parts: res.parts
                 });
                 renderMain();
             });
