@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - TOEIC Analytics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --subtle: #21262d;
+            --border: #30363d;
+            --text-pri: #f0f6fc;
+            --text-mut: #8b949e;
+            --brand: #2f81f7;
+            --success: #238636;
+            --warning: #f59e0b;
+            --danger: #da3633;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-pri);
+            padding: 24px 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+            .header h2 {
+                font-size: 20px;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #238636;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #238636;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+            .stat-card h4 {
+                font-size: 11.5px;
+                color: var(--text-mut);
+                text-transform: uppercase;
+                font-weight: 700;
+                margin-bottom: 6px;
+            }
+
+            .stat-card .val {
+                font-size: 26px;
+                font-weight: 800;
+                color: var(--brand);
+            }
+
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            text-align: left;
+            font-size: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--subtle);
+            color: var(--text-mut);
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .badge {
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            display: inline-block;
+        }
+
+        .badge-score {
+            background: rgba(47, 129, 247, 0.15);
+            color: var(--brand);
+            font-size: 13px;
+        }
+
+        .badge-device {
+            background: var(--subtle);
+            color: var(--text-mut);
+            border: 1px solid var(--border);
+        }
+
+        .parts-summary {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            max-width: 280px;
+        }
+
+        .part-tag {
+            font-size: 10.5px;
+            padding: 1px 5px;
+            border-radius: 4px;
+            background: var(--subtle);
+            border: 1px solid var(--border);
+        }
+
+            .part-tag.good {
+                color: #34d399;
+            }
+
+            .part-tag.weak {
+                color: #fbbf24;
+            }
+
+        .btn-del {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--danger);
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+            .btn-del:hover {
+                background: rgba(218, 54, 51, 0.15);
+            }
+    </style>
+</head>
+<body>
+    <!-- Khung xác thực mật khẩu -->
+    <div class="container" id="authBox" style="max-width:340px; margin:100px auto; text-align:center;">
+        <h3 style="margin-bottom:12px; font-weight:800;">Admin Dashboard</h3>
+        <input type="password" id="adminPass" placeholder="Nhập mã PIN truy cập..." style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:#fff; margin-bottom:10px; text-align:center; outline:none;">
+        <button onclick="checkPass()" style="width:100%; padding:10px; border-radius:6px; background:var(--brand); border:none; color:#fff; font-weight:700; cursor:pointer;">Vào trang quản trị</button>
+    </div>
+
+    <!-- Màn hình quản trị chính -->
+    <div class="container" id="dashboard" style="display:none;">
+        <div class="header">
+            <h2><span class="live-dot"></span> Bảng theo dõi lượt nộp bài TOEIC</h2>
+            <button onclick="clearAllData()" class="btn-del" style="padding:6px 12px;">Xóa toàn bộ lịch sử</button>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card"><h4>Tổng lượt làm bài</h4><div class="val" id="totalSubmits">0</div></div>
+            <div class="stat-card"><h4>Số người tham gia</h4><div class="val" id="totalUsers">0</div></div>
+            <div class="stat-card"><h4>Điểm trung bình</h4><div class="val" id="avgScore">0</div></div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Thời gian</th>
+                        <th>Họ tên / Hồ sơ</th>
+                        <th>Thiết bị</th>
+                        <th>Đề thi</th>
+                        <th>Tổng điểm</th>
+                        <th>Điểm LC / RC</th>
+                        <th>Số câu đúng</th>
+                        <th>Chi tiết Parts</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PIN = "123456"; // Đổi mã PIN bảo mật của bạn tại đây
+
+        function checkPass() {
+            if (document.getElementById('adminPass').value === ADMIN_PIN) {
+                document.getElementById('authBox').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                initFirebase();
+            } else {
+                alert("Mã PIN không chính xác!");
+            }
+        }
+
+        let db = null;
+
+        function initFirebase() {
+            const firebaseConfig = {
+                apiKey: "AIzaSyDyu65Udqqj1Bysvf7WqupXtELa-8QHFa8",
+                authDomain: "admintoeic-9cc9d.firebaseapp.com",
+                databaseURL: "https://admintoeic-9cc9d-default-rtdb.firebaseio.com",
+                projectId: "admintoeic-9cc9d",
+                storageBucket: "admintoeic-9cc9d.firebasestorage.app",
+                messagingSenderId: "684029208771",
+                appId: "1:684029208771:web:37a885410fd5b5b6a49a76"
+            };
+
+            if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+
+            db.ref('test_submissions').on('value', (snapshot) => {
+                const tbody = document.getElementById('tableBody');
+                tbody.innerHTML = '';
+                const records = [];
+
+                snapshot.forEach(child => {
+                    records.unshift({ key: child.key, ...child.val() });
+                });
+
+                document.getElementById('totalSubmits').textContent = records.length;
+                const uniqueUsers = new Set(records.map(r => r.profileName)).size;
+                document.getElementById('totalUsers').textContent = uniqueUsers;
+
+                const totalScore = records.reduce((s, r) => s + (r.totalScore || 0), 0);
+                document.getElementById('avgScore').textContent = records.length ? Math.round(totalScore / records.length) : 0;
+
+                if (records.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-mut);">Chưa có lượt nộp bài nào.</td></tr>`;
+                    return;
+                }
+
+                records.forEach(r => {
+                    const time = new Date(r.timestamp).toLocaleString('vi-VN');
+                    const p = r.parts || {};
+                    const partsHtml = `
+                        <div class="parts-summary">
+                            <span class="part-tag ${p.p1 && p.p1.correct >= 5 ? 'good' : 'weak'}">P1: ${p.p1 ? p.p1.correct : 0}/6</span>
+                            <span class="part-tag ${p.p2 && p.p2.correct >= 18 ? 'good' : 'weak'}">P2: ${p.p2 ? p.p2.correct : 0}/25</span>
+                            <span class="part-tag ${p.p3 && p.p3.correct >= 28 ? 'good' : 'weak'}">P3: ${p.p3 ? p.p3.correct : 0}/39</span>
+                            <span class="part-tag ${p.p4 && p.p4.correct >= 22 ? 'good' : 'weak'}">P4: ${p.p4 ? p.p4.correct : 0}/30</span>
+                            <span class="part-tag ${p.p5 && p.p5.correct >= 22 ? 'good' : 'weak'}">P5: ${p.p5 ? p.p5.correct : 0}/30</span>
+                            <span class="part-tag ${p.p6 && p.p6.correct >= 12 ? 'good' : 'weak'}">P6: ${p.p6 ? p.p6.correct : 0}/16</span>
+                            <span class="part-tag ${p.p7 && p.p7.correct >= 38 ? 'good' : 'weak'}">P7: ${p.p7 ? p.p7.correct : 0}/54</span>
+                        </div>
+                    `;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="color:var(--text-mut); font-size:12px;">${time}</td>
+                        <td><b>${r.profileName}</b></td>
+                        <td><span class="badge badge-device">${r.device || 'N/A'}</span></td>
+                        <td><b>${r.testName}</b></td>
+                        <td><span class="badge badge-score">${r.totalScore}/990</span></td>
+                        <td><b>${r.lcScore}</b> | <b>${r.rcScore}</b></td>
+                        <td><b>${r.correctCount}</b>/200</td>
+                        <td>${partsHtml}</td>
+                        <td><button class="btn-del" onclick="deleteRecord('${r.key}')">Xoá</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        function deleteRecord(key) {
+            if (confirm("Bạn có chắc muốn xoá bản ghi này?")) {
+                db.ref('test_submissions/' + key).remove();
+            }
+        }
+
+        function clearAllData() {
+            if (confirm("CẢNH BÁO: Bạn có chắc muốn xoá toàn bộ dữ liệu làm bài của tất cả mọi người?")) {
+                db.ref('test_submissions').remove();
+            }
+        }
+    </script>
+</body>
+</html>

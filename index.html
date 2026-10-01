@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <!-- Firebase SDK Compat -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <style>
         :root {
@@ -66,7 +69,6 @@
             touch-action: manipulation;
         }
 
-        /* CUSTOM THANH CUỘN */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -1047,7 +1049,7 @@
             overflow-y: auto;
         }
 
-        /* GIAO DIỆN LỊCH SỬ LÀM BÀI DASHBOARD */
+        /* LỊCH SỬ KẾT QUẢ THEO PART */
         .history-card {
             background: var(--bg-subtle);
             border: 1px solid var(--border);
@@ -1057,12 +1059,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            transition: border-color 0.15s ease;
         }
-
-            .history-card:hover {
-                border-color: var(--border-hover);
-            }
 
         .history-top-row {
             display: flex;
@@ -1147,7 +1144,6 @@
                 color: var(--warning);
             }
 
-        /* Giao diện Từ điển */
         .vocab-card {
             background: var(--bg-subtle);
             border: 1px solid var(--border);
@@ -1236,8 +1232,8 @@
             }
 
             .family-tag.v {
-                background: rgba(16, 185, 129, 0.15);
-                color: #34d399;
+                background: rgba(168, 85, 247, 0.15);
+                color: #c084fc;
             }
 
             .family-tag.adj {
@@ -1246,8 +1242,8 @@
             }
 
             .family-tag.adv {
-                background: rgba(168, 85, 247, 0.15);
-                color: #c084fc;
+                background: rgba(16, 185, 129, 0.15);
+                color: #34d399;
             }
 
         .family-words {
@@ -1400,6 +1396,7 @@
 
             to {
                 transform: scale(1);
+                opacity: 1;
             }
         }
 
@@ -1513,10 +1510,7 @@
     <header>
         <div style="display:flex; align-items:center; gap:6px;">
             <button id="sidebarToggleBtn" class="btn-outline">Mục lục</button>
-            <div class="brand-title">
-                TOEIC
-                <span class="brand-badge">ETS Series</span>
-            </div>
+            <div class="brand-title">TOEIC <span class="brand-badge">ETS Series</span></div>
         </div>
         <div class="header-actions">
             <button id="notebookToggleBtn" class="btn-outline">⭐ Sổ từ vựng</button>
@@ -1612,6 +1606,38 @@
         let mobilePdfDoc = null;
         let mobileCurrentPage = 1;
 
+        // CẤU HÌNH FIREBASE REALTIME SYNC
+        const firebaseConfig = {
+            apiKey: "AIzaSyDyu65Udqqj1Bysvf7WqupXtELa-8QHFa8",
+            authDomain: "admintoeic-9cc9d.firebaseapp.com",
+            databaseURL: "https://admintoeic-9cc9d-default-rtdb.firebaseio.com",
+            projectId: "admintoeic-9cc9d",
+            storageBucket: "admintoeic-9cc9d.firebasestorage.app",
+            messagingSenderId: "684029208771",
+            appId: "1:684029208771:web:37a885410fd5b5b6a49a76"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const fbDb = firebase.database();
+
+        function syncResultToFirebase(record) {
+            try {
+                fbDb.ref('test_submissions').push({
+                    profileName: getCurrentProfile() || 'Khách (Chưa đăng nhập)',
+                    testName: record.testName,
+                    testNum: record.testNum,
+                    totalScore: record.scaled.total,
+                    lcScore: record.scaled.lc,
+                    rcScore: record.scaled.rc,
+                    correctCount: record.totalCorrect,
+                    parts: record.parts,
+                    timestamp: Date.now(),
+                    device: isMobileDevice() ? 'Điện thoại' : 'Máy tính'
+                });
+            } catch (e) {
+                console.warn("Lỗi gửi dữ liệu về Firebase:", e);
+            }
+        }
+
         function isMobileDevice() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
@@ -1638,7 +1664,6 @@
             titleEl.textContent = title;
             descEl.textContent = message;
             cancelBtn.style.display = isConfirm ? 'inline-flex' : 'none';
-
             overlay.classList.add('open');
 
             const closeDialog = () => {
@@ -1647,10 +1672,7 @@
                 cancelBtn.onclick = null;
             };
 
-            confirmBtn.onclick = () => {
-                closeDialog();
-                if (onConfirm) onConfirm();
-            };
+            confirmBtn.onclick = () => { closeDialog(); if (onConfirm) onConfirm(); };
             cancelBtn.onclick = closeDialog;
         }
 
@@ -1661,24 +1683,15 @@
             }
             const script = document.createElement('script');
             script.src = `./data/test${testNum}.js?t=` + Date.now();
-            script.onload = () => {
-                renderMain();
-                if (callback) callback();
-            };
-            script.onerror = () => {
-                console.error(`Không thể nạp dữ liệu từ: ./data/test${testNum}.js`);
-                if (callback) callback();
-            };
+            script.onload = () => { renderMain(); if (callback) callback(); };
+            script.onerror = () => { console.error(`Lỗi nạp ./data/test${testNum}.js`); if (callback) callback(); };
             document.head.appendChild(script);
         }
 
         // Menu & Theme
         const menuToggleBtn = document.getElementById('menuToggleBtn');
         const dropdownMenu = document.getElementById('dropdownMenu');
-        menuToggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('open');
-        });
+        menuToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); dropdownMenu.classList.toggle('open'); });
         window.addEventListener('click', () => dropdownMenu.classList.remove('open'));
 
         const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -1702,7 +1715,7 @@
             }
         });
 
-        // Quản lý Hồ sơ
+        // Hồ sơ
         function getProfiles() {
             try { return JSON.parse(localStorage.getItem('toeic_profiles') || '[]'); } catch (e) { return []; }
         }
@@ -1722,7 +1735,7 @@
             saveResults(profile, list);
         }
 
-        // SỔ TAY TỪ VỰNG
+        // Sổ từ vựng
         function getNotebookKey(profile) { return 'toeic_notebook_' + (profile || 'default'); }
         function getSavedWords() {
             const profile = getCurrentProfile();
@@ -1732,10 +1745,8 @@
             const profile = getCurrentProfile();
             localStorage.setItem(getNotebookKey(profile), JSON.stringify(list));
         }
-
         function isWordSaved(word) {
-            const list = getSavedWords();
-            return list.some(item => item.word.toLowerCase() === word.toLowerCase());
+            return getSavedWords().some(item => item.word.toLowerCase() === word.toLowerCase());
         }
 
         window.toggleSaveWord = function (word, vi = '', def = '') {
@@ -1815,31 +1826,22 @@
             });
         }
 
-        profileBtn.addEventListener('click', () => {
-            renderProfileOverlay();
-            profileOverlay.classList.add('open');
-        });
-        document.getElementById('profileOverlayCloseBtn').addEventListener('click', () => {
-            profileOverlay.classList.remove('open');
-        });
+        profileBtn.addEventListener('click', () => { renderProfileOverlay(); profileOverlay.classList.add('open'); });
+        document.getElementById('profileOverlayCloseBtn').addEventListener('click', () => { profileOverlay.classList.remove('open'); });
         document.getElementById('createProfileBtn').addEventListener('click', () => {
             const name = newProfileInput.value.trim();
             if (!name) return;
             const profiles = getProfiles();
-            if (!profiles.includes(name)) {
-                profiles.push(name);
-                saveProfilesList(profiles);
-            }
+            if (!profiles.includes(name)) { profiles.push(name); saveProfilesList(profiles); }
             newProfileInput.value = '';
             setCurrentProfile(name);
             profileOverlay.classList.remove('open');
             updateProfileBtnLabel();
             renderNotebookDrawer();
         });
-
         updateProfileBtnLabel();
 
-        // Tra từ vựng hai chiều
+        // Tra từ & Sổ tay
         const vocabDrawer = document.getElementById('vocabDrawer');
         const vocabInput = document.getElementById('vocabInput');
         const vocabResult = document.getElementById('vocabResult');
@@ -1851,12 +1853,8 @@
             backdrop.classList.add('open');
             vocabInput.focus();
         });
-        document.getElementById('vocabCloseBtn').addEventListener('click', () => {
-            vocabDrawer.classList.remove('open');
-            backdrop.classList.remove('open');
-        });
+        document.getElementById('vocabCloseBtn').addEventListener('click', () => { vocabDrawer.classList.remove('open'); backdrop.classList.remove('open'); });
 
-        // Sổ từ vựng
         const notebookDrawer = document.getElementById('notebookDrawer');
         const notebookListEl = document.getElementById('notebookListEl');
         const notebookFilterInput = document.getElementById('notebookFilterInput');
@@ -1906,10 +1904,7 @@
             notebookDrawer.classList.add('open');
             backdrop.classList.add('open');
         });
-        document.getElementById('notebookCloseBtn').addEventListener('click', () => {
-            notebookDrawer.classList.remove('open');
-            backdrop.classList.remove('open');
-        });
+        document.getElementById('notebookCloseBtn').addEventListener('click', () => { notebookDrawer.classList.remove('open'); backdrop.classList.remove('open'); });
 
         async function fetchWithTimeout(url, ms = 3000) {
             const controller = new AbortController();
@@ -1918,24 +1913,18 @@
                 const res = await fetch(url, { signal: controller.signal });
                 clearTimeout(id);
                 return res.ok ? await res.json() : null;
-            } catch (e) {
-                clearTimeout(id);
-                return null;
-            }
+            } catch (e) { clearTimeout(id); return null; }
         }
 
         function isVietnamese(text) {
-            const vnRegex = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i;
-            return vnRegex.test(text);
+            return /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(text);
         }
 
         async function translateText(text, sl, tl) {
             try {
                 const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=` + encodeURIComponent(text);
                 const data = await fetchWithTimeout(url);
-                if (data && data[0]) {
-                    return data[0].map(s => s[0]).join('');
-                }
+                if (data && data[0]) return data[0].map(s => s[0]).join('');
             } catch (e) { }
             return '';
         }
@@ -1946,10 +1935,7 @@
             let stem = raw;
             const suffixes = ['tion', 'sion', 'ment', 'ence', 'ance', 'able', 'ible', 'ive', 'ing', 'ed', 'ly', 'er', 'or', 'al', 'ate', 'ize'];
             for (const suf of suffixes) {
-                if (stem.length > suf.length + 3 && stem.endsWith(suf)) {
-                    stem = stem.slice(0, -suf.length);
-                    break;
-                }
+                if (stem.length > suf.length + 3 && stem.endsWith(suf)) { stem = stem.slice(0, -suf.length); break; }
             }
             try {
                 const data = await fetchWithTimeout(`https://api.datamuse.com/words?sp=${encodeURIComponent(stem)}*&md=pf&max=40`);
@@ -1973,7 +1959,6 @@
             try {
                 const p1 = fetchWithTimeout(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word)}&md=f&max=15`);
                 const p2 = fetchWithTimeout(`https://api.datamuse.com/words?ml=${encodeURIComponent(word)}&md=f&max=15`);
-
                 const [synRes, mlRes] = await Promise.all([p1, p2]);
                 const candidates = [];
                 const seen = new Set([word.toLowerCase()]);
@@ -1982,10 +1967,8 @@
                     if (!Array.isArray(list)) return;
                     list.forEach(item => {
                         const w = item.word.toLowerCase();
-                        if (w.includes(' ') || w.includes('-')) return;
-                        if (seen.has(w)) return;
+                        if (w.includes(' ') || w.includes('-') || seen.has(w)) return;
                         seen.add(w);
-
                         let freq = 0;
                         if (item.tags) {
                             const fTag = item.tags.find(t => t.startsWith('f:'));
@@ -1994,10 +1977,7 @@
                         candidates.push({ word: w, freq });
                     });
                 };
-
-                processList(synRes);
-                processList(mlRes);
-
+                processList(synRes); processList(mlRes);
                 candidates.sort((a, b) => b.freq - a.freq);
                 return candidates.slice(0, 8).map(x => x.word);
             } catch (e) { }
@@ -2024,7 +2004,6 @@
             }
 
             const primaryEnWord = englishWord.split(' ')[0].replace(/[^a-zA-Z]/g, '');
-
             const [dmDefData, rawSyns, family] = await Promise.all([
                 fetchWithTimeout(`https://api.datamuse.com/words?sp=${encodeURIComponent(primaryEnWord)}&md=dpf&max=1`),
                 fetchSynonyms(primaryEnWord),
@@ -2103,7 +2082,6 @@
                       </div>
                     </div>
                 `;
-
             vocabResult.innerHTML = html;
         }
 
@@ -2117,7 +2095,7 @@
             }
         });
 
-        // LỊCH SỬ KẾT QUẢ ĐÃ CHIA CHI TIẾT THEO PART
+        // Lịch sử kết quả
         const historyDrawer = document.getElementById('historyDrawer');
         const historyListEl = document.getElementById('historyListEl');
 
@@ -2139,15 +2117,9 @@
                 let dateStr = r.date;
                 try { dateStr = new Date(r.date).toLocaleString('vi-VN'); } catch (e) { }
 
-                // Tính toán số câu đúng từng Part nếu bản ghi cũ chưa lưu
                 const parts = r.parts || {
-                    p1: { correct: 0, total: 6 },
-                    p2: { correct: 0, total: 25 },
-                    p3: { correct: 0, total: 39 },
-                    p4: { correct: 0, total: 30 },
-                    p5: { correct: 0, total: 30 },
-                    p6: { correct: 0, total: 16 },
-                    p7: { correct: 0, total: 54 }
+                    p1: { correct: 0, total: 6 }, p2: { correct: 0, total: 25 }, p3: { correct: 0, total: 39 },
+                    p4: { correct: 0, total: 30 }, p5: { correct: 0, total: 30 }, p6: { correct: 0, total: 16 }, p7: { correct: 0, total: 54 }
                 };
 
                 const getStatusClass = (correct, total) => {
@@ -2230,10 +2202,7 @@
             historyDrawer.classList.add('open');
             backdrop.classList.add('open');
         });
-        document.getElementById('historyCloseBtn').addEventListener('click', () => {
-            historyDrawer.classList.remove('open');
-            backdrop.classList.remove('open');
-        });
+        document.getElementById('historyCloseBtn').addEventListener('click', () => { historyDrawer.classList.remove('open'); backdrop.classList.remove('open'); });
         backdrop.addEventListener('click', () => {
             vocabDrawer.classList.remove('open');
             historyDrawer.classList.remove('open');
@@ -2242,7 +2211,7 @@
             sidebarEl.classList.remove('open');
         });
 
-        // Khởi tạo 10 đề ETS
+        // 10 đề thi ETS
         let tests = [];
         for (let i = 1; i <= 10; i++) {
             tests.push({
@@ -2334,9 +2303,7 @@
 
         window.changeAudioSpeed = function (speed) {
             const audio = document.getElementById('mainAudioPlayer');
-            if (audio) {
-                audio.playbackRate = parseFloat(speed);
-            }
+            if (audio) audio.playbackRate = parseFloat(speed);
         };
 
         window.setAudioToolbarVisible = function (visible) {
@@ -2348,35 +2315,21 @@
             isFocusPdfMode = !isFocusPdfMode;
             const split = document.getElementById('panelsSplitArea');
             const btn = document.getElementById('btnToggleFocus');
-            if (split) {
-                split.classList.toggle('focus-mode', isFocusPdfMode);
-            }
-            if (btn) {
-                btn.innerHTML = isFocusPdfMode ? '⛶ Thu gọn đề' : '⛶ Đọc rộng hơn';
-            }
+            if (split) split.classList.toggle('focus-mode', isFocusPdfMode);
+            if (btn) btn.innerHTML = isFocusPdfMode ? '⛶ Thu gọn đề' : '⛶ Đọc rộng hơn';
         };
 
         window.addEventListener('keydown', (e) => {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
-            if (e.key === 'ArrowLeft') {
-                e.preventDefault();
-                window.skipAudio(-5);
-            } else if (e.key === 'ArrowRight') {
-                e.preventDefault();
-                window.skipAudio(5);
-            }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); window.skipAudio(-5); }
+            else if (e.key === 'ArrowRight') { e.preventDefault(); window.skipAudio(5); }
         });
 
         window.toggleFlag = function (q) {
             const t = tests.find(x => x.id === activeId);
             if (!t) return;
             t.flags[q] = !t.flags[q];
-
-            if (activePartFilter === 'flagged') {
-                renderQuestionsGridOnly();
-                return;
-            }
-
+            if (activePartFilter === 'flagged') { renderQuestionsGridOnly(); return; }
             const row = document.getElementById(`qrow-${q}`);
             const btn = document.getElementById(`flagbtn-${q}`);
             if (row && btn) {
@@ -2394,14 +2347,8 @@
                 card.innerHTML = `<div class="test-item-title">${t.name}</div>`;
                 card.addEventListener('click', () => {
                     activeId = t.id;
-                    ensureTestDataLoaded(t.testNum, () => {
-                        renderSidebar();
-                        renderMain();
-                    });
-                    if (window.innerWidth <= 768) {
-                        sidebarEl.classList.remove('open');
-                        backdrop.classList.remove('open');
-                    }
+                    ensureTestDataLoaded(t.testNum, () => { renderSidebar(); renderMain(); });
+                    if (window.innerWidth <= 768) { sidebarEl.classList.remove('open'); backdrop.classList.remove('open'); }
                 });
                 list.appendChild(card);
             });
@@ -2422,26 +2369,17 @@
             395, 400, 405, 410, 415, 420, 425, 430, 435, 445, 450, 455, 465, 470, 480, 485, 490, 495, 495, 495, 495
         ];
 
-        // TÍNH ĐIỂM VÀ PHÂN TÁCH CHI TIẾT THEO TỪNG PART
         function computeScore(t, testKey) {
             let lcCorrect = 0, rcCorrect = 0;
             const parts = {
-                p1: { correct: 0, total: 6 },
-                p2: { correct: 0, total: 25 },
-                p3: { correct: 0, total: 39 },
-                p4: { correct: 0, total: 30 },
-                p5: { correct: 0, total: 30 },
-                p6: { correct: 0, total: 16 },
-                p7: { correct: 0, total: 54 }
+                p1: { correct: 0, total: 6 }, p2: { correct: 0, total: 25 }, p3: { correct: 0, total: 39 },
+                p4: { correct: 0, total: 30 }, p5: { correct: 0, total: 30 }, p6: { correct: 0, total: 16 }, p7: { correct: 0, total: 54 }
             };
 
             for (let q = 1; q <= 200; q++) {
                 const isRight = testKey[q] && t.answers[q] === testKey[q];
-                if (q <= 100) {
-                    if (isRight) lcCorrect++;
-                } else {
-                    if (isRight) rcCorrect++;
-                }
+                if (q <= 100) { if (isRight) lcCorrect++; }
+                else { if (isRight) rcCorrect++; }
 
                 if (isRight) {
                     if (q <= 6) parts.p1.correct++;
@@ -2485,9 +2423,7 @@
 
             let targetQuestions = [];
             if (activePartFilter === 'flagged') {
-                for (let q = 1; q <= 200; q++) {
-                    if (t.flags[q]) targetQuestions.push(q);
-                }
+                for (let q = 1; q <= 200; q++) { if (t.flags[q]) targetQuestions.push(q); }
                 if (targetQuestions.length === 0) {
                     grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:35px 10px; color:var(--text-muted); font-size:13px; font-weight:600;">Chưa có câu nào được gắn cờ phân vân ⚑.</div>';
                     return;
@@ -2551,7 +2487,6 @@
             });
 
             grid.appendChild(fragment);
-
             document.querySelectorAll('.part-nav-tab').forEach(tab => {
                 tab.classList.toggle('active', tab.getAttribute('data-part') === activePartFilter);
             });
@@ -2584,7 +2519,7 @@
             if (progFill) progFill.style.width = pct + '%';
         };
 
-        // Render trang PDF đơn lẻ cho Mobile
+        // Render trang PDF Mobile
         async function renderSingleMobilePage(pageNumber) {
             if (!mobilePdfDoc) return;
             const docArea = document.getElementById('docArea');
@@ -2627,7 +2562,7 @@
             }
         };
 
-        // Render PDF chuẩn xác 100% bề ngang, không bị lệch góc
+        // Render Desktop PDF
         async function renderDesktopPdf(pdf) {
             const docArea = document.getElementById('docArea');
             if (!docArea) return;
@@ -2654,7 +2589,6 @@
             }
         }
 
-        // HÀM RENDER CHÍNH (ĐỒNG BỘ NỘI DUNG DOM)
         function renderMain() {
             const t = tests.find(x => x.id === activeId);
             const mainStage = document.getElementById('mainStage');
@@ -2665,7 +2599,6 @@
 
             const testKey = window.TOEIC_KEYS[t.testNum] || {};
 
-            // Audio Bar
             if (isAudioToolbarOpen) {
                 const audioBar = document.createElement('div');
                 audioBar.className = 'audio-toolbar';
@@ -2698,7 +2631,6 @@
 
             const currentActivePdf = t.viewMode === 'pdfR' ? t.pdfReadingUrl : t.pdfListeningUrl;
 
-            // Khung xem PDF & Transcript
             const viewerPanel = document.createElement('div');
             viewerPanel.className = 'viewer-panel';
             viewerPanel.innerHTML = `
@@ -2724,7 +2656,6 @@
                 `;
             panels.appendChild(viewerPanel);
 
-            // Phiếu làm bài
             const sheetPanel = document.createElement('div');
             sheetPanel.className = 'sheet-panel';
             const count = Object.keys(t.answers).length;
@@ -2796,10 +2727,7 @@
                 const targetTest = tests.find(x => x.testNum === nextNum);
                 if (targetTest) {
                     activeId = targetTest.id;
-                    ensureTestDataLoaded(nextNum, () => {
-                        renderSidebar();
-                        renderMain();
-                    });
+                    ensureTestDataLoaded(nextNum, () => { renderSidebar(); renderMain(); });
                 }
             });
 
@@ -2831,10 +2759,12 @@
                 });
             });
 
+            // NÚT CHẤM BÀI: TÍNH ĐIỂM + LƯU LOCAL + GỬI LÊN FIREBASE REALTIME
             document.getElementById('gradeBtn').addEventListener('click', () => {
                 t.isGraded = true; stopTimer();
                 const res = computeScore(t, testKey);
-                addResultRecord({
+
+                const record = {
                     testName: t.name,
                     testNum: t.testNum,
                     date: new Date().toISOString(),
@@ -2842,7 +2772,10 @@
                     totalCorrect: res.totalCorrect,
                     scaled: res.scaled,
                     parts: res.parts
-                });
+                };
+
+                addResultRecord(record);
+                syncResultToFirebase(record); // Đồng bộ ngầm về Admin Dashboard
                 renderMain();
             });
 
