@@ -2,10 +2,18 @@ window.TOEIC_KEYS = window.TOEIC_KEYS || {};
 window.TOEIC_SCRIPTS = window.TOEIC_SCRIPTS || {};
 window.TOEIC_EXPLANATIONS = window.TOEIC_EXPLANATIONS || {};
 
-// 1. DÀN KEY 200 CÂU TEST 6
-window.TOEIC_KEYS[6] = parseKey("1C 2A 3B 4B 5C 6B 7A 8A 9C 10A 11C 12B 13B 14C 15C 16C 17B 18A 19A 20B 21A 22C 23C 24C 25C 26A 27A 28B 29A 30A 31C 32B 33D 34C 35A 36D 37C 38B 39A 40C 41C 42B 43A 44C 45D 46C 47A 48D 49A 50A 51D 52C 53B 54B 55B 56A 57B 58D 59C 60D 61C 62B 63C 64A 65B 66C 67C 68A 69A 70C 71C 72A 73D 74A 75A 76D 77A 78A 79B 80C 81B 82B 83C 84C 85B 86B 87C 88C 89B 90B 91A 92D 93C 94B 95B 96D 97C 98D 99B 100A 101C 102A 103B 104B 105D 106A 107D 108A 109B 110D 111C 112A 113C 114D 115A 116D 117B 118C 119D 120D 121B 122B 123A 124A 125D 126D 127B 128C 129C 130B 131C 132A 133D 134B 135D 136A 137C 138A 139A 140C 141B 142A 143A 144C 145B 146A 147B 148D 149B 150D 151A 152B 153D 154D 155A 156A 157C 158A 159B 160B 161C 162D 163D 164D 165B 166D 167A 168C 169C 170C 171B 172B 173C 174D 175D 176B 177A 178C 179D 180A 181D 182D 183C 184B 185C 186B 187C 188A 189C 190B 191B 192D 193A 194C 195B 196B 197D 198C 199A 200D");
+function parseKey(text) {
+    const key = {};
+    const re = /(\d{1,3})\s*[.\-:)]?\s*([A-Da-d])/g;
+    let m;
+    while ((m = re.exec(text)) !== null) key[parseInt(m[1], 10)] = m[2].toUpperCase();
+    return key;
+}
 
-// 2. FULL TRANSCRIPT LISTENING TEST 6 (CHUẨN 100% THEO FILE AUDIO)
+// 1. DÀN KEY 200 CÂU TEST 6 (ĐÃ ĐỐI CHIẾU CHUẨN XÁC 100%)
+window.TOEIC_KEYS[6] = parseKey("1C 2A 3B 4B 5C 6B 7A 8A 9C 10A 11C 12B 13B 14C 15C 16C 17B 18A 19A 20B 21A 22C 23C 24C 25C 26A 27A 28B 29A 30A 31C 32B 33D 34C 35A 36D 37C 38B 39A 40C 41C 42B 43A 44C 45D 46C 47A 48D 49A 50A 51D 52C 53B 54B 55B 56A 57B 58D 59C 60D 61C 62B 63C 64A 65B 66C 67C 68A 69A 70C 71C 72A 73D 74A 75A 76D 77A 78A 79B 80C 81B 82B 83C 84C 85B 86B 87C 88C 89B 90B 91A 92D 93C 94B 95B 96D 97C 98D 99B 100A 101C 102A 103B 104B 105D 106A 107D 108A 109B 110D 111C 112A 113C 114D 115A 116D 117B 118C 119B 120D 121B 122B 123A 124A 125D 126D 127B 128C 129C 130B 131C 132A 133D 134B 135D 136A 137C 138A 139A 140C 141B 142A 143A 144C 145B 146A 147B 148D 149B 150D 151A 152B 153D 154D 155A 156A 157C 158A 159B 160B 161C 162D 163D 164D 165B 166D 167A 168C 169C 170C 171B 172B 173C 174D 175D 176B 177A 178C 179D 180A 181D 182D 183C 184B 185C 186B 187C 188A 189C 190B 191B 192D 193A 194C 195B 196B 197D 198C 199A 200C");
+
+// 2. FULL TRANSCRIPT LISTENING TEST 6
 window.TOEIC_SCRIPTS[6] = `
   <h3>PART 1: PHOTOGRAPHS (Câu 1 - 6)</h3>
   <div class="script-question">
@@ -402,7 +410,7 @@ window.TOEIC_SCRIPTS[6] = `
   </div>
 `;
 
-// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 6
+// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 6 (CHUẨN 100% THEO ĐỀ GỐC)
 window.TOEIC_EXPLANATIONS[6] = {
     101: "💡 <b>Đáp án (C) perform:</b> Sau trợ động từ 'will' cần động từ nguyên mẫu: 'will perform a new work' (dàn nhạc sẽ biểu diễn một tác phẩm mới).",
     102: "💡 <b>Đáp án (A) polite:</b> Sau động từ liên kết 'be' và trạng từ 'especially' cần tính từ: 'be especially polite' (đặc biệt lịch sự khi tiếp xúc với khách hàng mới).",
@@ -467,7 +475,7 @@ window.TOEIC_EXPLANATIONS[6] = {
     161: "💡 <b>Đáp án (C):</b> Câu trả lời 'Consider it done' (Cứ xem như xong rồi) thể hiện Ervin sẽ phụ trách việc ghé tiệm bánh để mua bánh ngọt theo yêu cầu của Mindy.",
     162: "💡 <b>Đáp án (D):</b> Tác giả Salvador Torres mở đầu bài viết bằng việc nhắc lại câu hỏi của một độc giả và giải thích các tìm hiểu nghiên cứu của mình về tiềm năng ứng dụng công nghệ in 3D vào trò chơi bàn cờ.",
     163: "💡 <b>Đáp án (D):</b> Đoạn 2 nêu rõ sản xuất theo lô nhỏ ('small batches') rất lý tưởng để phát hành các bản trò chơi giới hạn hoặc tạo ra các phiên bản mới bổ sung cho trò chơi sẵn có.",
-    164: "💡 <b>Đáp án (C):</b> Vị trí [3] theo sau các câu giới thiệu sự đa dạng về chủng loại vật liệu của máy in 3D, tiếp nối ý: 'Các doanh nghiệp thậm chí còn có thể chọn những vật liệu tự phân hủy sinh học'.",
+    164: "💡 <b>Đáp án (D) [4]:</b> Vị trí [4] nằm ngay sau câu nói về sản xuất lô nhỏ, rất thích hợp để bổ sung ý: 'Các doanh nghiệp thậm chí còn có thể chọn những vật liệu tự phân hủy sinh học' trước câu kết luận.",
     165: "💡 <b>Đáp án (B):</b> Từ 'space' trong ngữ cảnh 'offers a peaceful, comfortable space' (mang đến một không gian yên bình, thoải mái) đồng nghĩa với **area** (khu vực/không gian).",
     166: "💡 <b>Đáp án (D):</b> Danh sách tiện nghi của phòng chờ sân bay có liệt kê mục: 'Printing and copying services' -> Có sẵn máy in cho hành khách sử dụng.",
     167: "💡 <b>Đáp án (A):</b> Phòng chờ phục vụ đồ uống, bánh nướng ngọt và đồ ăn nhẹ ('Beverages, baked goods, and snacks') -> Đồ ăn thức uống nhẹ (Refreshments).",

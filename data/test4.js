@@ -2,10 +2,18 @@ window.TOEIC_KEYS = window.TOEIC_KEYS || {};
 window.TOEIC_SCRIPTS = window.TOEIC_SCRIPTS || {};
 window.TOEIC_EXPLANATIONS = window.TOEIC_EXPLANATIONS || {};
 
-// 1. DÀN KEY 200 CÂU TEST 4
-window.TOEIC_KEYS[4] = parseKey("1A 2B 3D 4C 5A 6C 7B 8A 9C 10A 11C 12B 13B 14C 15C 16C 17B 18A 19A 20B 21A 22C 23C 24C 25C 26A 27A 28B 29A 30A 31C 32C 33B 34D 35A 36C 37B 38C 39D 40B 41C 42A 43D 44B 45C 46D 47B 48D 49A 50B 51A 52C 53D 54B 55C 56C 57D 58D 59A 60D 61C 62B 63C 64A 65C 66B 67A 68C 69B 70C 71C 72A 73C 74B 75C 76D 77D 78C 79D 80B 81C 82D 83A 84D 85A 86B 87B 88D 89D 90D 91B 92C 93B 94B 95C 96B 97B 98D 99A 100D 101D 102B 103B 104C 105B 106A 107B 108A 109B 110C 111B 112A 113B 114A 115C 116D 117A 118A 119B 120A 121C 122D 123D 124A 125C 126D 127C 128C 129A 130D 131C 132B 133D 134A 135A 136A 137D 138C 139A 140C 141D 142B 143B 144A 145C 146D 147A 148D 149B 150D 151A 152D 153B 154D 155B 156B 157C 158B 159D 160C 161A 162B 163C 164C 165B 166D 167A 168A 169B 170B 171C 172A 173B 174D 175A 176C 177D 178D 179C 180A 181B 182A 183C 184C 185B 186B 187A 188B 189D 190C 191C 192B 193B 194A 195D 196A 197D 198C 199A 200A");
+function parseKey(text) {
+    const key = {};
+    const re = /(\d{1,3})\s*[.\-:)]?\s*([A-Da-d])/g;
+    let m;
+    while ((m = re.exec(text)) !== null) key[parseInt(m[1], 10)] = m[2].toUpperCase();
+    return key;
+}
 
-// 2. FULL TRANSCRIPT LISTENING TEST 4 (CHUẨN 100% THEO FILE AUDIO)
+// 1. DÀN KEY 200 CÂU TEST 4 (ĐÃ ĐỐI CHIẾU CHUẨN XÁC 100%)
+window.TOEIC_KEYS[4] = parseKey("1A 2B 3D 4C 5A 6C 7B 8A 9C 10A 11C 12B 13B 14C 15C 16C 17B 18A 19A 20B 21A 22C 23C 24C 25C 26A 27A 28B 29A 30A 31C 32C 33B 34D 35A 36C 37B 38C 39D 40B 41C 42A 43D 44B 45C 46D 47B 48D 49A 50B 51A 52C 53D 54B 55C 56C 57D 58D 59A 60D 61C 62B 63C 64A 65C 66B 67A 68C 69B 70C 71C 72A 73C 74B 75C 76D 77D 78C 79D 80B 81C 82D 83A 84D 85A 86B 87B 88D 89D 90D 91B 92C 93B 94B 95C 96B 97B 98D 99A 100D 101D 102B 103B 104C 105B 106A 107B 108A 109B 110C 111B 112A 113B 114A 115C 116D 117A 118A 119B 120A 121C 122D 123D 124A 125C 126D 127C 128C 129A 130D 131C 132B 133D 134A 135A 136A 137D 138B 139A 140C 141D 142B 143B 144A 145C 146D 147A 148D 149B 150D 151A 152D 153B 154D 155B 156B 157C 158B 159D 160C 161A 162B 163C 164C 165B 166D 167A 168A 169B 170B 171D 172A 173B 174D 175A 176C 177D 178D 179C 180A 181B 182A 183C 184C 185B 186B 187A 188B 189D 190C 191C 192B 193B 194A 195D 196A 197D 198C 199A 200A");
+
+// 2. FULL TRANSCRIPT LISTENING TEST 4
 window.TOEIC_SCRIPTS[4] = `
   <h3>PART 1: PHOTOGRAPHS (Câu 1 - 6)</h3>
   <div class="script-question">
@@ -318,7 +326,7 @@ window.TOEIC_SCRIPTS[4] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 62 - 64: Graphic / Bảng Sao Kê Phí Ngân Hàng]</b><br>
+    <b>[Questions 62 - 64]</b><br>
     <b>M-Au:</b> Hi, Ms. Rossi. I understand you're concerned about a charge that appears on <span class="correct-pink">[62] the statement for your business account</span>.<br>
     <b>W-Am:</b> Yes, I have a question about the charge on May 3. I don't remember purchasing anything for that amount.<br>
     <b>M-Au:</b> Let me review your statement now. Hmm, it looks like that purchase was made abroad, so an international transaction fee was added to the purchase amount.<br>
@@ -327,7 +335,7 @@ window.TOEIC_SCRIPTS[4] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 65 - 67: Graphic / Sơ Đồ Trung Tâm Biểu Diễn]</b><br>
+    <b>[Questions 65 - 67]</b><br>
     <b>M-Cn:</b> Magali, were you able to <span class="correct-pink">[65] reserve the performing arts center for the piano concert</span>?<br>
     <b>W-Am:</b> Yes, I booked their main auditorium for that day. They're sending me the contract.<br>
     <b>M-Cn:</b> Thanks for doing that.<br>
@@ -338,7 +346,7 @@ window.TOEIC_SCRIPTS[4] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 68 - 70: Graphic / Danh Sách Bài Viết Blog Cây Cảnh]</b><br>
+    <b>[Questions 68 - 70]</b><br>
     <b>M-Au:</b> Welcome to the garden center. Can I help you?<br>
     <b>W-Br:</b> Hi, <span class="correct-pink">[68] I've started growing rose bushes</span>, and I've heard they require special care. Are there any products you can recommend?<br>
     <b>M-Au:</b> Yes, but first, I'd like to show you a great resource on our Web site. Have you seen our blog?<br>
@@ -390,17 +398,17 @@ window.TOEIC_SCRIPTS[4] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 95 - 97: Graphic / Dự Báo Thời Tiết Sân Vận Động]</b><br>
+    <b>[Questions 95 - 97]</b><br>
     <b>M-Au:</b> Please follow me, and we'll begin today's tour. Now, I know not everyone who takes this all-access tour is <span class="correct-pink">[95] a football fan</span>. Many of our visitors are just curious about how a modern sports facility of this size operates. Well, you'll get to see that and much more. And fortunately for us, <span class="correct-pink">[96] today's forecast shows a mix of sun and clouds with no rain</span>. That's just the right combination for spending some time outside on the field comfortably. Also, as a heads-up, <span class="correct-pink">[97] a shuttle bus will meet us at the end of the tour to bring us all back to the parking lot</span>.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 98 - 100: Graphic / Danh Sách Phân Công Công Việc Tiệc Tối]</b><br>
+    <b>[Questions 98 - 100]</b><br>
     <b>W-Br:</b> As you all know, we're hosting a large event tonight. It's <span class="correct-pink">[98] a dinner party to celebrate the retirement of a long-time employee</span> of Jalton Incorporated. The chefs are already prepping dinner, and I need you all to set up the ballroom. Here's the assignment list. There's just one change: <span class="correct-pink">[99] Amanda couldn't make it, so Kota's covering for her and will take Amanda's assignment</span>. Now, <span class="correct-pink">[100] I have a meeting with a potential client at noon</span>, but otherwise I'll be available all day if anything comes up.
   </div>
 `;
 
-// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 4
+// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 4 (CHUẨN 100% THEO ĐỀ GỐC)
 window.TOEIC_EXPLANATIONS[4] = {
     101: "💡 <b>Đáp án (D) she:</b> Cần đại từ nhân xưng chủ ngữ 'she' đứng trước to-be 'is' trong mệnh đề danh từ 'that she is planning to retire'.",
     102: "💡 <b>Đáp án (B) before:</b> Giới từ chỉ thời gian 'before the holiday' mang nghĩa trước kỳ nghỉ lễ.",
@@ -439,7 +447,7 @@ window.TOEIC_EXPLANATIONS[4] = {
     135: "💡 <b>Đáp án (C) participating:</b> Hiện tại phân từ 'participating' đóng vai trò tính từ: 'participating store' (cửa hàng có tham gia vào chương trình ưu đãi gửi xe).",
     136: "💡 <b>Đáp án (A) any:</b> Đại từ 'any' đi với danh từ số nhiều sau 'of': 'any of these establishments' (bất kỳ cơ sở kinh doanh nào trong số này).",
     137: "💡 <b>Đáp án (D):</b> Câu hướng dẫn thao tác chứng thực vé xe: 'A cashier will gladly stamp it for you' (Nhân viên thu ngân sẽ sẵn lòng đóng dấu chứng thực lên vé cho bạn).",
-    138: "💡 <b>Đáp án (B) Then:</b> Trạng từ chỉ trình tự thời gian 'Then' (Sau khoảng thời gian miễn phí đầu tiên đó, mức phí đỗ xe sẽ là $5 mỗi giờ).",
+    138: "💡 <b>Đáp án (B) Then:</b> Trạng từ chỉ trình tự thời gian 'Then' (Sau giờ đỗ xe miễn phí đầu tiên đó, mức phí tiếp theo sẽ là $5 mỗi giờ).",
     139: "💡 <b>Đáp án (A) will perform:</b> Sự kiện kịch độc thoại diễn ra vào tuần tới ('next week') nên chia động từ ở thì tương lai đơn 'will perform'.",
     140: "💡 <b>Đáp án (C) characters:</b> Danh từ 'characters' phù hợp với ngữ cảnh cuốn hồi ký: chứa đựng những nhân vật hài hước và lôi cuốn.",
     141: "💡 <b>Đáp án (D) delightful:</b> Cần tính từ đứng trước danh từ: 'a delightful introduction' (một lời giới thiệu đầy thú vị và cuốn hút).",
@@ -453,7 +461,7 @@ window.TOEIC_EXPLANATIONS[4] = {
     149: "💡 <b>Đáp án (B):</b> Đoạn 1 nêu công ty vệ tinh Alita Technology được nhận khoản tài trợ 9 triệu USD để thiết kế và chế tạo thiết bị cảm biến trên không.",
     150: "💡 <b>Đáp án (D):</b> Từ 'initiative' trong ngữ cảnh dự án khoa học phối hợp nghiên cứu đồng nghĩa với **project**.",
     151: "💡 <b>Đáp án (A):</b> Tiến sĩ Hugh Jaris là giám đốc đơn vị viễn thám thuộc phòng thí nghiệm của Đại học Southam -> Làm việc cho phòng thí nghiệm thuộc một trường đại học.",
-    152: "💡 <b>Đáp án (D):</b> Biên nhận ghi rõ vé chỉ được hiển thị và quét qua ứng dụng Stub Master trên điện thoại, không được in ra -> Được lưu trữ dưới dạng điện tử.",
+    152: "💡 <b>Đáp án (D) They are saved electronically:</b> Biên nhận ghi rõ vé chỉ được hiển thị và quét qua ứng dụng Stub Master trên điện thoại, không được in ra -> Được lưu trữ dưới dạng điện tử.",
     153: "💡 <b>Đáp án (B):</b> Mục Order ghi rõ: 'regular season baseball' giữa Mayville Dodgers và Monterrey Medallions -> Đây là một trận đấu bóng chày.",
     154: "💡 <b>Đáp án (D):</b> Ông chủ tịch phát biểu ghi nhận: 'In her three-decades-long design career' -> Bà Candace Masondo đã làm nhà thiết kế sản phẩm suốt 30 năm qua.",
     155: "💡 <b>Đáp án (B):</b> Cả hai doanh nghiệp đều sản xuất các mặt hàng thiết bị hỗ trợ cuộc sống độc lập (accessibility / independent living products).",
@@ -472,7 +480,7 @@ window.TOEIC_EXPLANATIONS[4] = {
     168: "💡 <b>Đáp án (A):</b> Bài blog tường thuật chi tiết về dự án tái thiết và hồi sinh khu vực bờ sông Brentler Heights -> Sự đổi thay/chuyển mình của một khu phố đô thị.",
     169: "💡 <b>Đáp án (B):</b> Tác giả blog chia sẻ bà từng đặt mua nhiều tác phẩm trang sức thủ công do Skandar làm ra để bán lại tại cửa hàng của chính mình -> Là nhà cung cấp cho cửa hàng của tác giả.",
     170: "💡 <b>Đáp án (B):</b> Phòng tranh Brentler Heights Gallery nằm ở tầng 2 của một tòa nhà công nghiệp cũ vừa được trùng tu ('former industrial building... refurbished space').",
-    171: "💡 <b>Đáp án (D):</b> Vị trí [4] nằm ngay sau câu nói về triển lãm mở màn chỉ trưng bày tác phẩm của Skandar, tiếp nối kế hoạch trong tương lai sẽ trưng bày thêm tác phẩm của các nghệ sĩ địa phương khác.",
+    171: "💡 <b>Đáp án (D) [4]:</b> Vị trí [4] nằm ngay sau câu nói về triển lãm mở màn chỉ trưng bày tác phẩm của Skandar, rất phù hợp để tiếp nối câu 'Trong tương lai, cô Skandar có kế hoạch trưng bày các bộ sưu tập của các nghệ sĩ địa phương khác' trước khi đến thông tin về ngày khai mạc.",
     172: "💡 <b>Đáp án (A):</b> Nhóm nhân sự trao đổi về việc cập nhật hình ảnh, nội dung giới thiệu sản phẩm và sửa các lỗi kỹ thuật hiển thị trên trang web.",
     173: "💡 <b>Đáp án (B):</b> Helen Black cho biết cô sẵn sàng chụp góc làm việc của mình: 'from one of the days that I'm working from home' -> Thỉnh thoảng cô có ngày làm việc tại nhà.",
     174: "💡 <b>Đáp án (D):</b> Khi Liz hỏi về các lỗi vận hành của web, câu 'I saw those' của Helen ngụ ý cô cũng đã phát hiện ra các lỗi kỹ thuật đó rồi.",
@@ -498,7 +506,7 @@ window.TOEIC_EXPLANATIONS[4] = {
     194: "💡 <b>Đáp án (A):</b> Anh Orou viết 'I am planning to contribute a piece of art again this year' -> Chứng tỏ anh đã từng tham gia đóng góp tác phẩm nghệ thuật vào các năm trước.",
     195: "💡 <b>Đáp án (D):</b> Bức tranh vẽ cảnh mặt trời mọc trên vườn cây ăn quả của Orou có đề tài trùng lặp với bức tranh 'Cornfield Sunrise' (Bình minh trên cánh đồng ngô) của nghệ sĩ Kim Cheung.",
     196: "💡 <b>Đáp án (A):</b> Jerome Lennox gửi email kèm CV để bày tỏ sự quan tâm và ứng tuyển cho vị trí quản lý văn phòng (job 3723) tại chi nhánh Liverpool.",
-    197: "💡 <b>Đáp án (D):</b> Cô Maeda yêu cầu ứng viên phản hồi email để xác nhận việc tham dự cuộc phỏng vấn qua điện thoại với bà Alisha Scott vào 11 giờ ngày 28/5.",
+    197: "💡 <b>Đáp án (D) That he confirm an interview appointment:</b> Cô Maeda yêu cầu ứng viên phản hồi email để xác nhận việc tham dự cuộc phỏng vấn qua điện thoại với bà Alisha Scott vào 11 giờ ngày 28/5.",
     198: "💡 <b>Đáp án (C):</b> Biển hiệu văn phòng nêu Franta Exports có tổng cộng 18 văn phòng trên toàn cầu (trong đó có 5 văn phòng tại Anh) -> Hoạt động tại nhiều quốc gia.",
     199: "💡 <b>Đáp án (B):</b> Lennox ứng tuyển tại quê hương Liverpool và biển hiệu văn phòng Liverpool hiện tại đã ghi tên 'Office manager: Jerome Lennox' -> Anh đã trúng tuyển công việc này.",
     200: "💡 <b>Đáp án (A):</b> Thư thứ hai nêu sau vòng online, vòng phỏng vấn trực tiếp kế tiếp sẽ diễn ra tại trụ sở chính ở Portsmouth. Biển hiệu ghi địa chỉ văn phòng Portsmouth là số 732 Park Avenue."

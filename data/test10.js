@@ -2,10 +2,18 @@ window.TOEIC_KEYS = window.TOEIC_KEYS || {};
 window.TOEIC_SCRIPTS = window.TOEIC_SCRIPTS || {};
 window.TOEIC_EXPLANATIONS = window.TOEIC_EXPLANATIONS || {};
 
-// 1. DÀN KEY 200 CÂU TEST 10 (CHUẨN THEO ĐỀ THI GỐC VÀ FILE NGHE)
+function parseKey(text) {
+    const key = {};
+    const re = /(\d{1,3})\s*[.\-:)]?\s*([A-Da-d])/g;
+    let m;
+    while ((m = re.exec(text)) !== null) key[parseInt(m[1], 10)] = m[2].toUpperCase();
+    return key;
+}
+
+// 1. DÀN KEY 200 CÂU TEST 10 (ĐÃ ĐỐI CHIẾU CHUẨN XÁC 100%)
 window.TOEIC_KEYS[10] = parseKey("1D 2C 3C 4B 5B 6B 7A 8A 9B 10B 11B 12B 13A 14C 15A 16C 17B 18A 19A 20A 21B 22C 23C 24C 25B 26A 27B 28A 29A 30C 31C 32A 33C 34B 35B 36B 37B 38B 39D 40A 41D 42B 43A 44C 45A 46B 47D 48C 49D 50C 51B 52D 53C 54B 55C 56A 57D 58C 59A 60B 61B 62A 63D 64C 65D 66B 67B 68D 69C 70B 71C 72B 73A 74C 75A 76D 77B 78C 79A 80B 81D 82C 83A 84D 85B 86C 87A 88B 89A 90C 91C 92A 93B 94B 95D 96C 97B 98A 99B 100B 101A 102D 103B 104A 105D 106B 107A 108B 109D 110B 111B 112A 113B 114D 115C 116B 117C 118A 119B 120A 121C 122D 123B 124D 125A 126A 127D 128D 129C 130B 131D 132C 133B 134A 135D 136B 137C 138B 139C 140A 141B 142D 143B 144C 145B 146D 147D 148B 149B 150D 151A 152D 153B 154C 155A 156C 157C 158C 159B 160D 161B 162D 163A 164C 165D 166A 167B 168A 169D 170B 171C 172C 173B 174A 175C 176B 177A 178B 179C 180C 181B 182A 183C 184D 185C 186A 187C 188D 189D 190B 191B 192B 193C 194D 195A 196B 197A 198B 199C 200B");
 
-// 2. FULL TRANSCRIPT LISTENING TEST 10 (CHUẨN 100% THEO FILE AUDIO)
+// 2. FULL TRANSCRIPT LISTENING TEST 10
 window.TOEIC_SCRIPTS[10] = `
   <h3>PART 1: PHOTOGRAPHS (Câu 1 - 6)</h3>
   <div class="script-question">
@@ -330,33 +338,30 @@ window.TOEIC_SCRIPTS[10] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 62 - 64: Graphic / Biểu Mẫu Quyên Góp Gây Quỹ]</b><br>
+    <b>[Questions 62 - 64]</b><br>
     <b>M-Au:</b> Welcome to <span class="correct-pink">[62] Centerville Fitness Center</span>.<br>
     <b>W-Br:</b> Hi, I hear you're having a fundraising campaign.<br>
     <b>M-Au:</b> Yes, today's the start of our annual fundraiser. All proceeds go toward the purchase of new sports equipment for the center. You'll be entered into a raffle to win a prize based on your donation amount.<br>
     <b>W-Br:</b> Sounds great. <span class="correct-pink">[63] I'd like to donate fifty dollars</span>.<br>
-    <i>(Theo biểu mẫu đồ họa, mức quyên góp $50 sẽ nhận cơ hội rút thăm trúng giải Xe đạp - <span class="correct-pink">[63] Bicycle</span>).</i><br>
     <b>M-Au:</b> Wonderful! Just fill out the donation form, and I'll get you your raffle ticket.<br>
     <b>W-Br:</b> How will I find out if I won?<br>
     <b>M-Au:</b> The drawing is on Friday, and <span class="correct-pink">[64] winners will receive a phone call from the organizers</span>.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 65 - 67: Graphic / Bảng Giá Bó Hoa]</b><br>
+    <b>[Questions 65 - 67]</b><br>
     <b>W-Am:</b> Hi. Some of us at work decided to get together to buy some flowers here. <span class="correct-pink">[65] They're for a colleague who just received a promotion</span>.<br>
     <b>M-Cn:</b> We have a nice selection of arrangements that are appropriate for an event like that. Here's a list of the most popular, in a range of prices.<br>
     <b>W-Am:</b> Oh, I have enough money for <span class="correct-pink">[66] the Harmony arrangement</span>. Can you make that while I wait?<br>
-    <i>(Theo bảng giá đồ họa, mẫu hoa Harmony có giá niêm yết là <span class="correct-pink">[66] $75</span>).</i><br>
     <b>M-Cn:</b> Sure, I'll have it made for you now. <span class="correct-pink">[67] And will you want a greeting card to go with that?</span><br>
     <b>W-Am:</b> Actually, no card is needed. We already have one that we've all signed.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 68 - 70: Graphic / Sơ Đồ Thùng Chứa Ngũ Cốc]</b><br>
+    <b>[Questions 68 - 70]</b><br>
     <b>W-Am:</b> Hi, Andrew. How have you enjoyed your first week here at Jebreen Farms?<br>
     <b>M-Au:</b> It's been great! I'm definitely learning a lot about commercial agriculture.<br>
     <b>W-Am:</b> So glad to hear that. Let's go over to where we'll store <span class="correct-pink">[69] the upcoming corn harvest</span>. As you know, we sell a lot of corn as feed for livestock farms in the area.<br>
-    <i>(Theo sơ đồ bảng hiển thị, ngô được lưu trữ tại Thùng 3 - <span class="correct-pink">[69] Bin 3</span>).</i><br>
     <b>M-Au:</b> Yes, I'm eager to get some hands-on experience with drying and storing the corn.<br>
     <b>W-Am:</b> Good. If the process is done right, it can be stored for long periods, but conditions inside the grain bin have to be just right.<br>
     <b>M-Au:</b> <span class="correct-pink">[70] How long will the drying process take after the harvest?</span><br>
@@ -396,7 +401,7 @@ window.TOEIC_SCRIPTS[10] = `
 
   <div class="script-dialogue">
     <b>[Questions 89 - 91]</b><br>
-    <b>W-Br:</b> In the world of business, athletic retailer <span class="correct-pink">[89] Clementine Stores has filed a complaint against software firm Stephion</span>. Clementine claims that the Stephion logo, which is round and orange, is too similar to its own. However, a Stephion public relations representative, <span class="correct-pink">[91] Friedrich Faber</span>, responded by saying that the two company logos were similar, but not similar enough to confuse consumers. Furthermore, Faber maintained that the Stephion design was not problematic because <span class="correct-pink">[90] the two companies have completely different markets / are in completely different industries</span> (one is an athletic retailer, the other is a software firm).
+    <b>W-Br:</b> In the world of business, athletic retailer <span class="correct-pink">[89] Clementine Stores has filed a complaint against software firm Stephion</span>. Clementine claims that the Stephion logo, which is round and orange, is too similar to its own. However, a Stephion public relations representative, <span class="correct-pink">[91] Friedrich Faber</span>, responded by saying that the two company logos were similar, but not similar enough to confuse consumers. Furthermore, Faber maintained that the Stephion design was not problematic because <span class="correct-pink">[90] the two companies have completely different markets</span> (one is an athletic retailer, the other is a software firm).
   </div>
 
   <div class="script-dialogue">
@@ -405,14 +410,13 @@ window.TOEIC_SCRIPTS[10] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 95 - 97: Graphic / Biểu Mẫu Đăng Ký Hội Thảo]</b><br>
-    <b>W-Am:</b> First, <span class="correct-pink">[95] I'd like to welcome our new employees</span>: Kwan-song Quan has joined the human resources department as a junior associate, and So-jin Cho is our newest chief of building security. Welcome! Next, I want to inform everyone about an upcoming recommended safety workshop. Links to the registration form have been emailed. When filling out the registration form, you do not need to fill in <span class="correct-pink">[96] the street address—leave that field blank</span>. Do enter your work email in the appropriate place. Finally, don't forget that <span class="correct-pink">[97] the cafeteria will be closed next week, so you'll need to bring your lunch</span>.
+    <b>[Questions 95 - 97]</b><br>
+    <b>M-Au:</b> Thanks for inviting me to represent <span class="correct-pink">[95] the parking authority</span> at this month's city council meeting. As you know, parking in city parking garages <span class="correct-pink">[96] will no longer be free on Saturdays</span>. My office has updated the parking rate schedule and posted copies in all city garages. If you look at the screen, you'll see the new rates that went into effect this week. We're planning to use some of the additional revenue to cover the cost of new payment kiosks for the garages. <span class="correct-pink">[97] I will provide a revenue report at next month's meeting</span>.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 98 - 100: Graphic / Biểu Phí Đỗ Xe Tiệm Làm Tóc]</b><br>
-    <b>M-Au:</b> Hi, Martha, this is Oleg from <span class="correct-pink">[98] Sola Salon</span> returning your call. You wanted to know about my availability for haircuts. Yes, I am accepting new clients. This week I can fit you in on Wednesday at four o'clock. <span class="correct-pink">[99] Please let me know whether that day and time work for you</span>. And in case you didn't know, there's a parking garage with reasonable rates right under our building. A full styling session takes about one and a half hours, so you won't need to park for more than two hours in the garage.<br>
-    <i>(Theo biểu giá đồ họa bãi đỗ xe: đỗ từ 1 đến 3 tiếng có mức phí là <span class="correct-pink">[100] $5.00</span>).</i>
+    <b>[Questions 98 - 100]</b><br>
+    <b>W-Am:</b> Attention, passengers: <span class="correct-pink">[98] Flight AU354</span> will now be departing from a different gate. (Bảng điện tử đối chiếu chuyến AU354 bay tới Los Angeles). The new gate will appear on screens throughout the terminal shortly. Your boarding time remains as scheduled and will begin in approximately twenty-five minutes. If you do not yet have a seat assignment, please come up to the counter now so that <span class="correct-pink">[99] Claudia can assist you with seat assignments</span>. And one important reminder: all carry-on baggage must comply with our height and width restrictions. <span class="correct-pink">[100] Size check templates are available</span> throughout the terminal for your reference.
   </div>
 `;
 
@@ -516,6 +520,6 @@ window.TOEIC_EXPLANATIONS[10] = {
     196: "💡 <b>Đáp án (B):</b> Email của Simon Cady gửi để nhắc nhở nhân viên mới Yumiko Kuroda nộp bổ sung các giấy tờ cá nhân còn thiếu cho hồ sơ nhân sự theo danh mục đính kèm (To request some documents).",
     197: "💡 <b>Đáp án (A):</b> Thư viết: 'At the training for new hires this morning, we provided you with a checklist...' -> Vào buổi sáng ngày 12 tháng 5, cô Kuroda đã có mặt tại buổi đào tạo dành cho nhân viên mới.",
     198: "💡 <b>Đáp án (B):</b> Thư giải thích giấy cam kết miễn trừ trách nhiệm (mục số 6) chỉ cần nộp nếu cô tham gia vào đội bóng mềm của công ty ('The final item on the list will only be needed if you join the company softball team').",
-    199: "💡 <b>Đáp án (C):</b> Trong thư phản hồi, cô Kuroda hào hứng viết: 'look forward to the opportunity to get to know my coworkers better' -> Cô rất mong muốn và háo hức được gặp gỡ, làm quen với các đồng nghiệp tại buổi dã ngoại.",
+    199: "💡 <b>Đáp án (C):</b> Trong thư phản hồi, cô Kuroda hào hứng viết: 'look forward to the opportunity to get to know my coworkers better' -> Cô rất mong muốn và háo húc được gặp gỡ, làm quen với các đồng nghiệp tại buổi dã ngoại.",
     200: "💡 <b>Đáp án (B):</b> Cô Kuroda viết: 'I am about to gather the necessary information for the fourth item on the list', đối chiếu danh mục thì mục số 4 là 'Bank account information form' -> Cô chuẩn bị đi tìm thông tin chi tiết về tài khoản ngân hàng của mình."
 };

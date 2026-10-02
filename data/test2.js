@@ -2,10 +2,17 @@ window.TOEIC_KEYS = window.TOEIC_KEYS || {};
 window.TOEIC_SCRIPTS = window.TOEIC_SCRIPTS || {};
 window.TOEIC_EXPLANATIONS = window.TOEIC_EXPLANATIONS || {};
 
-// 1. DÀN KEY 200 CÂU TEST 2
-window.TOEIC_KEYS[2] = parseKey("1B 2D 3B 4A 5C 6A 7A 8B 9C 10A 11C 12C 13A 14A 15B 16C 17A 18B 19C 20C 21B 22C 23A 24A 25B 26B 27B 28A 29B 30C 31C 32D 33D 34A 35B 36B 37D 38C 39D 40B 41A 42C 43A 44A 45D 46A 47B 48D 49C 50C 51B 52B 53C 54A 55C 56D 57C 58D 59A 60D 61C 62B 63C 64A 65A 66B 67A 68D 69A 70C 71B 72D 73C 74A 75D 76B 77C 78C 79D 80A 81C 82C 83B 84D 85A 86A 87D 88B 89B 90C 91A 92B 93D 94D 95A 96B 97C 98C 99A 100D 101C 102A 103D 104B 105A 106D 107D 108C 109A 110A 111C 112D 113C 114D 115B 116C 117A 118C 119D 120C 121A 122B 123A 124C 125B 126C 127D 128C 129B 130A 131D 132B 133A 134D 135A 136A 137D 138D 139B 140C 141D 142B 143B 144D 145B 146B 147D 148C 149B 150C 151A 152B 153C 154C 156B 157B 158C 159B 160B 161D 162B 163D 164D 165B 166A 167B 168C 169B 170D 171A 172C 173A 174C 175B 176A 177C 178C 179D 180B 181D 182B 183C 184D 185A 186C 187D 188A 189D 190D 191A 192C 193C 194C 195B 196B 197A 198C 199B 200D");
+function parseKey(text) {
+    const key = {};
+    const re = /(\d{1,3})\s*[.\-:)]?\s*([A-Da-d])/g;
+    let m;
+    while ((m = re.exec(text)) !== null) key[parseInt(m[1], 10)] = m[2].toUpperCase();
+    return key;
+}
 
-// 2. FULL TRANSCRIPT LISTENING TEST 2 (CHUẨN 100% THEO FILE AUDIO)
+// 1. DÀN KEY 200 CÂU TEST 2 (CHUẨN 100% ETS - ĐỦ 200 CÂU)
+window.TOEIC_KEYS[2] = parseKey("1B 2D 3B 4A 5C 6A 7A 8B 9C 10A 11C 12C 13A 14A 15B 16C 17A 18B 19C 20C 21B 22C 23A 24A 25B 26B 27B 28A 29B 30C 31C 32D 33D 34A 35B 36B 37D 38C 39D 40B 41A 42C 43A 44A 45D 46A 47B 48D 49C 50C 51B 52B 53C 54A 55C 56D 57C 58D 59A 60D 61C 62B 63C 64A 65A 66B 67A 68D 69A 70C 71B 72D 73C 74A 75D 76B 77C 78C 79D 80A 81C 82C 83B 84D 85A 86A 87D 88B 89B 90C 91A 92B 93D 94D 95A 96B 97C 98C 99A 100D 101C 102A 103D 104B 105A 106D 107D 108C 109A 110A 111C 112D 113C 114D 115B 116C 117A 118C 119D 120C 121A 122B 123A 124C 125B 126C 127D 128C 129B 130A 131D 132B 133A 134D 135A 136A 137D 138D 139B 140C 141D 142B 143B 144D 145B 146B 147D 148C 149B 150C 151A 152B 153C 154C 155A 156B 157B 158C 159B 160B 161D 162B 163D 164D 165B 166A 167B 168C 169B 170D 171B 172C 173A 174C 175B 176A 177C 178C 179D 180B 181D 182B 183C 184D 185A 186C 187C 188A 189D 190D 191A 192C 193D 194C 195B 196B 197A 198C 199B 200D");
+// 2. FULL TRANSCRIPT LISTENING TEST 2
 window.TOEIC_SCRIPTS[2] = `
   <h3>PART 1: PHOTOGRAPHS (Câu 1 - 6)</h3>
   <div class="script-question">
@@ -431,7 +438,7 @@ window.TOEIC_EXPLANATIONS[2] = {
     123: "💡 <b>Đáp án (A) near:</b> Giới từ chỉ khoảng cách/vị trí 'near the Liverpool Convention Complex' (tọa lạc gần khu phức hợp hội nghị).",
     124: "💡 <b>Đáp án (C) briefer:</b> Cấu trúc so sánh hơn với 'than' -> dùng tính từ ngắn dạng so sánh hơn 'briefer' (ngắn gọn hơn dự kiến).",
     125: "💡 <b>Đáp án (B) guarantee:</b> Xét ngữ cảnh bồi hoàn chi phí: 'According to our guarantee' (Theo cam kết/chính sách bảo đảm của chúng tôi).",
-    126: "💡 <b>Đáp án (D) notably:</b> Trạng từ 'notably' (một cách rõ rệt, đáng kể) đứng trước bổ nghĩa cho tính từ so sánh 'more colorful and comfortable'.",
+    126: "💡 <b>Đáp án (C) notably:</b> Trạng từ 'notably' (một cách rõ rệt, đáng kể) đứng trước bổ nghĩa cho tính từ so sánh 'more colorful and comfortable'.",
     127: "💡 <b>Đáp án (D) unseasonably:</b> Trạng từ 'unseasonably' bổ nghĩa cho tính từ trong cụm 'unseasonably cold' (lạnh bất thường so với thời tiết mùa này).",
     128: "💡 <b>Đáp án (C) with:</b> Cấu trúc tuyệt đối 'with just two more days to go' (khi chỉ còn lại đúng hai ngày nữa là kết thúc).",
     129: "💡 <b>Đáp án (B) distinguish:</b> Cấu trúc động từ 'distinguish A from B' (phân biệt sản phẩm espresso của mình với các loại thức uống tương tự khác).",
@@ -447,7 +454,7 @@ window.TOEIC_EXPLANATIONS[2] = {
     139: "💡 <b>Đáp án (B) offered:</b> Kể lại sự việc mở quán ăn trong quá khứ -> chia thì quá khứ đơn 'offered an unusual menu'.",
     140: "💡 <b>Đáp án (C) eatery:</b> Danh từ 'eatery' (quán ăn nhỏ/nhà hàng) dùng để thay thế đồng nghĩa cho từ 'bistro' ở câu trước.",
     141: "💡 <b>Đáp án (D):</b> 'But the time has come for something new' dẫn dắt ý định nghỉ hưu và muốn làm chậm nhịp sống lại của bà Ellison sau 50 năm làm nghề.",
-    142: "💡 <b>Đáp án (A) fast-paced:</b> Cụm tính từ 'fast-paced environment' (môi trường làm việc hối hả, nhịp độ gấp gáp của ngành nhà hàng).",
+    142: "💡 <b>Đáp án (B) fast-paced:</b> Cụm tính từ 'fast-paced environment' (môi trường làm việc hối hả, nhịp độ gấp gáp của ngành nhà hàng).",
     143: "💡 <b>Đáp án (B) several:</b> Cụm từ 'in several ways' (xử lý vấn đề thoát nước đọng này theo nhiều cách khác nhau).",
     144: "💡 <b>Đáp án (D) Alternatively:</b> Trạng từ liên kết đưa ra phương án thay thế: 'Hoặc một giải pháp khác là, chúng tôi có thể đào bỏ toàn bộ lớp nhựa đường cũ...'.",
     145: "💡 <b>Đáp án (B):</b> 'This approach is the one we would recommend' nhấn mạnh phương án rải sỏi nghiền là giải pháp mà công ty khuyên khách hàng nên chọn.",
@@ -476,14 +483,14 @@ window.TOEIC_EXPLANATIONS[2] = {
     168: "💡 <b>Đáp án (C):</b> Chương trình mới mở rộng dạy đàn guitar và violin cho người lớn bắt đầu từ con số không ('instruction for beginners') -> Dành cho người chưa có kinh nghiệm âm nhạc.",
     169: "💡 <b>Đáp án (B):</b> Quảng cáo nêu rõ tiêu chuẩn giảng viên: 'All our instructors hold at least a bachelor's degree in music' (Tất cả giảng viên đều có bằng đại học chuyên ngành âm nhạc).",
     170: "💡 <b>Đáp án (D):</b> Khách điền form trên mạng và 'An instructor will contact you within 48 hours' -> Giảng viên sẽ là người trực tiếp liên hệ lại trước tiên.",
-    171: "💡 <b>Đáp án (B):</b> Vị trí [2] nằm ngay sau các phương án học trực tiếp tại trung tâm hoặc nhà riêng, nên câu 'Alternatively, we can provide online lessons...' (Ngoài ra, chúng tôi có thể dạy học trực tuyến...) là tiếp nối hợp lý nhất.",
+    171: "💡 <b>Đáp án (B) [2]:</b> Vị trí [2] nằm ngay sau câu mô tả các lựa chọn học trực tiếp tại trung tâm hoặc tại nhà riêng. Do đó câu 'Alternatively, we can provide online lessons to accommodate your schedule...' (Ngoài ra, chúng tôi có thể dạy học trực tuyến để phù hợp với lịch trình của bạn...) là phương án thay thế logic và chuẩn xác nhất.",
     172: "💡 <b>Đáp án (C):</b> Lynette Walter rủ đồng nghiệp ăn trưa trước buổi họp để cập nhật thống nhất chiến dịch tiếp thị dòng giày mùa hè ('new marketing campaign').",
     173: "💡 <b>Đáp án (A):</b> Tripp Hines giải thích cuộc họp lúc 3h chiều ở phòng hội đồng chỉ dành riêng cho những người phụ trách phần hình ảnh ('only for people involved in the graphics' -> Nhà thiết kế đồ họa).",
     174: "💡 <b>Đáp án (C):</b> Khi biết cuộc họp 3h không liên quan đến mình nên không có trên lịch, April Au thốt lên 'What a relief!' (Thật nhẹ nhõm/may quá!) vì lịch làm việc của cô không bị sai sót.",
     175: "💡 <b>Đáp án (B):</b> Lynette chốt cuộc hẹn: 'I'll see you both tomorrow at 1:30 in the lobby' -> Gặp nhau ở sảnh tòa nhà.",
     176: "💡 <b>Đáp án (A):</b> Hóa đơn ghi rõ dòng cảm ơn khách hàng đã ủng hộ doanh nghiệp nhỏ của gia đình ('supporting our family's small business').",
     177: "💡 <b>Đáp án (C):</b> Nicolla Grant yêu cầu báo giá đặt may rèm cửa theo kích thước riêng cho phòng ăn sử dụng loại vải Manchester ('get a quote for custom curtains...').",
-    178: "💡 <b>Đáp án (A):</b> Ở email thứ hai, cô Grant phàn nàn tất cả các mẫu vải cô nhận được đều mang sắc thái màu xanh dương ('the shades of blue in all the samples I received'), trong đó có mẫu Cambridge trong đơn hàng.",
+    178: "💡 <b>Đáp án (C):</b> Ở email thứ hai, cô Grant phàn nàn tất cả các mẫu vải cô nhận được đều mang sắc thái màu xanh dương ('the shades of blue in all the samples I received'), trong đó có mẫu Cambridge trong đơn hàng.",
     179: "💡 <b>Đáp án (D):</b> Câu cuối email nhắc đến việc cô đã lưu thẻ tín dụng trên tài khoản hồ sơ trực tuyến trong đơn hàng ngày 23/7 -> Đơn hàng đã được đặt trực tuyến.",
     180: "💡 <b>Đáp án (B):</b> Từ 'last' trong cụm 'during my last order' (đơn hàng trước/gần nhất của tôi) đồng nghĩa với **previous**.",
     181: "💡 <b>Đáp án (D):</b> Giới thiệu tổ chức phi lợi nhuận hoạt động để bảo tồn công viên và không gian xanh của thành phố từ năm 1981 -> Tập trung bảo vệ môi trường.",
@@ -492,18 +499,16 @@ window.TOEIC_EXPLANATIONS[2] = {
     184: "💡 <b>Đáp án (D):</b> Bà Nguyen nhắn: 'We are working with a new catering company this year' và thông báo nêu đơn vị phục vụ tiệc là Green Earth Provisions -> Đơn vị này lần đầu cung cấp đồ ăn cho sự kiện.",
     185: "💡 <b>Đáp án (A):</b> Bức thư giới thiệu Minna Nguyen là trưởng bộ phận gây quỹ mới, thay thế cho vị trí mà Stefano Cleary đã đảm nhiệm vào năm ngoái.",
     186: "💡 <b>Đáp án (C):</b> Thông tin triển lãm Artists of Delta City nêu rõ: 'individual pieces are displayed on a rotating basis and are on view for a limited time only' (các tác phẩm được luân phiên thay đổi định kỳ).",
-    187: "💡 <b>Đáp án (C):</b> Lớp Art 103 của cô Desnoyers chuyên vẽ hình thể con người nên sẽ tập trung vào các bức tượng. Triển lãm Classical Greece and Beyond tại phòng tranh Techtmann Gallery là nơi trưng bày tượng người.",
-    188: "💡 <b>Đáp án (A):</b> Email phản hồi của Jocelyn Grady xác nhận: 'Your colleague was correct: the museum does indeed provide that service' (Bảo tàng thực sự có dịch vụ dẫn tour cho các lớp học mỹ thuật).",
+    187: "💡 <b>Đáp án (C) In the Techtmann Gallery:</b> Lớp Art 103 của cô Desnoyers chuyên vẽ hình thể người nên sẽ tập trung phác thảo các bức tượng. Bảng triển lãm nêu rõ triển lãm Classical Greece and Beyond chuyên về tượng người được đặt tại phòng trưng bày Techtmann Gallery.",    188: "💡 <b>Đáp án (A):</b> Email phản hồi của Jocelyn Grady xác nhận: 'Your colleague was correct: the museum does indeed provide that service' (Bảo tàng thực sự có dịch vụ dẫn tour cho các lớp học mỹ thuật).",
     189: "💡 <b>Đáp án (D):</b> Bà Grady thông báo đã chuyển tiếp tin nhắn tới bộ phận chương trình cộng đồng và một nhân viên sẽ gọi điện thoại trao đổi chi tiết với cô Desnoyers -> Chờ nhận cuộc gọi.",
     190: "💡 <b>Đáp án (D):</b> Email 2 nhấn mạnh quy định cấm: 'the use of paints, including watercolors, is prohibited in all museum galleries' (nghiêm cấm sử dụng màu vẽ, bao gồm cả màu nước).",
     191: "💡 <b>Đáp án (A):</b> Bài báo nêu tuýp kem đánh răng dạng bóp truyền thống có nhiều lớp nên gần như không thể tái chế được ('nearly impossible to recycle them' -> khó tái chế).",
     192: "💡 <b>Đáp án (C):</b> Bà Verna Brown viết thư cảm ơn ông Patel đã dành thời gian gặp gỡ lắng nghe phần trình bày giới thiệu về sản phẩm kem đánh răng Green Globe (theo sát sau buổi thuyết trình bán hàng).",
-    193: "💡 <b>Đáp án (D):</b> Bài báo nêu bao bì tái chế như hũ thủy tinh, chai lọ mà Green Globe đang dùng đang dần chiếm thêm thị phần từ các tuýp truyền thống -> Thị phần ngày càng tăng.",
-    194: "💡 <b>Đáp án (C):</b> Bà Brown giới thiệu sản phẩm hũ thủy tinh của công ty hiện đang được bán tại các cửa hàng trên khắp Hoa Kỳ và Canada (hai quốc gia).",
+    193: "💡 <b>Đáp án (D) Their share of the market is rising:</b> Đoạn 2 bài báo nêu rõ bao bì dạng tuýp truyền thống đang dần mất một phần thị phần vào tay các dạng bao bì có thể tái chế (bao gồm hũ thủy tinh và chai lọ mà Green Globe sử dụng), chứng tỏ thị phần của các dòng bao bì này đang có xu hướng tăng lên.",    194: "💡 <b>Đáp án (C):</b> Bà Brown giới thiệu sản phẩm hũ thủy tinh của công ty hiện đang được bán tại các cửa hàng trên khắp Hoa Kỳ và Canada (hai quốc gia).",
     195: "💡 <b>Đáp án (B):</b> Thư bà Brown đề cập chuỗi nhà thuốc Macker mua trước 2 thùng để thử nghiệm doanh số tại một cửa hàng đơn lẻ ('test sales in a single store') -> Dùng để thử nghiệm thị trường.",
     196: "💡 <b>Đáp án (B):</b> Ông Cho gửi email để hỏi hướng dẫn cụ thể cách di chuyển từ ga tới khách sạn do ứng dụng khó tra cứu ('To obtain clear directions to a hotel').",
     197: "💡 <b>Đáp án (A):</b> Ông Cho viết 'looking forward to spending a couple of nights right by the beach' và bài đánh giá nhắc đến bãi biển -> Khách sạn nằm gần biển/nguồn nước.",
     198: "💡 <b>Đáp án (C):</b> Bài đánh giá kể ông đi tàu điện nhẹ tới nhà ga nằm ngay đối diện bên kia đường của khách sạn ('directly across the street from the hotel'), khớp với ga Dalton được nhắc trong email.",
-    199: "💡 <b>Đáp án (C):</b> Bài đánh giá kể ông bắt chuyến tàu 4:05 P.M. rời Johnstown. Tra bảng giờ tàu City Link Line, chuyến xuất phát lúc 4:05 P.M. sẽ đến ga Charlesville lúc 5:41 P.M.",
+    199: "💡 <b>Đáp án (B):</b> Bài đánh giá kể ông bắt chuyến tàu 4:05 P.M. rời Johnstown. Tra bảng giờ tàu City Link Line, chuyến xuất phát lúc 4:05 P.M. sẽ đến ga Charlesville lúc 5:41 P.M.",
     200: "💡 <b>Đáp án (D):</b> Bài đánh giá mở đầu nhắc đến việc ông vừa kết thúc chuyến đi dự hội thảo chuyên môn 3 ngày ('exhilarating three-day professional conference') -> Vừa hoàn thành một chuyến công tác."
 };

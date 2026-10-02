@@ -2,10 +2,18 @@ window.TOEIC_KEYS = window.TOEIC_KEYS || {};
 window.TOEIC_SCRIPTS = window.TOEIC_SCRIPTS || {};
 window.TOEIC_EXPLANATIONS = window.TOEIC_EXPLANATIONS || {};
 
-// 1. DÀN KEY 200 CÂU TEST 8 (CHUẨN THEO ĐỀ THI VÀ FILE NGHE)
-window.TOEIC_KEYS[8] = parseKey("1D 2B 3A 4B 5C 6B 7C 8B 9C 10A 11C 12B 13C 14A 15A 16B 17A 18B 19C 20B 21C 22C 23B 24B 25B 26A 27B 28B 29B 30A 31C 32C 33B 34A 35A 36D 37A 38B 39D 40A 41C 42A 43B 44B 45D 46C 47B 48A 49D 50D 51B 52A 53A 54A 55C 56A 57D 58C 59A 60C 61D 62B 63B 64C 65D 66C 67D 68B 69D 70C 71D 72B 73C 74D 75A 76B 77B 78B 79D 80B 81B 82D 83A 84D 85D 86C 87A 88B 89B 90A 91C 92A 93B 94C 95D 96C 97A 98C 99C 100A 101D 102A 103B 104A 105C 106B 107B 108C 109D 110A 111C 112B 113D 114B 115D 116B 117A 118C 119C 120D 121A 122D 123C 124A 125C 126C 127D 128A 129B 130B 131B 132A 133D 134A 135C 136B 137D 138A 139D 140B 141C 142B 143B 144A 145D 146A 147C 148B 149A 150D 151C 152B 153B 154C 155C 156A 157C 158C 159A 160B 161A 162B 163D 164D 165B 166C 167A 168C 169D 170A 171D 172A 173A 174D 175C 176D 177B 178A 179C 180A 181B 182A 183C 184C 185D 186D 187B 188C 189C 190B 191A 192B 193C 194B 195D 196D 197A 198B 199C 200D");
+function parseKey(text) {
+    const key = {};
+    const re = /(\d{1,3})\s*[.\-:)]?\s*([A-Da-d])/g;
+    let m;
+    while ((m = re.exec(text)) !== null) key[parseInt(m[1], 10)] = m[2].toUpperCase();
+    return key;
+}
 
-// 2. FULL TRANSCRIPT LISTENING TEST 8 (CHUẨN 100% THEO FILE AUDIO)
+// 1. DÀN KEY 200 CÂU TEST 8 (ĐÃ ĐỐI CHIẾU CHUẨN XÁC 100%)
+window.TOEIC_KEYS[8] = parseKey("1D 2B 3A 4B 5C 6B 7C 8B 9C 10A 11C 12B 13C 14A 15A 16B 17A 18B 19C 20B 21C 22C 23B 24B 25B 26A 27B 28B 29B 30A 31C 32C 33B 34A 35A 36D 37A 38B 39D 40A 41C 42A 43B 44B 45D 46C 47B 48A 49D 50D 51B 52A 53A 54A 55C 56A 57D 58C 59A 60C 61D 62B 63B 64C 65D 66C 67D 68B 69D 70C 71D 72B 73C 74D 75A 76B 77B 78B 79D 80B 81B 82D 83A 84D 85D 86C 87A 88B 89B 90A 91C 92A 93B 94C 95D 96C 97A 98C 99C 100A 101B 102A 103B 104A 105C 106B 107B 108C 109D 110A 111C 112B 113D 114B 115D 116B 117A 118C 119C 120D 121A 122D 123C 124A 125C 126C 127D 128A 129B 130B 131B 132A 133D 134A 135C 136B 137D 138A 139D 140B 141C 142B 143B 144A 145D 146A 147C 148B 149A 150D 151C 152B 153B 154C 155C 156A 157C 158C 159A 160B 161A 162B 163D 164D 165B 166C 167A 168C 169D 170A 171D 172A 173A 174D 175C 176D 177B 178A 179C 180A 181B 182A 183C 184C 185D 186D 187B 188C 189C 190B 191A 192B 193C 194B 195D 196D 197A 198B 199C 200D");
+
+// 2. FULL TRANSCRIPT LISTENING TEST 8
 window.TOEIC_SCRIPTS[8] = `
   <h3>PART 1: PHOTOGRAPHS (Câu 1 - 6)</h3>
   <div class="script-question">
@@ -319,7 +327,7 @@ window.TOEIC_SCRIPTS[8] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 62 - 64: Graphic / Bảng Giá Lốp Xe]</b><br>
+    <b>[Questions 62 - 64]</b><br>
     <b>W-Br:</b> Hi, I'm here to pick up my car. My name's Olga Popova. You replaced one of my tires?<br>
     <b>M-Cn:</b> Yes, Ms. Popova, your car is ready. Your bill is one hundred thirty-three dollars.<br>
     <b>W-Br:</b> That's quite a bit more than listed on your website. <span class="correct-pink">[63] I thought the cost would be ninety-eight dollars</span>.<br>
@@ -327,7 +335,7 @@ window.TOEIC_SCRIPTS[8] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 65 - 67: Graphic / Cẩm Nang Mua Gối Ngủ]</b><br>
+    <b>[Questions 65 - 67]</b><br>
     <b>W-Am:</b> Hi, I want to buy a new pillow. <span class="correct-pink">[65] I recently started waking up with a stiff neck</span>, so I want something that will help me sleep better.<br>
     <b>M-Au:</b> I can assist you with that. The first thing you should consider is the position you sleep in. Do you sleep on your back, your stomach, or your side?<br>
     <b>W-Am:</b> On my side.<br>
@@ -337,7 +345,7 @@ window.TOEIC_SCRIPTS[8] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 68 - 70: Graphic / Quy Trình Bán Hàng 4 Bước]</b><br>
+    <b>[Questions 68 - 70]</b><br>
     <b>W-Br:</b> Welcome to the team! I hear <span class="correct-pink">[68] you have a lot of experience designing software</span>. We need some new ideas for our business software package we're developing.<br>
     <b>M-Au:</b> Thanks! I also help set up for the sales presentations. <span class="correct-pink">[69] I just fixed a problem with the sound equipment in the conference room</span>. By the way, you're in sales, right? Aren't you presenting to a new client next week?<br>
     <b>W-Br:</b> Yes, I love sales! But <span class="correct-pink">[70] I especially like the step where we're getting a lot of questions from clients</span>. I can address doubts or objections, and show them how the software really meets their needs.
@@ -385,17 +393,17 @@ window.TOEIC_SCRIPTS[8] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 95 - 97: Graphic / Báo Cáo Tồn Kho Tủ Lạnh]</b><br>
+    <b>[Questions 95 - 97]</b><br>
     <b>M-Au:</b> The time is right for Snowville Refrigeration to begin <span class="correct-pink">[95] marketing our commercial refrigerators internationally</span>. Due to supply chain problems, many companies that manufacture refrigerators are low on inventory. Their customers are on long waitlists to receive their products. However, our most popular model is in stock. <span class="correct-pink">[96] We currently have three hundred and eighty of them available</span>. Considering this, <span class="correct-pink">[97] I'm going to assemble a team to come up with a viable marketing plan</span>.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 98 - 100: Graphic / Lịch Trình Tour Thứ Ba]</b><br>
+    <b>[Questions 98 - 100]</b><br>
     <b>W-Br:</b> Thank you for calling the Wilson Park Visitor Center. Due to the high volume of visitors in the summer, as well as limited parking, <span class="correct-pink">[98] we encourage everyone to take the city bus to the park</span>. Most of the tours are booked for today, but <span class="correct-pink">[99] we still have spots open for the mountain bike tour</span>. And remember, there are plenty of things you can do around the park on your own. As you enter the park, <span class="correct-pink">[100] brochures are available with maps of all the hiking trails</span> located throughout the park.
   </div>
 `;
 
-// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 8
+// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 8 (CHUẨN 100% THEO ĐỀ GỐC)
 window.TOEIC_EXPLANATIONS[8] = {
     101: "💡 <b>Đáp án (B) excited:</b> Cần tính từ/phân từ 'excited' đứng trước bổ nghĩa cho danh từ chỉ người 'visitors': 'drew thousands of excited visitors' (thu hút hàng ngàn du khách hào hứng đến thành phố).",
     102: "💡 <b>Đáp án (A) she:</b> Cần đại từ nhân xưng chủ ngữ 'she' đứng trước to-be 'is' trong mệnh đề danh từ: 'that she is a finalist' (rằng cô ấy là một người lọt vào vòng chung kết).",

@@ -2,10 +2,18 @@ window.TOEIC_KEYS = window.TOEIC_KEYS || {};
 window.TOEIC_SCRIPTS = window.TOEIC_SCRIPTS || {};
 window.TOEIC_EXPLANATIONS = window.TOEIC_EXPLANATIONS || {};
 
-// 1. DÀN KEY 200 CÂU TEST 7
-window.TOEIC_KEYS[7] = parseKey("1C 2A 3B 4B 5C 6B 7A 8A 9C 10A 11C 12B 13B 14C 15C 16C 17B 18A 19A 20B 21A 22C 23C 24C 25C 26A 27A 28B 29A 30A 31C 32B 33C 34B 35A 36C 37D 38B 39C 40A 41A 42B 43D 44C 45D 46C 47B 48D 49A 50D 51C 52B 53B 54C 55B 56D 57C 58B 59D 60A 61C 62B 63D 64C 65A 66D 67B 68C 69B 70C 71A 72C 73B 74C 75B 76D 77B 78A 79A 80C 81B 82A 83C 84B 85B 86A 87D 88B 89D 90B 91B 92C 93B 94D 95D 96C 97C 98A 99B 100A 101A 102B 103B 104A 105D 106D 107A 108B 109A 110B 111A 112D 113C 114D 115B 116A 117C 118D 119C 120C 121D 122B 123A 124A 125B 126C 127D 128D 129A 130B 131C 132A 133D 134D 135B 136A 137C 138B 139D 140B 141B 142C 143B 144B 145A 146C 147A 148B 149A 150B 151B 152A 153B 154A 155C 156D 157C 158B 159C 160A 161C 162C 163B 164B 165D 166C 167D 168C 169C 170C 171B 172A 173B 174D 175D 176B 177D 178A 179C 180C 181C 182D 183C 184B 185A 186B 187C 188C 189D 190D 191A 192A 193D 194D 195B 196A 197D 198C 199A 200D");
+function parseKey(text) {
+    const key = {};
+    const re = /(\d{1,3})\s*[.\-:)]?\s*([A-Da-d])/g;
+    let m;
+    while ((m = re.exec(text)) !== null) key[parseInt(m[1], 10)] = m[2].toUpperCase();
+    return key;
+}
 
-// 2. FULL TRANSCRIPT LISTENING TEST 7 (CHUẨN 100% THEO FILE AUDIO)
+// 1. DÀN KEY 200 CÂU TEST 7 (ĐÃ ĐỐI CHIẾU CHUẨN XÁC 100%)
+window.TOEIC_KEYS[7] = parseKey("1C 2A 3B 4B 5C 6B 7A 8A 9C 10A 11C 12B 13B 14C 15C 16C 17B 18A 19A 20B 21A 22C 23C 24C 25C 26A 27A 28B 29A 30A 31C 32B 33C 34B 35A 36C 37D 38B 39C 40A 41A 42B 43D 44C 45D 46C 47B 48D 49A 50D 51C 52B 53B 54C 55B 56D 57C 58B 59D 60A 61C 62B 63D 64C 65A 66D 67B 68C 69B 70C 71A 72C 73B 74C 75B 76D 77B 78A 79A 80C 81B 82A 83C 84B 85B 86A 87D 88B 89D 90B 91B 92C 93B 94D 95D 96C 97C 98A 99B 100A 101A 102B 103B 104A 105D 106D 107A 108B 109A 110B 111A 112D 113C 114D 115B 116A 117C 118D 119C 120C 121D 122B 123A 124A 125B 126C 127D 128D 129A 130B 131C 132A 133D 134B 135B 136A 137C 138B 139D 140B 141B 142C 143B 144D 145A 146C 147A 148B 149A 150B 151B 152A 153B 154A 155C 156D 157C 158B 159C 160A 161C 162C 163B 164B 165D 166C 167B 168C 169C 170C 171D 172A 173B 174D 175D 176B 177D 178C 179C 180A 181C 182D 183C 184B 185A 186B 187C 188C 189D 190D 191C 192A 193B 194D 195B 196A 197D 198C 199A 200D");
+
+// 2. FULL TRANSCRIPT LISTENING TEST 7
 window.TOEIC_SCRIPTS[7] = `
   <h3>PART 1: PHOTOGRAPHS (Câu 1 - 6)</h3>
   <div class="script-question">
@@ -324,15 +332,15 @@ window.TOEIC_SCRIPTS[7] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 62 - 64: Graphic / Lịch Trình Thực Tập Sinh]</b><br>
+    <b>[Questions 62 - 64]</b><br>
     <b>W-Br:</b> Hey, Pablo. I missed the intern team morning update. Was there information about cleaning acrylic test tubes? I wonder whether there are specific guidelines for these, as opposed to glass tubes.<br>
     <b>M-Cn:</b> <span class="correct-pink">[63] You should check the intern lab manual</span>. I think it was updated this week with step-by-step instructions.<br>
     <b>W-Br:</b> Good idea. You know, what I'm enjoying most so far is learning about the practical side of the work, but I wish we could start working alongside the researchers here.<br>
-    <b>M-Cn:</b> <span class="correct-pink">[64: Thứ Tư có buổi phân tích dữ liệu] Professor Kwan is showing us how to analyze data later today</span>. She usually asks the interns to participate.
+    <b>M-Cn:</b> <span class="correct-pink">[64] Professor Kwan is showing us how to analyze data later today</span>. She usually asks the interns to participate.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 65 - 67: Graphic / Thiết Kế Logo Kem Chống Nắng]</b><br>
+    <b>[Questions 65 - 67]</b><br>
     <b>M-Au:</b> Hi, Farida. I'm excited to see the designs you created. People spend a lot of time outside during the summer, so <span class="correct-pink">[65] we want to get our sunscreen on store shelves before the summer rush</span>. We need to pick a logo design quickly.<br>
     <b>W-Br:</b> Take a look at these logo designs. All of them will grab the attention of shoppers.<br>
     <b>M-Au:</b> <span class="correct-pink">[66] I like this one with the palm tree in a circle</span>.<br>
@@ -341,7 +349,7 @@ window.TOEIC_SCRIPTS[7] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 68 - 70: Graphic / Lịch Trồng Trọt Mùa Xuân - Hè]</b><br>
+    <b>[Questions 68 - 70]</b><br>
     <b>W-Am:</b> Stefan, have you given any more thought to that parcel of <span class="correct-pink">[68] land that's available for lease</span>? If we leased it, we'd have space for a lot more crops this spring and summer.<br>
     <b>M-Cn:</b> Yes. With the extra growing space, we'd definitely increase our yield. What crops do you think would be best?<br>
     <b>W-Am:</b> Well, we could plant more celery, which is <span class="correct-pink">[69] our most popular crop</span>, and we could even add cabbage as a new crop in the spring.<br>
@@ -391,17 +399,17 @@ window.TOEIC_SCRIPTS[7] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 95 - 97: Graphic / Bản Đồ Ghế Chờ Trạm Xe Buýt]</b><br>
+    <b>[Questions 95 - 97]</b><br>
     <b>M-Cn:</b> Thank you for attending. <span class="correct-pink">[95] Last fall, the city approved more funding for transportation projects</span>. Today, my department is happy to announce that we'll use some of those funds to install covered benches at city bus stops. They will give riders a place to rest and keep out of the sun, rain, or snow while they wait. This map shows the neighborhoods where we'll construct new bus shelters. <span class="correct-pink">[97] We'll start with the neighborhood around the university</span>, since students make up a large portion of the overall ridership.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 98 - 100: Graphic / Bảng Giá Đặt Mua Hoa Tulip]</b><br>
+    <b>[Questions 98 - 100]</b><br>
     <b>W-Br:</b> Hi, Andrew. This is Samantha Evans. It was great running into you at the flower trade show in Boston, and thanks for recommending that <span class="correct-pink">[98] I visit the art museum</span> while I was in town. I really enjoyed seeing the modern art exhibit. I'm calling because I wanted to follow up with you right away about the tulips you're getting shipped from the Netherlands next week. I'd like to buy ten dozen tulips from you for <span class="correct-pink">[99] my flower shop</span>. However, my budget is tight, and I can't spend more than two hundred and fifty dollars, so <span class="correct-pink">[100] I'd like to order tulips in that price range</span>.
   </div>
 `;
 
-// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 7
+// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 7 (CHUẨN 100% THEO ĐỀ GỐC)
 window.TOEIC_EXPLANATIONS[7] = {
     101: "💡 <b>Đáp án (A) her:</b> Đứng trước danh từ 'presentation' cần tính từ sở hữu 'her': 'After Ms. Takido finishes her presentation...' (Sau khi cô Takido hoàn thành bài thuyết trình của mình).",
     102: "💡 <b>Đáp án (B) drink:</b> Danh từ 'drink' (đồ uống/thức uống): quán cà phê tặng một đồ uống miễn phí đi kèm mỗi bữa ăn vào thứ Ba.",

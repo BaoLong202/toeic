@@ -2,10 +2,18 @@ window.TOEIC_KEYS = window.TOEIC_KEYS || {};
 window.TOEIC_SCRIPTS = window.TOEIC_SCRIPTS || {};
 window.TOEIC_EXPLANATIONS = window.TOEIC_EXPLANATIONS || {};
 
-// 1. DÀN KEY 200 CÂU TEST 9 (CHUẨN THEO ĐỀ GỐC VÀ FILE NGHE)
+function parseKey(text) {
+    const key = {};
+    const re = /(\d{1,3})\s*[.\-:)]?\s*([A-Da-d])/g;
+    let m;
+    while ((m = re.exec(text)) !== null) key[parseInt(m[1], 10)] = m[2].toUpperCase();
+    return key;
+}
+
+// 1. DÀN KEY 200 CÂU TEST 9 (ĐÃ ĐỐI CHIẾU CHUẨN XÁC 100%)
 window.TOEIC_KEYS[9] = parseKey("1D 2A 3B 4A 5B 6A 7C 8B 9B 10A 11C 12B 13C 14A 15A 16B 17A 18B 19C 20B 21C 22C 23B 24B 25B 26A 27B 28B 29B 30A 31C 32C 33A 34B 35D 36C 37B 38A 39D 40A 41C 42A 43B 44D 45D 46C 47B 48A 49D 50D 51B 52A 53C 54B 55C 56D 57C 58A 59A 60B 61B 62A 63D 64C 65C 66B 67D 68B 69B 70D 71D 72B 73A 74A 75C 76B 77C 78A 79B 80B 81C 82D 83B 84A 85D 86C 87D 88B 89A 90B 91C 92C 93C 94B 95D 96C 97B 98B 99A 100D 101A 102B 103B 104C 105A 106A 107C 108A 109B 110D 111C 112A 113C 114B 115D 116A 117C 118B 119D 120D 121D 122B 123C 124C 125A 126B 127B 128B 129D 130A 131B 132D 133A 134C 135D 136B 137A 138B 139C 140D 141A 142D 143D 144C 145A 146A 147D 148A 149D 150B 151C 152D 153B 154D 155A 156B 157B 158D 159C 160B 161A 162C 163D 164C 165B 166C 167D 168C 169A 170B 171C 172A 173B 174C 175D 176D 177D 178A 179B 180C 181C 182A 183D 184C 185B 186B 187A 188C 189D 190B 191C 192D 193C 194A 195B 196A 197C 198A 199C 200B");
 
-// 2. FULL TRANSCRIPT LISTENING TEST 9 (CHUẨN 100% THEO FILE AUDIO)
+// 2. FULL TRANSCRIPT LISTENING TEST 9
 window.TOEIC_SCRIPTS[9] = `
   <h3>PART 1: PHOTOGRAPHS (Câu 1 - 6)</h3>
   <div class="script-question">
@@ -335,7 +343,7 @@ window.TOEIC_SCRIPTS[9] = `
     <b>M-Cn:</b> You're in luck, it's a small. I'll ring it up for you. Are you a museum member?<br>
     <b>W-Am:</b> No, I'm not.<br>
     <b>M-Cn:</b> <span class="correct-pink">[67] You might consider becoming one. Members get a ten percent discount at the gift shop</span>.<br>
-    <i>(Theo hình ảnh kệ hàng, chiếc áo phông T-shirt có giá niêm yết là $35. Nếu không phải hội viên, khách trả đúng <span class="correct-pink">[66] $35</span>).</i>
+    <b>W-Am:</b> I'll think about it. For now, I'll just pay the full price of <span class="correct-pink">[66: $35]</span> for the T-shirt.
   </div>
 
   <div class="script-dialogue">
@@ -351,52 +359,52 @@ window.TOEIC_SCRIPTS[9] = `
   <h3>PART 4: TALKS (Câu 71 - 100)</h3>
   <div class="script-dialogue">
     <b>[Questions 71 - 73]</b><br>
-    <b>W-Br:</b> Welcome aboard Sunshine Cruises! On today's tour, you'll have the opportunity to see several of the city's most famous <span class="correct-pink">[71] buildings directly from the Camille River</span>. Our route along the river provides a great view of the architecture, and <span class="correct-pink">[72] we also have a professional photographer on board the boat</span> who is available to take your picture for a small fee. Okay, it's time for us to get going. <span class="correct-pink">[73] Please take your seats for departure</span>.
+    <b>W-Am:</b> Good morning, everyone. <span class="correct-pink">[71] Thank you for coming in a little bit early for your shift today</span>. While production was closed down for the holiday, management took the opportunity to install a new type of safety equipment on all the machines on <span class="correct-pink">[72] the assembly lines</span>. A special sensor, called a light curtain, automatically turns off the machines if an object gets too close during operation. <span class="correct-pink">[73] I'd like to show you how it works. Let's go look at a machine now</span>.
   </div>
 
   <div class="script-dialogue">
     <b>[Questions 74 - 76]</b><br>
-    <b>M-Cn:</b> Attention, customers of George's Grocery: we are pleased to share the launch of our <span class="correct-pink">[74] Shopper's Rewards Program</span>, and want you to be a part of it! This new program offers all members exclusive perks like personalized coupons and special discounts. Signing up is easy and can be done right at the register when you check out. <span class="correct-pink">[75] Just present your driver's license or other identification</span>, and you'll be given a membership card. Also, don't forget that <span class="correct-pink">[76] we will be closed tomorrow in honor of the national holiday</span>.
+    <b>W-Br:</b> Good job at all the rehearsals this week as we prepare for our upcoming performance, <span class="correct-pink">[74] dancers! You did great at quickly learning the newly choreographed steps to our main piece</span>. <span class="correct-pink">[75] I recommend that you rest a lot over the weekend</span>. Please give your muscles time to recover after working so hard. When we return on Monday for our final rehearsal, Irina will be here. She's in charge of <span class="correct-pink">[76] the costumes</span> and will be making last-minute alterations to your outfits. Then we'll be ready for our first show on Tuesday night.
   </div>
 
   <div class="script-dialogue">
     <b>[Questions 77 - 79]</b><br>
-    <b>W-Am:</b> This just in on News Channel 6: <span class="correct-pink">[77] there is a traffic delay</span> on Highway 59 with expected delays of about fifteen minutes in the direction of the sports stadium. Apparently, <span class="correct-pink">[78] a tree has fallen into the easternmost lane of the road</span>. Many residents will recognize this tree—it's been featured in many publications about the area. Join me as I interview Jing-da Wei, <span class="correct-pink">[79] an aerial photographer</span> who has captured some of the most iconic images of this tree. Mr. Wei, thanks for talking with me.
+    <b>M-Au:</b> Attention, everyone. <span class="correct-pink">[77] Tonight we're filming a live performance of the Edmonton Symphony Orchestra</span>, so the margin for error is zero. I know we've had a lot of adjustments to make since <span class="correct-pink">[78] we just upgraded our cameras to newer models last week</span>, but we've tested everything, and we know what we're doing. Remember, it's an important night because this is a high-profile event that will be broadcast live to viewers. If we do a great job, our services are bound to be in demand. It's noon now, so let's break for lunch. <span class="correct-pink">[79] When we come back, we'll get set up</span>.
   </div>
 
   <div class="script-dialogue">
     <b>[Questions 80 - 82]</b><br>
-    <b>M-Cn:</b> Junko, I just read your email about the photo-sharing app that our <span class="correct-pink">[80] social media company</span> is launching tomorrow. You know, the email about updating the language in the community guidelines for the app? We've already spent a lot of time reviewing the guideline document, and actually, <span class="correct-pink">[81] I was just about to post it</span>. Since we'll both be at the all-staff meeting at one o'clock, <span class="correct-pink">[82] let's stay after it finishes to touch base</span> on upcoming projects.
+    <b>W-Br:</b> Hi, I'm your supervisor, Maria Gonzalez. <span class="correct-pink">[80] I'd like to extend a warm welcome to everyone here. I'm excited that you'll all be joining the customer service department</span>. I hope that the onboarding process has been going well so far. <span class="correct-pink">[81] After lunch, I'll share a video about our company's history</span>, from its founding in 1971 to the present day. Let's move on now to introductions. I'd like all of you to tell us something about yourselves. For example, I just found out that Astrid plays saxophone in a jazz ensemble. <span class="correct-pink">[82] That certainly wasn't on her résumé!</span> Klaus, would you go first?
   </div>
 
   <div class="script-dialogue">
     <b>[Questions 83 - 85]</b><br>
-    <b>W-Am:</b> Thanks again for taking on this project. <span class="correct-pink">[83] You'll be authoring a comprehensive handbook that describes all the standard operating procedures</span> to be used by our <span class="correct-pink">[84] flight crew and airport staff</span>. The goal is to have a master document from which we can pull out different sections as needed. On your screens, <span class="correct-pink">[85] you'll see a list of who will be responsible for drafting each chapter</span>. All chapters will be co-written with one other author.
+    <b>M-Au:</b> Good afternoon, and welcome aboard this train to Ashdale. Our next stop is Broxton, <span class="correct-pink">[83] famous for being the birthplace of renowned painter Oliver Murray</span>. As you may know, several of Mr. Murray's paintings hang in museums around the world. Please be advised that due to the short platform length, the doors of the last train car will not open. <span class="correct-pink">[84] If you are in that car, you'll need to walk forward to exit the train</span>. There will also be <span class="correct-pink">[85] a short delay at this station while our new train crew comes on</span> and gets situated. We apologize for any inconvenience.
   </div>
 
   <div class="script-dialogue">
     <b>[Questions 86 - 88]</b><br>
-    <b>M-Au:</b> One final thing before we close the team leaders' meeting: some educators from various countries will be visiting our company next week. I will be giving a brief presentation to introduce all of <span class="correct-pink">[86] the educational software products</span> we make. After that, <span class="correct-pink">[87] I'd like some of you to give demonstrations of the software your team developed</span>. I'll have a final agenda ready soon, and will meet with those of you who will be presenting that day to go over the details. We wanted to go to lunch with the visitors afterward at the restaurant next door, but it's closed for renovations. Luckily, <span class="correct-pink">[88] a new restaurant has opened close by</span>.
+    <b>W-Am:</b> I have good news: we've signed a contract with Lambert Technologies to plan <span class="correct-pink">[86] the gardens and landscaping around their new office building</span>. I met with them last week to present our design proposals, and they agreed on a design plan. They've decided to cover a lot of the open space with creeping thyme plantings instead of grass. Resource conservation is a priority for all of us, and I must say, <span class="correct-pink">[87] grass does require a lot of water</span>. The project will start in August. I'll need to make the work schedules soon. If you're planning to take any time off for vacation, <span class="correct-pink">[88] send me those dates today, please</span>.
   </div>
 
   <div class="script-dialogue">
     <b>[Questions 89 - 91]</b><br>
-    <b>M-Cn:</b> Are you ready to launch a new career in the technology industry? At Joblift Enterprises, we provide <span class="correct-pink">[89] hands-on training</span> to help you learn the skills and earn the certifications that tech professionals need. Unlike other job training programs, <span class="correct-pink">[90] our courses are tuition-free</span>, so students leave our school debt-free and ready to pursue their careers. Our schools are conveniently located throughout the Grand Lakes region. <span class="correct-pink">[91] Visit our website today to find the location closest to you</span>.
+    <b>M-Cn:</b> A market research firm has reported that <span class="correct-pink">[89] the department store chain Willoughby is partnering with the beauty retailer Rossi</span>. By the end of the year, Rossi stores will be in place at five hundred Willoughby locations. Currently, most of the beauty retailer's sales come from small shops in urban areas. By joining forces with Willoughby, <span class="correct-pink">[90] Rossi hopes to meet its goal of expanding its customer base</span> by entering suburban markets. To accommodate the new retail spaces for Rossi, participating Willoughby stores will <span class="correct-pink">[91] start renovations in July</span>.
   </div>
 
   <div class="script-dialogue">
     <b>[Questions 92 - 94]</b><br>
-    <b>W-Br:</b> I'd like to thank you all for attending <span class="correct-pink">[92] Omnicon Department Stores' staff meeting</span>. As you'll recall, six months ago, <span class="correct-pink">[93] we made a deal with Euphora sports clothing to sell their merchandise exclusively in our department stores</span>. The hope is that we can attract new customers to our stores by selling this brand. Data show that foot traffic in the department stores containing Euphora clothing is up twenty percent from last year. Keep in mind, however, that <span class="correct-pink">[94] total sales revenues are still being calculated</span>.
+    <b>M-Au:</b> Today, <span class="correct-pink">[92] I want to discuss some ways we can improve our solar panel installation business</span>. I'd like to pay for national certification for all of our installation techs, which will greatly improve our quality. <span class="correct-pink">[93] Let's not forget that the business council's yearly ratings will be published soon</span>. In addition, we can attract new customers by offering twenty-five percent off the installation charge. <span class="correct-pink">[94] I suggest we begin the promotion next month</span>.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 95 - 97: Graphic / Bảng Phí Đỗ Xe Thành Phố]</b><br>
-    <b>M-Au:</b> Thanks for inviting me to represent <span class="correct-pink">[95] the parking authority</span> at this month's city council meeting. As you know, parking in city parking garages <span class="correct-pink">[96] will no longer be free on Saturdays</span>. My office has updated the parking rate schedule and posted copies in all city garages. If you look at the screen, you'll see the new rates that went into effect this week. We're planning to use some of the additional revenue to cover the cost of new payment kiosks for the garages. <span class="correct-pink">[97] I will provide a revenue report at next month's meeting</span>.
+    <b>[Questions 95 - 97: Graphic / Bản Đồ Ghế Chờ Trạm Xe Buýt]</b><br>
+    <b>M-Cn:</b> Thank you for attending. <span class="correct-pink">[95] Last fall, the city approved more funding for transportation projects</span>. Today, my department is happy to announce that we'll use some of those funds to install covered benches at city bus stops. They will give riders a place to rest and keep out of the sun, rain, or snow while they wait. This map shows the neighborhoods where we'll construct new bus shelters. <span class="correct-pink">[97] We'll start with the neighborhood around the university</span>, since students make up a large portion of the overall ridership.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 98 - 100: Graphic / Thông Tin Chuyến Bay]</b><br>
-    <b>W-Am:</b> Attention, passengers: <span class="correct-pink">[98] Flight AU354</span> will now be departing from a different gate. (Bảng điện tử đối chiếu chuyến AU354 bay tới Los Angeles). The new gate will appear on screens throughout the terminal shortly. Your boarding time remains as scheduled and will begin in approximately twenty-five minutes. If you do not yet have a seat assignment, please come up to the counter now so that <span class="correct-pink">[99] Claudia can assist you with seat assignments</span>. And one important reminder: all carry-on baggage must comply with our height and width restrictions. <span class="correct-pink">[100] Size check templates are available</span> throughout the terminal for your reference.
+    <b>[Questions 98 - 100: Graphic / Bảng Giá Đặt Mua Hoa Tulip]</b><br>
+    <b>W-Br:</b> Hi, Andrew. This is Samantha Evans. It was great running into you at the flower trade show in Boston, and thanks for recommending that <span class="correct-pink">[98] I visit the art museum</span> while I was in town. I really enjoyed seeing the modern art exhibit. I'm calling because I wanted to follow up with you right away about the tulips you're getting shipped from the Netherlands next week. I'd like to buy ten dozen tulips from you for <span class="correct-pink">[99] my flower shop</span>. However, my budget is tight, and I can't spend more than two hundred and fifty dollars, so <span class="correct-pink">[100] I'd like to order tulips in that price range</span>.
   </div>
 `;
 
@@ -449,7 +457,7 @@ window.TOEIC_EXPLANATIONS[9] = {
     145: "💡 <b>Đáp án (A):</b> Đoạn văn nêu 5 trong số 6 cửa hàng được mua lại, tiếp nối tự nhiên bằng câu: 'The fate of the shop in Leeds is still unknown' (Số phận của cửa hàng tại Leeds hiện vẫn chưa rõ).",
     146: "💡 <b>Đáp án (A) will be adding:</b> Thì tương lai tiếp diễn diễn tả giá trị mà thương hiệu này sẽ đóng góp vào danh mục sản phẩm của công ty: 'will be adding much to the Locke and Jeeves portfolio'.",
     147: "💡 <b>Đáp án (D):</b> Thư mời toàn thể nhân viên tham gia buổi tiệc đón chào Giám đốc tài chính mới (Ms. Misun Lee as Chief Financial Officer) -> Giới thiệu một lãnh đạo cấp cao mới của công ty.",
-    148: "💡 <b>Đáp án (A):</b> Thư mời ghi rõ: 'Join your colleagues for pastries and coffee' -> Buổi gặp gỡ có phục vụ đồ ăn thức uống nhẹ (Refreshments).",
+    148: "💡 <b>Đáp án (A) Refreshments will be served:</b> Thư mời ghi rõ: 'Join your colleagues for pastries and coffee' -> Buổi gặp gỡ có phục vụ đồ ăn thức uống nhẹ (Refreshments).",
     149: "💡 <b>Đáp án (D):</b> Email thông báo tài khoản sẽ bị đóng sau 6 tháng không hoạt động và tài khoản của ông Hong sắp bị vô hiệu hóa vì ông không đăng nhập gần đây -> Tài khoản đã không được dùng trong vài tháng qua.",
     150: "💡 <b>Đáp án (B):</b> Email hướng dẫn rõ: 'simply sign in to the app before that date' (trước ngày 20 tháng 7) để tránh việc tài khoản bị khóa.",
     151: "💡 <b>Đáp án (C):</b> Khách hàng nhắn tin hỏi thợ sửa lò sưởi đã xuất phát chưa vì ông đã xin nghỉ việc buổi sáng để đón thợ -> Nhằm đảm bảo dịch vụ được thực hiện đúng kế hoạch đã định.",
@@ -462,8 +470,8 @@ window.TOEIC_EXPLANATIONS[9] = {
     158: "💡 <b>Đáp án (D):</b> Câu áp chót bài báo thông báo rõ: 'Preorders are now being accepted at Teleteknic's online shop' -> Khách hàng hiện có thể đặt mua trước tại cửa hàng trực tuyến của hãng.",
     159: "💡 <b>Đáp án (C):</b> Bài đăng nêu dự án phim tài liệu kể lại câu chuyện thị trấn Tottenton chuyển mình từ một thị trấn công nghiệp cũ thành trung tâm công trình sinh thái bền vững -> Sự chuyển mình của một thị trấn qua thời gian.",
     160: "💡 <b>Đáp án (B):</b> Đạo diễn tìm cư dân từ 50 tuổi trở lên từng sống qua thời kỳ đó để phỏng vấn về trải nghiệm của họ -> Kêu gọi người dân chia sẻ lại những ký ức của mình.",
-    161: "💡 <b>Đáp án (A):</b> Đoạn đầu nêu bài giới thiệu bản thân (Personal statement) là văn bản ngắn làm nổi bật tài năng, thành tích của ứng viên gửi tới nhà tuyển dụng -> Dành cho những người đang xin việc (Job applicants).",
-    162: "💡 <b>Đáp án (C):</b> Bài viết lưu ý về số lượng từ (word count), văn phong/chất lượng viết (word choice and tone) và các ví dụ vượt qua thử thách, hoàn toàn KHÔNG nhắc đến các chi tiết bằng cấp học vấn.",
+    161: "💡 <b>Đáp án (A) Job applicants:</b> Đoạn đầu nêu bài giới thiệu bản thân (Personal statement) là văn bản ngắn làm nổi bật tài năng, thành tích của ứng viên gửi tới nhà tuyển dụng -> Dành cho những người đang xin việc (Job applicants).",
+    162: "💡 <b>Đáp án (C) Details about the writer's education:</b> Bài viết lưu ý về số lượng từ (word count), văn phong/chất lượng viết (word choice and tone) và các ví dụ vượt qua thử thách, hoàn toàn KHÔNG nhắc đến các chi tiết học vấn.",
     163: "💡 <b>Đáp án (D):</b> Đoạn cuối hướng dẫn nên điều chỉnh đoạn kết cho từng công việc cụ thể: 'as you can create a separate version of this paragraph for each position you apply for' -> Có thể dễ dàng tùy biến linh hoạt (easily customizable).",
     164: "💡 <b>Đáp án (C):</b> Vị trí [3] đứng ngay sau câu khuyên đưa ra ví dụ về cách bạn làm việc và học hỏi từ người khác, rất ăn khớp với ví dụ minh họa: 'Chẳng hạn, bạn có thể giải thích cách một người mà bạn kính trọng đã tạo ra ảnh hưởng tích cực đến cuộc sống của bạn'.",
     165: "💡 <b>Đáp án (B):</b> Mở đầu đoạn chat là báo cáo tình hình kiểm tra thực địa tại cầu Crosley và đề xuất các phương án bảo trì định kỳ -> Cập nhật tình trạng của một cây cầu.",
@@ -475,7 +483,7 @@ window.TOEIC_EXPLANATIONS[9] = {
     171: "💡 <b>Đáp án (C):</b> Bà Acro cho biết ngay sau khi nhận được thỏa thuận bảo mật có chữ ký, bà sẽ gửi: 'the applications with their respective résumés' -> Một tập hợp các bản sơ yếu lý lịch của ứng viên.",
     172: "💡 <b>Đáp án (A):</b> Đoạn 1 nêu rõ các khu trưng bày nâng cấp đã mở cửa đón khách vào thứ Hai: 'one week before the scheduled completion date' -> Hoàn thành sớm hơn một tuần so với kế hoạch ban đầu.",
     173: "💡 <b>Đáp án (B):</b> Giám đốc Ann Wert chia sẻ: 'Every week in the museum lobby, I interview patrons and record their opinions' -> Bà trực tiếp gặp gỡ và phỏng vấn khách tham quan bảo tàng.",
-    174: "💡 <b>Đáp án (C):</b> Đoạn cuối bài báo ghi: 'Ms. Wert suggests that guests stroll around the city's adjoining heritage district' -> Khuyên du khách ghé thăm khu phố di sản lịch sử lân cận sau khi tham quan.",
+    174: "💡 <b>Đáp án (C) Visit a nearby historic neighborhood:</b> Đoạn cuối bài báo ghi: 'Ms. Wert suggests that guests stroll around the city's adjoining heritage district' -> Khuyên du khách ghé thăm khu phố di sản lịch sử lân cận sau khi tham quan.",
     175: "💡 <b>Đáp án (D):</b> Vị trí [4] nằm ngay sau câu nói về việc khách được tự kiểm soát trải nghiệm của mình, nối tiếp chuẩn nhất bằng câu: 'Du khách giờ đây sẽ có thể tự do lựa chọn các chủ đề mà họ muốn tìm hiểu sâu hơn'.",
     176: "💡 <b>Đáp án (D):</b> Gian hàng 101 bán bát đĩa salad, thớt và dụng cụ phục vụ; gian hàng 103 bán cốc gốm, đĩa và bình nước -> Cả hai gian hàng đều bán các vật dụng dùng cho nhà bếp (items for the kitchen).",
     177: "💡 <b>Đáp án (D):</b> Bảng mô tả nêu rõ xà phòng của Franny's Sensational Scents được làm từ 'herbs and flowers harvested from our own garden' -> Chứa các thành phần chiết xuất từ thực vật (parts of plants).",

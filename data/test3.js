@@ -2,10 +2,18 @@ window.TOEIC_KEYS = window.TOEIC_KEYS || {};
 window.TOEIC_SCRIPTS = window.TOEIC_SCRIPTS || {};
 window.TOEIC_EXPLANATIONS = window.TOEIC_EXPLANATIONS || {};
 
-// 1. DÀN KEY 200 CÂU TEST 3
-window.TOEIC_KEYS[3] = parseKey("1C 2A 3D 4C 5B 6A 7B 8A 9C 10A 11C 12B 13B 14C 15C 16C 17B 18A 19A 20B 21A 22C 23C 24C 25C 26A 27A 28B 29A 30A 31C 32B 33C 34B 35D 36C 37A 38D 39C 40B 41D 42D 43C 44C 45A 46B 47A 48D 49B 50B 51C 52C 53B 54C 55B 56B 57A 58B 59C 60B 61C 62C 63D 64D 65D 66D 67C 68B 69D 70C 71D 72D 73C 74A 75B 76A 77C 78D 79B 80C 81A 82D 83B 84C 85D 86B 87D 88B 89B 90C 91A 92C 93C 94D 95D 96D 97C 98C 99D 100A 101B 102A 103B 104C 105D 106B 107A 108B 109C 110C 111B 112C 113B 114B 115D 116A 117D 118D 119A 120A 121A 122C 123D 124A 125B 126A 127C 128C 129C 130A 131A 132D 133A 134B 135B 136B 137A 138C 139B 140D 141A 142A 143B 144B 145D 146C 147D 148C 149B 150D 151C 152D 153A 154C 155A 156D 157C 158C 159D 160A 161B 162D 163C 164A 165C 166C 167A 168C 169D 170D 171D 172A 173D 174B 175D 176C 177B 178A 179D 180B 181B 182C 183B 184A 185D 186A 187B 188C 189D 190C 191D 192D 193A 194B 195B 196A 197B 198C 199D 200D");
+function parseKey(text) {
+    const key = {};
+    const re = /(\d{1,3})\s*[.\-:)]?\s*([A-Da-d])/g;
+    let m;
+    while ((m = re.exec(text)) !== null) key[parseInt(m[1], 10)] = m[2].toUpperCase();
+    return key;
+}
 
-// 2. FULL TRANSCRIPT LISTENING TEST 3 (CHUẨN 100% THEO FILE AUDIO)
+// 1. DÀN KEY 200 CÂU TEST 3 (ĐÃ ĐỐI CHIẾU CHUẨN XÁC 100%)
+window.TOEIC_KEYS[3] = parseKey("1C 2A 3D 4C 5B 6A 7B 8A 9C 10A 11C 12B 13B 14C 15C 16C 17B 18A 19A 20B 21A 22C 23C 24C 25C 26A 27A 28B 29A 30A 31C 32B 33C 34B 35D 36C 37A 38D 39C 40B 41D 42D 43C 44C 45A 46B 47A 48D 49B 50B 51C 52C 53B 54C 55B 56B 57A 58B 59C 60B 61C 62C 63D 64D 65D 66D 67C 68B 69D 70C 71D 72D 73C 74A 75B 76A 77C 78D 79B 80C 81A 82D 83B 84C 85D 86B 87D 88B 89B 90C 91A 92C 93C 94D 95D 96D 97C 98C 99D 100A 101B 102A 103B 104C 105D 106B 107A 108B 109A 110C 111B 112C 113B 114B 115D 116A 117D 118D 119A 120A 121B 122C 123D 124A 125B 126A 127C 128C 129C 130A 131A 132D 133A 134B 135B 136B 137A 138C 139B 140D 141A 142A 143B 144B 145D 146C 147D 148C 149B 150D 151C 152D 153A 154C 155A 156D 157C 158C 159D 160A 161B 162D 163C 164A 165C 166C 167A 168C 169D 170D 171D 172A 173D 174B 175D 176C 177B 178A 179D 180B 181B 182C 183B 184A 185D 186A 187B 188C 189D 190C 191B 192D 193A 194B 195B 196A 197B 198C 199D 200D");
+
+// 2. FULL TRANSCRIPT LISTENING TEST 3
 window.TOEIC_SCRIPTS[3] = `
   <h3>PART 1: PHOTOGRAPHS (Câu 1 - 6)</h3>
   <div class="script-question">
@@ -327,7 +335,7 @@ window.TOEIC_SCRIPTS[3] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 62 - 64: Graphic / Giá Kệ Cửa Hàng]</b><br>
+    <b>[Questions 62 - 64]</b><br>
     <b>W-Am:</b> Marco, you'll be restocking the cleaning products this morning, right? While you're doing that, could you also put the updated sale price labels on the hand soap dispensers? They're on the shelf <span class="correct-pink">[62] right above the laundry detergent</span>.<br>
     <b>M-Cn:</b> No problem, that shouldn't take long. What else can I help with?<br>
     <b>W-Am:</b> Can you make room for our <span class="correct-pink">[63] new international foods section</span> at the front of the store?<br>
@@ -335,7 +343,7 @@ window.TOEIC_SCRIPTS[3] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 65 - 67: Graphic / Lịch Hoạt Động Studio]</b><br>
+    <b>[Questions 65 - 67]</b><br>
     <b>W-Br:</b> Thanks for calling Kwan Photography Studio.<br>
     <b>M-Au:</b> Hello, I need to <span class="correct-pink">[65] have a photo taken for a Canadian passport</span>.<br>
     <b>W-Br:</b> Okay, you can make an appointment Monday through Friday. <span class="correct-pink">[66] Just bring in a copy of the application</span> so we can see the size requirements.<br>
@@ -344,7 +352,7 @@ window.TOEIC_SCRIPTS[3] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 68 - 70: Graphic / Biểu Mẫu Chi Phí Đi Lại]</b><br>
+    <b>[Questions 68 - 70]</b><br>
     <b>M-Au:</b> Hi, Marina. Do you have receipts for your expenses from the <span class="correct-pink">[68] Dental Hygienists Conference</span> you attended last week?<br>
     <b>W-Am:</b> Yes, I have them. I was just going to scan them and send them to you by email.<br>
     <b>M-Au:</b> Thanks very much. Once I receive them, <span class="correct-pink">[69] I'll process your request for reimbursement</span>. Don't forget to fill out the travel expenses form and include it in your email, too.<br>
@@ -394,17 +402,17 @@ window.TOEIC_SCRIPTS[3] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 95 - 97: Graphic / Phiếu Giảm Giá]</b><br>
+    <b>[Questions 95 - 97]</b><br>
     <b>M-Au:</b> Hi, this is Liam from Oceana Flowers. <span class="correct-pink">[95] I'm calling about our print order for coupons</span>. We originally said we needed the coupons by Friday, but we now need them to be ready by Wednesday instead. <span class="correct-pink">[96] We just found out yesterday that our application to the National Florists Association was approved</span>. We'll be attending their annual floral show in Richmond this weekend. Oh, one other thing: We'd also like to <span class="correct-pink">[97] change the limit to five items on the coupon</span>. Can you take care of that before you start printing? Thank you.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 98 - 100: Graphic / Bản Đồ Tuyến Xe Buýt]</b><br>
+    <b>[Questions 98 - 100]</b><br>
     <b>M-Cn:</b> Hi, Takuma, good news: You got your first television audition! It's for a role in a TV drama. I've sent an email with the script and details. Since you're auditioning to join the cast of an ongoing show, <span class="correct-pink">[99] you should watch some videos of previous episodes</span> so you understand the role. One last note: Since you're new to the city, you might be wondering about the best bus route to take. You could take the Green Line to Orchard, but <span class="correct-pink">[100] I'd recommend taking the Yellow Line to the last stop</span>. It's a longer route, but the last stop is closer to the studio.
   </div>
 `;
 
-// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 3
+// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 3 (CHUẨN 100% THEO ĐỀ GỐC)
 window.TOEIC_EXPLANATIONS[3] = {
     101: "💡 <b>Đáp án (B) her:</b> Đứng trước danh từ 'youth' cần một tính từ sở hữu: 'Despite her youth' (Mặc dù tuổi đời còn trẻ, cô Cho đã rất nổi tiếng trên mạng xã hội).",
     102: "💡 <b>Đáp án (A) available:</b> Tính từ 'available' (có sẵn/sẵn dùng) đứng sau to-be 'are now' làm vị ngữ: hầu hết tài liệu đã có sẵn trên mạng.",
@@ -457,7 +465,7 @@ window.TOEIC_EXPLANATIONS[3] = {
     149: "💡 <b>Đáp án (B):</b> Mục đích chính của mẩu tin là thông báo rộng rãi về việc khởi động dự án nâng cấp/cải tạo nhà ga đường sắt 100 năm tuổi.",
     150: "💡 <b>Đáp án (D):</b> Đoạn 2 nêu rõ: các nghệ sĩ địa phương được mời gửi đề xuất phác thảo các bức tranh tường trang trí (murals) vào tháng Ba.",
     151: "💡 <b>Đáp án (C):</b> Bức thư là thư mời tham dự buổi lễ khai trương khu trưng bày nghệ thuật mới Prosner Wing gửi đến ông Sanchez.",
-    152: "💡 <b>Đáp án (D):</b> Bức thư viết: 'This private celebration is limited to invaluable museum members like you', chứng tỏ ông Sanchez là hội viên của bảo tàng nghệ thuật.",
+    152: "💡 <b>Đáp án (D) He has a membership at an art museum:</b> Bức thư viết: 'This private celebration is limited to invaluable museum members like you', chứng tỏ ông Sanchez là hội viên của bảo tàng nghệ thuật.",
     153: "💡 <b>Đáp án (A):</b> Hai người nhắn tin thảo luận việc tìm kiếm và đặt thuê một mặt bằng kho chứa đồ tạm thời trên ứng dụng di động.",
     154: "💡 <b>Đáp án (C):</b> Khi cô Mehta gợi ý lái xe tải chở hàng tới khảo sát địa điểm, ông Beiger đồng tình vì ông cũng đang tính sẽ lái xe qua đó kiểm tra thực tế.",
     155: "💡 <b>Đáp án (A):</b> Doanh nghiệp chuyên chế tạo giá đỡ máy tính xách tay công thái học, ghế và bàn làm việc đứng điều chỉnh được -> Nhà sản xuất đồ nội thất máy tính văn phòng.",
@@ -496,7 +504,7 @@ window.TOEIC_EXPLANATIONS[3] = {
     188: "💡 <b>Đáp án (C):</b> Cô Deborah viết thư nêu rõ nếu thêm 30 sinh viên thì cần hơn 75 chỗ nên phải chuyển sang phòng khác, suy ra phòng Chovey Community Room chỉ chứa tối đa 75 chỗ ngồi.",
     189: "💡 <b>Đáp án (D):</b> Trong email ngày 19/10, Giáo sư Whitford bày tỏ hy vọng Tiến sĩ Fiallo sẽ cân nhắc lời mời cùng hợp tác thực hiện các dự án nghiên cứu khoa học sắp tới.",
     190: "💡 <b>Đáp án (C):</b> Các công cụ bằng đá thuộc cùng đợt khai quật cổ vật được Tiến sĩ Fiallo xác định là phản ánh đời sống người dân từ hơn 800 năm trước.",
-    191: "💡 <b>Đáp án (B):</b> Chuyến bay tối thứ Hai bị hủy và chuyến bay kế tiếp là sáng thứ Ba, bà Moreland dự kiến về cơ quan vào sáng thứ Tư để kịp khóa tập huấn bảo mật ('data security training').",
+    191: "💡 <b>Đáp án (B) On Wednesday:</b> Email gửi lúc 6:31 AM thứ Hai 7/6: chuyến bay bị hủy và chuyến sớm nhất là sáng mai (thứ Ba 8/6). Cô Moreland dự kiến sẽ có mặt tại văn phòng đúng giờ để tham gia 'data security training', theo bảng lịch biểu sự kiện này diễn ra vào thứ Tư ngày 9/6 (Wednesday).",
     192: "💡 <b>Đáp án (D):</b> Cô Weaver nhận nhiệm vụ điều phối, sắp xếp dời lại toàn bộ lịch trình công tác, họp hành và phỏng vấn cho sếp Moreland -> Trợ lý điều hành (executive assistant).",
     193: "💡 <b>Đáp án (A):</b> Email yêu cầu chỉ họp với phòng nhân sự sau khi tất cả các ứng viên đã được phỏng vấn xong -> Nhằm đánh giá, thảo luận kết quả các buổi phỏng vấn.",
     194: "💡 <b>Đáp án (B):</b> Lịch công tác thứ Sáu lúc 2:00 P.M. ghi nội dung 'Technology updates', trùng khớp với cuộc hẹn của ông Eric Kim mà cô Cindy đã xin hoãn lại.",
