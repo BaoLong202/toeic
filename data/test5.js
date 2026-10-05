@@ -10,8 +10,8 @@ function parseKey(text) {
     return key;
 }
 
-// 1. DÀN KEY 200 CÂU TEST 5 (ĐÃ CHUẨN HÓA 100%)
-window.TOEIC_KEYS[5] = parseKey("1A 2B 3D 4C 5A 6C 7B 8A 9C 10A 11C 12B 13B 14C 15C 16C 17B 18A 19A 20B 21A 22C 23C 24C 25C 26A 27A 28B 29A 30A 31C 32D 33C 34A 35B 36A 37D 38C 39B 40D 41B 42A 43D 44B 45A 46B 47D 48C 49B 50A 51C 52A 53D 54C 55C 56C 57C 58B 59C 60D 61B 62A 63D 64D 65C 66D 67B 68B 69A 70D 71A 72C 73D 74D 75B 76C 77B 78A 79B 80A 81D 82B 83C 84A 85B 86C 87D 88D 89C 90B 91A 92A 93B 94A 95B 96B 97C 98C 99C 100A 101C 102A 103B 104B 105D 106A 107C 108A 109A 110C 111B 112C 113C 114B 115B 116D 117C 118C 119C 120A 121C 122D 123C 124D 125B 126B 127B 128B 129C 130D 131A 132D 133C 134C 135D 136D 137B 138C 139C 140A 141A 142D 143A 144C 145B 146B 147C 148C 149A 150D 151B 152D 153D 154A 155C 156D 157D 158C 159A 160C 161C 162A 163C 164D 165D 166B 167D 168A 169C 170D 171D 172D 173A 174C 175B 176C 177B 178C 179D 180B 181A 182C 183D 184B 185C 186A 187D 188C 189A 190B 191A 192D 193C 194C 195D 196B 197B 198D 199D 200C");
+// 1. DÀN KEY 200 CÂU TEST 5 (CHUẨN 100% THEO FILE AUDIO VÀ ĐỀ READING)
+window.TOEIC_KEYS[5] = parseKey("1A 2B 3D 4C 5A 6C 7B 8B 9B 10C 11B 12C 13C 14B 15B 16C 17C 18A 19B 20B 21C 22C 23C 24C 25B 26B 27A 28C 29C 30B 31A 32D 33C 34A 35B 36A 37D 38C 39B 40D 41B 42A 43D 44B 45A 46B 47D 48C 49B 50A 51C 52A 53D 54C 55C 56C 57C 58B 59C 60D 61B 62A 63D 64D 65C 66D 67B 68B 69A 70D 71A 72C 73D 74D 75B 76C 77B 78A 79B 80A 81D 82B 83C 84A 85B 86C 87D 88D 89C 90B 91A 92A 93B 94A 95B 96B 97C 98C 99C 100A 101C 102A 103B 104B 105D 106A 107C 108A 109A 110C 111B 112C 113C 114B 115B 116D 117C 118C 119C 120A 121C 122D 123C 124D 125B 126B 127B 128B 129C 130D 131A 132D 133C 134C 135D 136D 137B 138C 139C 140A 141A 142D 143A 144C 145B 146B 147C 148C 149A 150D 151B 152D 153D 154A 155C 156D 157D 158C 159A 160C 161C 162A 163C 164D 165D 166B 167D 168A 169C 170D 171D 172D 173A 174C 175B 176C 177B 178C 179D 180B 181A 182C 183D 184B 185C 186A 187D 188C 189A 190B 191A 192D 193C 194C 195D 196B 197B 198D 199D 200C");
 
 // 2. FULL TRANSCRIPT LISTENING TEST 5
 window.TOEIC_SCRIPTS[5] = `
@@ -74,58 +74,58 @@ window.TOEIC_SCRIPTS[5] = `
 
   <div class="script-question">
     <span class="script-speaker">8. M-Au: Is the inspector coming this afternoon or tomorrow morning?</span>
-    <div class="script-opt correct-pink">(A) The exterior light isn't working.</div>
-    <div class="script-opt">(B) He'll be here tomorrow.</div>
+    <div class="script-opt">(A) The exterior light isn't working.</div>
+    <div class="script-opt correct-pink">(B) He'll be here tomorrow.</div>
     <div class="script-opt">(C) I'll take the next right turn.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">9. M-Au: What's the total cost to remodel the office lobby?</span>
     <div class="script-opt">(A) The view from this window is great.</div>
-    <div class="script-opt">(B) Over fifty thousand dollars.</div>
-    <div class="script-opt correct-pink">(C) No, a sofa and table.</div>
+    <div class="script-opt correct-pink">(B) Over fifty thousand dollars.</div>
+    <div class="script-opt">(C) No, a sofa and table.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">10. W-Am: Are you getting the same type of desk or a different one?</span>
-    <div class="script-opt correct-pink">(A) It's conveniently located.</div>
+    <div class="script-opt">(A) It's conveniently located.</div>
     <div class="script-opt">(B) I can pick it up for you.</div>
-    <div class="script-opt">(C) The same type.</div>
+    <div class="script-opt correct-pink">(C) The same type.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">11. M-Cn: We're taking the clients to the theater this evening.</span>
     <div class="script-opt">(A) He already ate.</div>
-    <div class="script-opt">(B) I'll reserve a taxi.</div>
-    <div class="script-opt correct-pink">(C) From Australia.</div>
+    <div class="script-opt correct-pink">(B) I'll reserve a taxi.</div>
+    <div class="script-opt">(C) From Australia.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">12. M-Cn: When is your budget report due?</span>
     <div class="script-opt">(A) It was too expensive.</div>
-    <div class="script-opt correct-pink">(B) I don't need one.</div>
-    <div class="script-opt">(C) By Tuesday at the latest.</div>
+    <div class="script-opt">(B) I don't need one.</div>
+    <div class="script-opt correct-pink">(C) By Tuesday at the latest.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">13. M-Au: Who can I talk to about getting a membership at this fitness center?</span>
     <div class="script-opt">(A) A monthly bill.</div>
-    <div class="script-opt correct-pink">(B) Some new workout equipment.</div>
-    <div class="script-opt">(C) I can help you with that.</div>
+    <div class="script-opt">(B) Some new workout equipment.</div>
+    <div class="script-opt correct-pink">(C) I can help you with that.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">14. M-Au: Are you planning to buy a house in the city?</span>
     <div class="script-opt">(A) A housecleaning company.</div>
-    <div class="script-opt">(B) I don't want to move.</div>
-    <div class="script-opt correct-pink">(C) I'll be waiting at the post office.</div>
+    <div class="script-opt correct-pink">(B) I don't want to move.</div>
+    <div class="script-opt">(C) I'll be waiting at the post office.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">15. M-Au: How did you decide on a venue for the fundraising event?</span>
     <div class="script-opt">(A) A small contribution.</div>
-    <div class="script-opt">(B) I got a recommendation from a friend.</div>
-    <div class="script-opt correct-pink">(C) To buy books for the library.</div>
+    <div class="script-opt correct-pink">(B) I got a recommendation from a friend.</div>
+    <div class="script-opt">(C) To buy books for the library.</div>
   </div>
 
   <div class="script-question">
@@ -138,8 +138,8 @@ window.TOEIC_SCRIPTS[5] = `
   <div class="script-question">
     <span class="script-speaker">17. W-Br: The sales representatives really appreciated the training we led.</span>
     <div class="script-opt">(A) The new transportation center nearby.</div>
-    <div class="script-opt correct-pink">(B) No, but there is a manual online.</div>
-    <div class="script-opt">(C) Yes, they seemed to find it helpful.</div>
+    <div class="script-opt">(B) No, but there is a manual online.</div>
+    <div class="script-opt correct-pink">(C) Yes, they seemed to find it helpful.</div>
   </div>
 
   <div class="script-question">
@@ -151,8 +151,8 @@ window.TOEIC_SCRIPTS[5] = `
 
   <div class="script-question">
     <span class="script-speaker">19. W-Br: Isn't the registration deadline tomorrow?</span>
-    <div class="script-opt correct-pink">(A) Here's a map that you can use.</div>
-    <div class="script-opt">(B) No, it's next week.</div>
+    <div class="script-opt">(A) Here's a map that you can use.</div>
+    <div class="script-opt correct-pink">(B) No, it's next week.</div>
     <div class="script-opt">(C) My office is on the ninth floor.</div>
   </div>
 
@@ -165,9 +165,9 @@ window.TOEIC_SCRIPTS[5] = `
 
   <div class="script-question">
     <span class="script-speaker">21. W-Am: Our factory makes the best cookies in the city.</span>
-    <div class="script-opt correct-pink">(A) A cup of sugar.</div>
+    <div class="script-opt">(A) A cup of sugar.</div>
     <div class="script-opt">(B) He worked an afternoon shift.</div>
-    <div class="script-opt">(C) Aren't they delicious?</div>
+    <div class="script-opt correct-pink">(C) Aren't they delicious?</div>
   </div>
 
   <div class="script-question">
@@ -194,14 +194,14 @@ window.TOEIC_SCRIPTS[5] = `
   <div class="script-question">
     <span class="script-speaker">25. M-Au: Isn't our department's quarterly report supposed to be sent out today?</span>
     <div class="script-opt">(A) No, he drinks coffee.</div>
-    <div class="script-opt">(B) There's a lot of information to include.</div>
-    <div class="script-opt correct-pink">(C) Some office supplies.</div>
+    <div class="script-opt correct-pink">(B) There's a lot of information to include.</div>
+    <div class="script-opt">(C) Some office supplies.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">26. M-Cn: Would you like a copy of the article I mentioned?</span>
-    <div class="script-opt correct-pink">(A) No, I'm not.</div>
-    <div class="script-opt">(B) Yes, I'd appreciate that.</div>
+    <div class="script-opt">(A) No, I'm not.</div>
+    <div class="script-opt correct-pink">(B) Yes, I'd appreciate that.</div>
     <div class="script-opt">(C) A Thursday morning appointment.</div>
   </div>
 
@@ -215,29 +215,29 @@ window.TOEIC_SCRIPTS[5] = `
   <div class="script-question">
     <span class="script-speaker">28. M-Cn: Our bookstore is having a sale today, isn't it?</span>
     <div class="script-opt">(A) Sure, you can use my printer.</div>
-    <div class="script-opt correct-pink">(B) I really enjoyed that book.</div>
-    <div class="script-opt">(C) It's only a small discount.</div>
+    <div class="script-opt">(B) I really enjoyed that book.</div>
+    <div class="script-opt correct-pink">(C) It's only a small discount.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">29. W-Br: Why haven't the painters arrived yet?</span>
-    <div class="script-opt correct-pink">(A) The keys are in the desk drawer.</div>
+    <div class="script-opt">(A) The keys are in the desk drawer.</div>
     <div class="script-opt">(B) No, that's all right.</div>
-    <div class="script-opt">(C) I heard that traffic is heavy this morning.</div>
+    <div class="script-opt correct-pink">(C) I heard that traffic is heavy this morning.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">30. M-Cn: Should I bring some flowers or some food to the party?</span>
-    <div class="script-opt correct-pink">(A) He's right down the hall.</div>
-    <div class="script-opt">(B) Don't you live next to a florist's shop?</div>
+    <div class="script-opt">(A) He's right down the hall.</div>
+    <div class="script-opt correct-pink">(B) Don't you live next to a florist's shop?</div>
     <div class="script-opt">(C) A few more hours.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">31. W-Am: The meeting can wait until tomorrow.</span>
-    <div class="script-opt">(A) I'll make sure the room is set up.</div>
+    <div class="script-opt correct-pink">(A) I'll make sure the room is set up.</div>
     <div class="script-opt">(B) Did you bring an umbrella?</div>
-    <div class="script-opt correct-pink">(C) No, he wasn't.</div>
+    <div class="script-opt">(C) No, he wasn't.</div>
   </div>
 
   <h3>PART 3: CONVERSATIONS (Câu 32 - 70)</h3>
@@ -332,7 +332,7 @@ window.TOEIC_SCRIPTS[5] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 62 - 64: Graphic / Dự Án Xây Dựng Hầm Tàu Hỏa]</b><br>
+    <b>[Questions 62 - 64]</b><br>
     <b>W-Br:</b> Hi, I just got off the phone with management. They're not happy. The construction of the train tunnel isn't progressing fast enough.<br>
     <b>M-Cn:</b> Yeah, I'm not surprised. <span class="correct-pink">[62] The drilling is done now</span>. The thing is, we can't start installing the support columns until we have all the materials for the concrete.<br>
     <b>W-Br:</b> When are the materials going to get here?<br>
@@ -343,7 +343,7 @@ window.TOEIC_SCRIPTS[5] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 65 - 67: Graphic / Bản Đồ Khu Vực Đỗ Xe Giao Hàng]</b><br>
+    <b>[Questions 65 - 67]</b><br>
     <b>M-Au:</b> The city just posted its new parking rates, and we need to talk about how they'll affect our <span class="correct-pink">[65] restaurant's food delivery service</span>. I'm worried we'll lose money because we'll need to pay more for parking while the delivery driver takes the food to customers.<br>
     <b>W-Am:</b> Wow, parking in our main delivery area is up to <span class="correct-pink">[66] fifteen dollars an hour</span>? That is a problem. But offering free delivery attracts a lot of business. What else can we do to lower expenses?<br>
     <b>M-Au:</b> <span class="correct-pink">[67] We could start using bicycle delivery</span> whenever possible. That should help.<br>
@@ -351,7 +351,7 @@ window.TOEIC_SCRIPTS[5] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 68 - 70: Graphic / Đề Xuất Cải Tạo Tiền Sảnh Ngân Hàng]</b><br>
+    <b>[Questions 68 - 70]</b><br>
     <b>M-Au:</b> When customers walk into Southern Regional Bank, I want them to feel confident about entrusting their money to us. As I mentioned the last time we met, I'm hoping your <span class="correct-pink">[68] interior design firm</span> can give our lobby a more polished, professional look.<br>
     <b>W-Br:</b> Our proposal does just that. Here, take a look. The cover page includes a summary of the renovations.<br>
     <b>M-Au:</b> Hmm, do you really think we need <span class="correct-pink">[69] skylights</span>? That would be a big expense.<br>
@@ -400,17 +400,17 @@ window.TOEIC_SCRIPTS[5] = `
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 95 - 97: Graphic / Bản Đồ Đường Đua Xe Đạp]</b><br>
+    <b>[Questions 95 - 97]</b><br>
     <b>M-Cn:</b> Good morning, everyone, and welcome to the fifteenth annual Summerhaven <span class="correct-pink">[95] Bicycle Race</span>! The profits from this year's race will help our town fix the Grant Park <span class="correct-pink">[96] footbridge</span>, which is in serious need of maintenance. Please take a look at the map to familiarize yourselves with the route the cyclists will be taking. Remember, there's a beverage stand located between City Hall and the Art Museum, <span class="correct-pink">[97] so you can stay hydrated while you watch the race along Cedar Avenue</span>.
   </div>
 
   <div class="script-dialogue">
-    <b>[Questions 98 - 100: Graphic / Quy Trình Phát Triển Ứng Dụng Ngân Hàng]</b><br>
+    <b>[Questions 98 - 100]</b><br>
     <b>M-Au:</b> In today's meeting, we'll discuss where we are in our software development process for Universal Banking. In-depth user research will help us create a better <span class="correct-pink">[98] online banking application</span>. Sarai will start by telling us about <span class="correct-pink">[99] her research into Universal Banking's target customers</span>. What features do they need in a banking app, and how comfortable are they with technology? But before Sarai begins her presentation, let me remind you that as summer begins next week, so do summer hours. You'll be able to stop working at two o'clock on Friday afternoons, so <span class="correct-pink">[100] we'll be moving our regular meeting to Friday mornings</span>.
   </div>
 `;
 
-// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 5 (CHUẨN 100% THEO ĐỀ GỐC)
+// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 5
 window.TOEIC_EXPLANATIONS[5] = {
     101: "💡 <b>Đáp án (C) and:</b> Liên từ nối 'and' liên kết hai danh từ nghề nghiệp/vai trò song hành: 'an experienced accountant and investor' (kế toán viên kiêm nhà đầu tư dày dạn kinh nghiệm).",
     102: "💡 <b>Đáp án (A) bottle:</b> Cụm danh từ ghép 'water bottle' (bình đựng nước miễn phí dành cho 150 vị khách đầu tiên đến công viên thể dục).",

@@ -10,10 +10,10 @@ function parseKey(text) {
     return key;
 }
 
-// 1. DÀN KEY 200 CÂU TEST 4 (ĐÃ ĐỐI CHIẾU CHUẨN XÁC 100%)
-window.TOEIC_KEYS[4] = parseKey("1A 2B 3D 4C 5A 6C 7B 8A 9C 10A 11C 12B 13B 14C 15C 16C 17B 18A 19A 20B 21A 22C 23C 24C 25C 26A 27A 28B 29A 30A 31C 32C 33B 34D 35A 36C 37B 38C 39D 40B 41C 42A 43D 44B 45C 46D 47B 48D 49A 50B 51A 52C 53D 54B 55C 56C 57D 58D 59A 60D 61C 62B 63C 64A 65C 66B 67A 68C 69B 70C 71C 72A 73C 74B 75C 76D 77D 78C 79D 80B 81C 82D 83A 84D 85A 86B 87B 88D 89D 90D 91B 92C 93B 94B 95C 96B 97B 98D 99A 100D 101D 102B 103B 104C 105B 106A 107B 108A 109B 110C 111B 112A 113B 114A 115C 116D 117A 118A 119B 120A 121C 122D 123D 124A 125C 126D 127C 128C 129A 130D 131C 132B 133D 134A 135A 136A 137D 138B 139A 140C 141D 142B 143B 144A 145C 146D 147A 148D 149B 150D 151A 152D 153B 154D 155B 156B 157C 158B 159D 160C 161A 162B 163C 164C 165B 166D 167A 168A 169B 170B 171D 172A 173B 174D 175A 176C 177D 178D 179C 180A 181B 182A 183C 184C 185B 186B 187A 188B 189D 190C 191C 192B 193B 194A 195D 196A 197D 198C 199A 200A");
+// 1. DÀN KEY 200 CÂU TEST 4 (ĐÃ SỬA CHUẨN PART 2 THEO AUDIO VÀ ĐỀ READING)
+window.TOEIC_KEYS[4] = parseKey("1A 2B 3D 4C 5A 6C 7C 8C 9C 10B 11C 12A 13A 14B 15C 16A 17A 18B 19A 20C 21B 22A 23B 24C 25B 26A 27A 28A 29B 30C 31B 32C 33B 34D 35A 36C 37B 38C 39D 40B 41C 42A 43D 44B 45C 46D 47B 48D 49A 50B 51A 52C 53D 54B 55C 56C 57D 58D 59A 60D 61C 62B 63C 64A 65C 66B 67A 68C 69B 70C 71C 72A 73C 74B 75C 76D 77D 78C 79D 80B 81C 82D 83A 84D 85A 86B 87B 88D 89D 90D 91B 92C 93B 94B 95C 96B 97B 98D 99A 100D 101D 102B 103B 104C 105B 106A 107B 108A 109B 110C 111B 112A 113B 114A 115C 116D 117A 118A 119B 120A 121C 122D 123D 124A 125C 126D 127C 128C 129A 130D 131C 132B 133D 134A 135A 136A 137D 138B 139A 140C 141D 142B 143B 144A 145C 146D 147A 148D 149B 150D 151A 152D 153B 154D 155B 156B 157C 158B 159D 160C 161A 162B 163C 164C 165B 166D 167A 168A 169B 170B 171D 172A 173B 174D 175A 176C 177D 178D 179C 180A 181B 182A 183C 184C 185B 186B 187A 188B 189D 190C 191C 192B 193B 194A 195D 196A 197D 198C 199A 200A");
 
-// 2. FULL TRANSCRIPT LISTENING TEST 4
+// 2. FULL TRANSCRIPT LISTENING TEST 4 (ĐÃ TÔ HỒNG ĐÚNG ĐÁP ÁN PART 2)
 window.TOEIC_SCRIPTS[4] = `
   <h3>PART 1: PHOTOGRAPHS (Câu 1 - 6)</h3>
   <div class="script-question">
@@ -68,15 +68,15 @@ window.TOEIC_SCRIPTS[4] = `
   <div class="script-question">
     <span class="script-speaker">7. M-Au: Will you let me know when the catering order arrives?</span>
     <div class="script-opt">(A) A reservation for two.</div>
-    <div class="script-opt correct-pink">(B) The front office.</div>
-    <div class="script-opt">(C) Sure, I'll text you.</div>
+    <div class="script-opt">(B) The front office.</div>
+    <div class="script-opt correct-pink">(C) Sure, I'll text you.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">8. W-Am: Why is the manager being replaced?</span>
-    <div class="script-opt correct-pink">(A) Let's do that.</div>
+    <div class="script-opt">(A) Let's do that.</div>
     <div class="script-opt">(B) I prefer working with a team.</div>
-    <div class="script-opt">(C) Because she's leaving the company.</div>
+    <div class="script-opt correct-pink">(C) Because she's leaving the company.</div>
   </div>
 
   <div class="script-question">
@@ -88,8 +88,8 @@ window.TOEIC_SCRIPTS[4] = `
 
   <div class="script-question">
     <span class="script-speaker">10. W-Am: Why did you decide to become a pilot?</span>
-    <div class="script-opt correct-pink">(A) Is there free Internet access?</div>
-    <div class="script-opt">(B) I enjoy traveling.</div>
+    <div class="script-opt">(A) Is there free Internet access?</div>
+    <div class="script-opt correct-pink">(B) I enjoy traveling.</div>
     <div class="script-opt">(C) He's on vacation in Argentina.</div>
   </div>
 
@@ -102,23 +102,23 @@ window.TOEIC_SCRIPTS[4] = `
 
   <div class="script-question">
     <span class="script-speaker">12. W-Am: When does your manager usually come in?</span>
-    <div class="script-opt">(A) Early in the morning.</div>
-    <div class="script-opt correct-pink">(B) No, I just left it there.</div>
+    <div class="script-opt correct-pink">(A) Early in the morning.</div>
+    <div class="script-opt">(B) No, I just left it there.</div>
     <div class="script-opt">(C) I haven't, thanks.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">13. W-Br: Isn't there a discount on this computer monitor?</span>
-    <div class="script-opt">(A) Yes, a ten percent discount.</div>
-    <div class="script-opt correct-pink">(B) An inventory check.</div>
+    <div class="script-opt correct-pink">(A) Yes, a ten percent discount.</div>
+    <div class="script-opt">(B) An inventory check.</div>
     <div class="script-opt">(C) Mine is broken.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">14. W-Am: How is the new group of interns doing?</span>
     <div class="script-opt">(A) No, we have five people in total.</div>
-    <div class="script-opt">(B) I haven't heard any negative feedback at all.</div>
-    <div class="script-opt correct-pink">(C) Let's pose for a group photo over there.</div>
+    <div class="script-opt correct-pink">(B) I haven't heard any negative feedback at all.</div>
+    <div class="script-opt">(C) Let's pose for a group photo over there.</div>
   </div>
 
   <div class="script-question">
@@ -130,22 +130,22 @@ window.TOEIC_SCRIPTS[4] = `
 
   <div class="script-question">
     <span class="script-speaker">16. M-Au: Where can I send the money?</span>
-    <div class="script-opt">(A) To my bank account.</div>
+    <div class="script-opt correct-pink">(A) To my bank account.</div>
     <div class="script-opt">(B) I think that's expensive too.</div>
-    <div class="script-opt correct-pink">(C) By next Tuesday.</div>
+    <div class="script-opt">(C) By next Tuesday.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">17. M-Au: Who's coming in tomorrow to help us prepare for the grand opening?</span>
-    <div class="script-opt">(A) Rebecca and Malik.</div>
-    <div class="script-opt correct-pink">(B) An online job posting.</div>
+    <div class="script-opt correct-pink">(A) Rebecca and Malik.</div>
+    <div class="script-opt">(B) An online job posting.</div>
     <div class="script-opt">(C) Some sales data.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">18. W-Am: How often does the bus stop at this location?</span>
-    <div class="script-opt correct-pink">(A) I'll be visiting the office.</div>
-    <div class="script-opt">(B) About every twenty minutes.</div>
+    <div class="script-opt">(A) I'll be visiting the office.</div>
+    <div class="script-opt correct-pink">(B) About every twenty minutes.</div>
     <div class="script-opt">(C) A city council meeting.</div>
   </div>
 
@@ -159,29 +159,29 @@ window.TOEIC_SCRIPTS[4] = `
   <div class="script-question">
     <span class="script-speaker">20. W-Am: There's coffee in the break room, right?</span>
     <div class="script-opt">(A) That shift starts at noon.</div>
-    <div class="script-opt correct-pink">(B) We decided to paint this room gray.</div>
-    <div class="script-opt">(C) Yes, I just made a fresh pot.</div>
+    <div class="script-opt">(B) We decided to paint this room gray.</div>
+    <div class="script-opt correct-pink">(C) Yes, I just made a fresh pot.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">21. M-Au: Who's going to the company picnic today?</span>
-    <div class="script-opt correct-pink">(A) About two hours long.</div>
-    <div class="script-opt">(B) I'm leaving in a few minutes.</div>
+    <div class="script-opt">(A) About two hours long.</div>
+    <div class="script-opt correct-pink">(B) I'm leaving in a few minutes.</div>
     <div class="script-opt">(C) A two-year maintenance contract.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">22. W-Br: Will the bakery be open tomorrow?</span>
-    <div class="script-opt">(A) No, it's closed until mid-August.</div>
+    <div class="script-opt correct-pink">(A) No, it's closed until mid-August.</div>
     <div class="script-opt">(B) Have you checked the oven?</div>
-    <div class="script-opt correct-pink">(C) The pound cake is delicious.</div>
+    <div class="script-opt">(C) The pound cake is delicious.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">23. M-Cn: Are you installing the new software on Monday or Tuesday?</span>
     <div class="script-opt">(A) Thanks, but they already have one.</div>
-    <div class="script-opt">(B) I'll be out of the office all week.</div>
-    <div class="script-opt correct-pink">(C) It was an older model laptop.</div>
+    <div class="script-opt correct-pink">(B) I'll be out of the office all week.</div>
+    <div class="script-opt">(C) It was an older model laptop.</div>
   </div>
 
   <div class="script-question">
@@ -194,8 +194,8 @@ window.TOEIC_SCRIPTS[4] = `
   <div class="script-question">
     <span class="script-speaker">25. M-Au: You're offering discounts to students, right?</span>
     <div class="script-opt">(A) No, that's not my wallet.</div>
-    <div class="script-opt">(B) You'll need valid identification.</div>
-    <div class="script-opt correct-pink">(C) I'm doing inventory this weekend.</div>
+    <div class="script-opt correct-pink">(B) You'll need valid identification.</div>
+    <div class="script-opt">(C) I'm doing inventory this weekend.</div>
   </div>
 
   <div class="script-question">
@@ -214,30 +214,30 @@ window.TOEIC_SCRIPTS[4] = `
 
   <div class="script-question">
     <span class="script-speaker">28. W-Am: When's the finance department going to confirm our first-quarter budget?</span>
-    <div class="script-opt">(A) Their deadline is next week.</div>
-    <div class="script-opt correct-pink">(B) Yes, I'll be there.</div>
+    <div class="script-opt correct-pink">(A) Their deadline is next week.</div>
+    <div class="script-opt">(B) Yes, I'll be there.</div>
     <div class="script-opt">(C) In the mail room.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">29. M-Cn: Who canceled the conference call?</span>
-    <div class="script-opt correct-pink">(A) The upstairs conference room.</div>
-    <div class="script-opt">(B) It's been rescheduled.</div>
+    <div class="script-opt">(A) The upstairs conference room.</div>
+    <div class="script-opt correct-pink">(B) It's been rescheduled.</div>
     <div class="script-opt">(C) Yes, you can.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">30. M-Au: Can you please transfer the service to my new phone?</span>
-    <div class="script-opt correct-pink">(A) Let's put it in the back seat.</div>
+    <div class="script-opt">(A) Let's put it in the back seat.</div>
     <div class="script-opt">(B) At the Maple Street Station.</div>
-    <div class="script-opt">(C) There is a processing fee.</div>
+    <div class="script-opt correct-pink">(C) There is a processing fee.</div>
   </div>
 
   <div class="script-question">
     <span class="script-speaker">31. W-Br: How was today's manufacturing seminar?</span>
     <div class="script-opt">(A) A new pair of shoes.</div>
-    <div class="script-opt">(B) We didn't get there in time.</div>
-    <div class="script-opt correct-pink">(C) There's a user's manual in the drawer.</div>
+    <div class="script-opt correct-pink">(B) We didn't get there in time.</div>
+    <div class="script-opt">(C) There's a user's manual in the drawer.</div>
   </div>
 
   <h3>PART 3: CONVERSATIONS (Câu 32 - 70)</h3>
@@ -408,7 +408,7 @@ window.TOEIC_SCRIPTS[4] = `
   </div>
 `;
 
-// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 4 (CHUẨN 100% THEO ĐỀ GỐC)
+// 3. GIẢI THÍCH CHI TIẾT READING (CÂU 101 - 200) TEST 4
 window.TOEIC_EXPLANATIONS[4] = {
     101: "💡 <b>Đáp án (D) she:</b> Cần đại từ nhân xưng chủ ngữ 'she' đứng trước to-be 'is' trong mệnh đề danh từ 'that she is planning to retire'.",
     102: "💡 <b>Đáp án (B) before:</b> Giới từ chỉ thời gian 'before the holiday' mang nghĩa trước kỳ nghỉ lễ.",
